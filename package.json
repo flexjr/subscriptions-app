@@ -98,7 +98,7 @@
       "plugin:testing-library/react"
     ],
     "parserOptions": {
-      "project": "./tsconfig.json"
+      "project": "tsconfig.json"
     },
     "plugins": [
       "import",

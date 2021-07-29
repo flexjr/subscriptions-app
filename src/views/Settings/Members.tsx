@@ -54,12 +54,12 @@ class Members extends React.Component {
   start = () => {
     this.setState({ loading: true });
     // ajax request after empty completing
-    // setTimeout(() => {
-    //   this.setState({
-    //     selectedRowKeys: [],
-    //     loading: false,
-    //   });
-    // }, 1000);
+    setTimeout(() => {
+      this.setState({
+        selectedRowKeys: [],
+        loading: false,
+      });
+    }, 1000);
 
 
   };
