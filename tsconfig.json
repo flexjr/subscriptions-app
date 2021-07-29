@@ -15,7 +15,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["@emotion/react/types/css-prop"]
+    "types": ["@emotion/react/types/css-prop"],
+    "noImplicitAny": false
   },
   "include": ["src", "integration"]
 }
