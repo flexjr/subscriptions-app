@@ -69,7 +69,7 @@
     "integration:headless": "testcafe chrome:headless integration/**/*.spec.ts --ts-config-path ./tsconfig.testcafe.json --app \"http-server ./build --port 3000\" --app-init-delay 5000",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
-    "start": "npm-run-all -p start:*",
+    "start": "REACT_APP_COMMIT_REF=$(git rev-parse --short HEAD) REACT_APP_AUTH0_DOMAIN=$(grep REACT_APP_AUTH0_DOMAIN .env | cut -d '=' -f2) REACT_APP_AUTH0_CLIENT_ID=$(grep REACT_APP_AUTH0_CLIENT_ID .env | cut -d '=' -f2)  npm-run-all -p start:*",
     "start:css": "postcss src/tailwind.css -o src/index.css --watch",
     "start:js": "sleep 2 && craco start",
     "storybook": "start-storybook -p 9009 -s public",
