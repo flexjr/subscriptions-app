@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
@@ -8,8 +8,7 @@ import Members from "./views/Settings/Members";
 import { NavbarTop } from "./components/UI/NavbarTop";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute";
 
-
-export const Router = (): ReactElement => {
+export const Router: React.FunctionComponent = () => {
   return (
     <BrowserRouter>
       <Layout className="layout">
@@ -26,6 +25,14 @@ export const Router = (): ReactElement => {
               <Members />
             </Route>
           </Switch>
+          <Footer style={{ textAlign: "center" }}>
+            <p>
+              Build v1.0.0-
+              <a href="https://github.com/flexjr/subscriptions-app" target="_blank" rel="noopener noreferrer">
+                {process.env.REACT_APP_COMMIT_REF?.substring(0, 7)}
+              </a>
+            </p>
+          </Footer>
         </Content>
       </Layout>
     </BrowserRouter>
