@@ -7,13 +7,15 @@ import { Home } from "./views/Home";
 import Members from "./views/Settings/Members";
 import { NavbarTop } from "./components/UI/NavbarTop";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute";
+import { NavbarSide } from "./components/UI";
 
 export const Router: React.FunctionComponent = () => {
   return (
     <BrowserRouter>
-      <Layout className="layout">
-        <NavbarTop />
-        <Content style={{ padding: "16px 50px" }}>
+      {/* <NavbarTop /> */}
+      <Layout className="layout" style={{ marginLeft: 200 }}>
+        <NavbarSide />
+        <Content style={{ padding: "16px 32px" }}>
           <Switch>
             <Route exact path="/">
               <Home />
