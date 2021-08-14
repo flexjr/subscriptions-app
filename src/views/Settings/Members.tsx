@@ -54,54 +54,17 @@ class Members extends React.Component {
   start = () => {
     this.setState({ loading: true });
     // ajax request after empty completing
-    // setTimeout(() => {
-    //   this.setState({
-    //     selectedRowKeys: [],
-    //     loading: false,
-    //   });
-    // }, 1000);
+    setTimeout(() => {
+      this.setState({
+        selectedRowKeys: [],
+        loading: false,
+      });
+    }, 1000);
 
     var chargebee = new ChargeBee();
 
     chargebee.configure({ site: "pixely-test", api_key: "test_jumo55anql2dcJF3USOARC0964wKp8NZ" });
-    chargebee.hosted_page
-      .checkout_one_time_for_items({
-        shipping_address: {
-          first_name: "John",
-          last_name: "Mathew",
-          city: "Walnut",
-          state: "California",
-          zip: "91789",
-          country: "US",
-        },
-        customer: {
-          id: "__test__XpbXKKYSOUtL5p2E",
-        },
-        item_prices: [
-          {
-            item_price_id: "ssl-charge-USD",
-            unit_price: 2000,
-          },
-        ],
-      })
-      .request( (error, result) => {
-        if (error) {
-          //handle error
-          console.log(error);
-          this.setState({
-            selectedRowKeys: [],
-            loading: false,
-          });
-        } else {
-          console.log(`${result}`);
-          var hosted_page: typeof chargebee.hosted_page = result.hosted_page;
-
-          this.setState({
-            selectedRowKeys: [],
-            loading: false,
-          });
-        }
-      });
+    
   };
 
   onSelectChange = (selectedRowKeys) => {

@@ -42,6 +42,13 @@ export const NavbarSide: FunctionComponent = () => {
         ) : (
           <></>
         )}
+        {isAuthenticated ? (
+          <Menu.Item key="savedCards">
+            <Link to="/platform/organization/saved_cards">Saved Cards</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
 
         {isAuthenticated ? (
           <Menu.Item

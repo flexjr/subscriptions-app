@@ -1,7 +1,5 @@
 import { FunctionComponent } from "react";
 import { Row, Col, Typography, Card, Divider, Image } from "antd";
-import "./Home.css";
-import styled from "@emotion/styled";
 
 const { Title } = Typography;
 

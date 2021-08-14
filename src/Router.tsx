@@ -8,6 +8,7 @@ import Members from "./views/Settings/Members";
 import { NavbarTop } from "./components/UI/NavbarTop";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute";
 import { NavbarSide } from "./components/UI";
+import { SavedCards } from "./views/Settings/SavedCards";
 
 export const Router: React.FunctionComponent = () => {
   return (
@@ -25,6 +26,9 @@ export const Router: React.FunctionComponent = () => {
             </Route>
             <Route exact={true} path="/platform/organization/members">
               <Members />
+            </Route>
+            <Route exact={true} path="/platform/organization/saved_cards">
+              <SavedCards />
             </Route>
           </Switch>
           <Footer style={{ textAlign: "center" }}>

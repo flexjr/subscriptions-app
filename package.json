@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.6.0",
+    "@chargebee/chargebee-js-react-wrapper": "^0.4.3",
     "@craco/craco": "^6.0.0",
     "@emotion/css": "^11.0.0",
     "@emotion/react": "^11.1.2",
