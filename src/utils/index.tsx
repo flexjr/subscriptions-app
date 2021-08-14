@@ -1,1 +1,1 @@
-export const API_URL = "http://api.flexjr.one";
+export const API_URL = "https://api.flexjr.one";
