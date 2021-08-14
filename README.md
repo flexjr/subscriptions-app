@@ -1,4 +1,4 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/ebcf2ca1-9073-40ff-af8f-2f64e1513e90/deploy-status)](https://app.netlify.com/sites/flexjr/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/45482a42-8274-44a7-aa47-ad785436314d/deploy-status)](https://app.netlify.com/sites/flexjr/deploys)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
