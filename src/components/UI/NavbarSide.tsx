@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Layout, Menu } from "antd";
+import React from "react";
+import { Link } from "react-router-dom";
 
 const { Sider } = Layout;
 
@@ -12,7 +12,7 @@ const Logo = styled.div`
   background: rgba(255, 255, 255, 0.2);
 `;
 
-export const NavbarSide: FunctionComponent = () => {
+export const NavbarSide: React.FunctionComponent = () => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
   return (
     <Sider
@@ -37,14 +37,14 @@ export const NavbarSide: FunctionComponent = () => {
         )}
         {isAuthenticated ? (
           <Menu.Item key="teamMembers">
-            <Link to="/platform/organization/members">Team Members</Link>
+            <Link to="/platform/organization/members">My Subscriptions</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
         {isAuthenticated ? (
           <Menu.Item key="savedCards">
-            <Link to="/platform/organization/saved_cards">Saved Cards</Link>
+            <Link to="/platform/organization/saved_cards">Payment Methods</Link>
           </Menu.Item>
         ) : (
           <></>

@@ -53,11 +53,13 @@ export const Members: React.FunctionComponent = () => {
   const [iframeRefresh, setIframeRefresh] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+  const [isManageSubscriptionsModalVisible, setIsManageSubscriptionsModalVisible] = useState(false);
+
   const [estimate, setEstimate] = useState(0);
 
-  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState(
-    "https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/"
-  );
+  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("");
+
+  const [manageSubscriptionsUrl, setManageSubscriptionsUrl] = useState("");
 
   const handleOk = (): void => {
     setIsModalVisible(false);
@@ -73,6 +75,14 @@ export const Members: React.FunctionComponent = () => {
 
   const handlePaymentCancel = (): void => {
     setIsPaymentModalVisible(false);
+  };
+
+  const handleManageSubscriptionsOk = (): void => {
+    setIsManageSubscriptionsModalVisible(false);
+  };
+
+  const handleManageSubscriptionsCancel = (): void => {
+    setIsManageSubscriptionsModalVisible(false);
   };
 
   const handleUpgrade = () => {
@@ -137,6 +147,34 @@ export const Members: React.FunctionComponent = () => {
     };
   };
 
+  const handleManageSubscriptions = () => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+
+    const getPaymentSourcesCount = async () => {
+      try {
+        const response = fetch(`${API_URL}/chargebee/sso?id=4851`, {
+          signal,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setManageSubscriptionsUrl(data.access_url);
+            setIsManageSubscriptionsModalVisible(true);
+          });
+      } catch (e) {
+        console.error(e.message);
+        setLoading(false);
+      }
+    };
+
+    getPaymentSourcesCount();
+
+    // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
+    return function cleanup() {
+      abortController.abort();
+    };
+  };
+
   const onSelectChange = (selectedRowKeys): void => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(selectedRowKeys);
@@ -155,8 +193,11 @@ export const Members: React.FunctionComponent = () => {
       <div style={{ marginBottom: 16 }}>
         <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={loading}>
           Upgrade
+        </Button>{" "}
+        <Button type="primary">Downgrade</Button>{" "}
+        <Button type="primary" onClick={handleManageSubscriptions}>
+          Manage Subcriptions
         </Button>
-
         <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
@@ -170,6 +211,14 @@ export const Members: React.FunctionComponent = () => {
           NOTE: After clicking Make Payment, will need to call OUR APIs to process payment for SGD 7.99 x (users
           picked)!!
         </p>
+      </Modal>
+      <Modal
+        title="Manage Subscriptions"
+        visible={isManageSubscriptionsModalVisible}
+        onOk={handleManageSubscriptionsOk}
+        onCancel={handleManageSubscriptionsCancel}
+      >
+        <iframe src={manageSubscriptionsUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
       </Modal>
     </>
   );

@@ -16,9 +16,7 @@ interface Card {
 
 export const SavedCards: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
-  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState(
-    "https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/"
-  );
+  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("");
   const [iframeRefresh, setIframeRefresh] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
