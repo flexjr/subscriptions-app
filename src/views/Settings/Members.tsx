@@ -1,5 +1,6 @@
-import { Button, Table } from "antd";
-import React, { useState, useRef } from "react";
+import { Button, Table, Modal } from "antd";
+import React, { useState } from "react";
+import { API_URL } from "../../utils";
 
 const columns = [
   {
@@ -47,17 +48,93 @@ for (let i = 1; i < 30; i++) {
 }
 
 export const Members: React.FunctionComponent = () => {
-  const cardRef = useRef();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
   const [loading, setLoading] = useState(false);
+  const [iframeRefresh, setIframeRefresh] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+  const [estimate, setEstimate] = useState(0);
 
-  const start = (): void => {
+  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState(
+    "https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/"
+  );
+
+  const handleOk = (): void => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = (): void => {
+    setIsModalVisible(false);
+  };
+
+  const handlePaymentOk = (): void => {
+    setIsPaymentModalVisible(false);
+  };
+
+  const handlePaymentCancel = (): void => {
+    setIsPaymentModalVisible(false);
+  };
+
+  const handleUpgrade = () => {
     setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
+    // // ajax request after empty completing
+    // setTimeout(() => {
+    //   setSelectedRowKeys([]);
+    //   setLoading(false);
+    // }, 1000);
+
+    const abortController = new AbortController();
+    const { signal } = abortController;
+
+    const getPaymentSourcesCount = async () => {
+      try {
+        const response = fetch(`${API_URL}/chargebee/payment_source/count?id=4851`, {
+          signal,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            if (data.cards_found == 0) {
+              const getHostedPaymentMethodPage = async () => {
+                const response = fetch(`${API_URL}/chargebee/payment_source/customer/manage?id=4851`, {
+                  signal,
+                })
+                  .then((response) => response.json())
+                  .then((data2) => {
+                    setHostedPaymentMethodPageUrl(data2.url);
+                    setIframeRefresh(iframeRefresh + 1);
+                    setIsModalVisible(true);
+                    setLoading(false);
+                  });
+              };
+              getHostedPaymentMethodPage();
+            } else {
+              const getEstimate = async () => {
+                const response = fetch(`${API_URL}/chargebee/subscriptions/estimate?id=4851`, {
+                  signal,
+                })
+                  .then((response) => response.json())
+                  .then((data2) => {
+                    setEstimate(data2.amount_due / 100);
+                    setIsPaymentModalVisible(true);
+                    setLoading(false);
+                  });
+              };
+              getEstimate();
+            }
+          });
+      } catch (e) {
+        console.error(e.message);
+        setLoading(false);
+      }
+    };
+
+    getPaymentSourcesCount();
+
+    // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
+    return function cleanup() {
+      abortController.abort();
+    };
   };
 
   const onSelectChange = (selectedRowKeys): void => {
@@ -73,16 +150,27 @@ export const Members: React.FunctionComponent = () => {
   const hasSelected = selectedRowKeys.length > 0;
 
   return (
-    <div>
+    <>
       <h2>Users</h2>
       <div style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
+        <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={loading}>
           Upgrade
         </Button>
 
         <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
-    </div>
+      <Modal title="Add Card" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <iframe src={hostedPaymentMethodPageUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
+      </Modal>
+      <Modal title="Upgrade! 🎉" visible={isPaymentModalVisible} onOk={handlePaymentOk} onCancel={handlePaymentCancel}>
+        <p>Your monthly recurring payment is SGD {estimate}</p>
+        <p>By making payment, you agree to our Subscribers Terms and Conditions blah blah</p>
+        <p>
+          NOTE: After clicking Make Payment, will need to call OUR APIs to process payment for SGD 7.99 x (users
+          picked)!!
+        </p>
+      </Modal>
+    </>
   );
 };

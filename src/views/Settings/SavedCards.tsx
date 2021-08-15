@@ -20,7 +20,6 @@ export const SavedCards: React.FunctionComponent = () => {
     "https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/"
   );
   const [iframeRefresh, setIframeRefresh] = useState(0);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = (): void => {
@@ -107,34 +106,38 @@ export const SavedCards: React.FunctionComponent = () => {
         </Col>
         <Col md={24}>
           <Row>
-            {savedCards.map((card) => (
-              <Card key={card["id"]}>
-                <Row>
-                  <Col md={24}>
-                    <Title level={4}>Saved Card</Title>
-                    <Row>
-                      <Col>
-                        <Image
-                          src="https://app.fxr.one/platform/static/media/physicalCard.ac5b1e0e.svg"
-                          preview={false}
-                        />
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col md={24}>
-                    <Row>
-                      <Col md={24}>
-                        <p>{card["brand"]}</p>
-                        <p>Ending in {card["last4"]}</p>
-                        <p>
-                          Expiry {card["expiry_month"]}/{card["expiry_year"]}
-                        </p>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Card>
-            ))}
+            {savedCards ? (
+              savedCards.map((card) => (
+                <Card key={card["id"]}>
+                  <Row>
+                    <Col md={24}>
+                      <Title level={4}>Saved Card</Title>
+                      <Row>
+                        <Col>
+                          <Image
+                            src="https://app.fxr.one/platform/static/media/physicalCard.ac5b1e0e.svg"
+                            preview={false}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col md={24}>
+                      <Row>
+                        <Col md={24}>
+                          <p>{card["brand"]}</p>
+                          <p>Ending in {card["last4"]}</p>
+                          <p>
+                            Expiry {card["expiry_month"]}/{card["expiry_year"]}
+                          </p>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Card>
+              ))
+            ) : (
+              <>No saved cards found! Would you like to add one?</>
+            )}
           </Row>
         </Col>
       </Row>
