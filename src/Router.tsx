@@ -1,13 +1,13 @@
-import React from "react";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
+import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import { Profile } from "./views/Profile";
-import { Home } from "./views/Home";
-import Members from "./views/Settings/Members";
-import { NavbarTop } from "./components/UI/NavbarTop";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute";
 import { NavbarSide } from "./components/UI";
+import { NavbarTop } from "./components/UI/NavbarTop";
+import { Home } from "./views/Home";
+import { Profile } from "./views/Profile";
+import { Members } from "./views/Settings/Members";
 import { SavedCards } from "./views/Settings/SavedCards";
 
 export const Router: React.FunctionComponent = () => {

@@ -1,5 +1,5 @@
-import { useState, useEffect, FunctionComponent } from "react";
 import { Row, Col, Typography, Card, Modal, Image, Button } from "antd";
+import React, { useState, useEffect } from "react";
 import { API_URL } from "../../utils";
 
 const { Title } = Typography;
@@ -14,25 +14,24 @@ interface Card {
   last4: string;
 }
 
-const Iframe = (src) => {
-  return <iframe src={src} />;
-};
-
-export const SavedCards: FunctionComponent = () => {
+export const SavedCards: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
-  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/");
+  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState(
+    "https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/"
+  );
+  const [iframeRefresh, setIframeRefresh] = useState(0);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const showModal = () => {
+  const showModal = (): void => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleOk = (): void => {
     setIsModalVisible(false);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setIsModalVisible(false);
   };
 
@@ -40,6 +39,7 @@ export const SavedCards: FunctionComponent = () => {
     const abortController = new AbortController();
     const { signal } = abortController;
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const getSavedCards = async () => {
       try {
         const apiUrl = `${API_URL}/chargebee/payment_source/customer?id=4851`;
@@ -73,6 +73,8 @@ export const SavedCards: FunctionComponent = () => {
         });
         const data = await response.json();
         setHostedPaymentMethodPageUrl(data.url);
+        setIframeRefresh(iframeRefresh + 1);
+
         console.log(data.url);
         setIsModalVisible(true);
       } catch (e) {
@@ -86,7 +88,6 @@ export const SavedCards: FunctionComponent = () => {
     return function cleanup() {
       abortController.abort();
     };
-
   };
 
   return (
@@ -138,7 +139,7 @@ export const SavedCards: FunctionComponent = () => {
         </Col>
       </Row>
       <Modal title="Add Card" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <iframe src="https://pixely-test.chargebee.com/pages/v3/IWLnz17EscuSuqfLGZre8Z0DDl7EwCIxN/" width="500" height="800" frameBorder="0" />
+        <iframe src={hostedPaymentMethodPageUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
       </Modal>
     </>
   );

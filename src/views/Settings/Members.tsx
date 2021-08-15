@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Button, Table, Radio, Divider } from "antd";
-import { ChargeBee, _hosted_page } from "chargebee-typescript";
+import { Button, Table } from "antd";
+import React, { useState, useRef } from "react";
 
 const columns = [
+  {
+    title: "User ID",
+    dataIndex: "user_id",
+  },
   {
     title: "Name",
     dataIndex: "name",
@@ -34,6 +36,7 @@ const data: object[] = [];
 for (let i = 1; i < 30; i++) {
   data.push({
     key: i,
+    user_id: `4851FX210${i}`,
     name: `Edward King ${i}`,
     email: "king@hooli.xyz",
     invitation_date: `Jul ${i}, 2021`,
@@ -43,56 +46,43 @@ for (let i = 1; i < 30; i++) {
   });
 }
 
-class Members extends React.Component {
-  cardRef = React.createRef();
+export const Members: React.FunctionComponent = () => {
+  const cardRef = useRef();
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
+  const [loading, setLoading] = useState(false);
 
-  state = {
-    selectedRowKeys: [], // Check here to configure the default column
-    loading: false,
-  };
-
-  start = () => {
-    this.setState({ loading: true });
+  const start = (): void => {
+    setLoading(true);
     // ajax request after empty completing
     setTimeout(() => {
-      this.setState({
-        selectedRowKeys: [],
-        loading: false,
-      });
+      setSelectedRowKeys([]);
+      setLoading(false);
     }, 1000);
-
-    var chargebee = new ChargeBee();
-
-    chargebee.configure({ site: "pixely-test", api_key: "test_jumo55anql2dcJF3USOARC0964wKp8NZ" });
-    
   };
 
-  onSelectChange = (selectedRowKeys) => {
+  const onSelectChange = (selectedRowKeys): void => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
-    this.setState({ selectedRowKeys });
+    setSelectedRowKeys(selectedRowKeys);
   };
 
-  render() {
-    const { loading, selectedRowKeys } = this.state;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-    return (
-      <div>
-        <h2>Users</h2>
-        <div style={{ marginBottom: 16 }}>
-          <Button type="primary" onClick={this.start} disabled={!hasSelected} loading={loading}>
-            Upgrade
-          </Button>
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
-          <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
-        </div>
-        <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+  const hasSelected = selectedRowKeys.length > 0;
+
+  return (
+    <div>
+      <h2>Users</h2>
+      <div style={{ marginBottom: 16 }}>
+        <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
+          Upgrade
+        </Button>
+
+        <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
       </div>
-    );
-  }
-}
-
-export default Members;
+      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+    </div>
+  );
+};
