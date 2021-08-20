@@ -1,6 +1,6 @@
-import { FunctionComponent } from "react";
-import { useHistory } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
+import React, { FunctionComponent } from "react";
+import { useHistory } from "react-router-dom";
 
 export const Auth0ProviderWithHistory: FunctionComponent = ({ children }) => {
   const domain = process.env.REACT_APP_AUTH0_DOMAIN;
