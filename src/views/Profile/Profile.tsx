@@ -1,6 +1,6 @@
-import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Avatar from "antd/lib/avatar/avatar";
+import React from "react";
 
 export const Profile: React.FunctionComponent = () => {
   const { user } = useAuth0();
@@ -12,4 +12,4 @@ export const Profile: React.FunctionComponent = () => {
       <Avatar size={64} src={user?.picture} />
     </div>
   );
-}
+};

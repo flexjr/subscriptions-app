@@ -3,10 +3,10 @@ import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import { NavbarSide } from "./components/UI";
+import { Members } from "./views/CompanySettings/Members";
+import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
 import { Profile } from "./views/Profile";
-import { Members } from "./views/Settings/Members";
-import { SavedCards } from "./views/Settings/SavedCards";
 
 export const Router: React.FunctionComponent = () => {
   return (

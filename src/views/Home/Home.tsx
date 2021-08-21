@@ -1,9 +1,9 @@
-import { FunctionComponent } from "react";
 import { Row, Col, Typography, Card, Divider, Image } from "antd";
+import React from "react";
 
 const { Title } = Typography;
 
-export const Home: FunctionComponent = () => (
+export const Home: React.FunctionComponent = () => (
   <>
     <Row>
       <Col md={24}>
@@ -16,11 +16,11 @@ export const Home: FunctionComponent = () => (
           <Row>
             <Col md={14}>
               <Title level={4}>Company Cards Overview</Title>
-              <Row style={{marginRight: 580}}>
+              <Row style={{ marginRight: 580 }}>
                 <Col>
                   <Image src="https://app.fxr.one/platform/static/media/physicalCard.ac5b1e0e.svg" preview={false} />
                 </Col>
-                <Col style={{margin: "auto"}}>
+                <Col style={{ margin: "auto" }}>
                   <p>Physical Cards (1)</p>
                 </Col>
               </Row>
@@ -28,7 +28,7 @@ export const Home: FunctionComponent = () => (
             <Col md={10}>
               <Row>
                 <Col md={1}>
-                  <Divider type="vertical" style={{height: "100%"}} />
+                  <Divider type="vertical" style={{ height: "100%" }} />
                 </Col>
                 <Col md={23}>
                   <Title level={4}>Quick Actions</Title>

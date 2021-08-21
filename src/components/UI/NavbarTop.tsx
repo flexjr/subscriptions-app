@@ -1,10 +1,10 @@
-import { FunctionComponent, useState } from "react";
-import { Header } from "antd/lib/layout/layout";
-import { Menu } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Menu } from "antd";
+import { Header } from "antd/lib/layout/layout";
+import React from "react";
 import { Link } from "react-router-dom";
 
-const LoginButton = ({ ...props }) => {
+const LoginButton: React.FunctionComponent = () => {
   const { loginWithRedirect } = useAuth0();
   return (
     <Menu.Item key="login" style={{ float: "right" }} onClick={() => loginWithRedirect()}>
@@ -13,7 +13,7 @@ const LoginButton = ({ ...props }) => {
   );
 };
 
-const LogoutButton = ({ ...props }) => {
+const LogoutButton: React.FunctionComponent = () => {
   const { logout } = useAuth0();
   return (
     <Menu.Item
@@ -30,13 +30,13 @@ const LogoutButton = ({ ...props }) => {
   );
 };
 
-const AuthenticationButton = ({ ...props }) => {
+const AuthenticationButton: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
 
   return isAuthenticated ? <LogoutButton /> : <LoginButton />;
 };
 
-const ProfileButton = () => {
+const ProfileButton: React.FunctionComponent = () => {
   return (
     <Menu.Item key="profile">
       <Link to="/profile">Profile</Link>
@@ -44,7 +44,7 @@ const ProfileButton = () => {
   );
 };
 
-const TeamMembersButton = () => {
+const TeamMembersButton: React.FunctionComponent = () => {
   return (
     <Menu.Item key="teamMembers">
       <Link to="/platform/organization/members">Team Members</Link>
@@ -52,7 +52,7 @@ const TeamMembersButton = () => {
   );
 };
 
-const AuthenticatedGroupButtons = () => {
+const AuthenticatedGroupButtons: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
   return isAuthenticated ? (
     <>
@@ -64,7 +64,7 @@ const AuthenticatedGroupButtons = () => {
   );
 };
 
-export const NavbarTop: FunctionComponent = () => {
+export const NavbarTop: React.FunctionComponent = () => {
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["home"]}>
