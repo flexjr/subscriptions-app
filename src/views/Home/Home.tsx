@@ -1,3 +1,4 @@
+import { url } from "inspector";
 import { Row, Col, Typography, Card, Divider, Image } from "antd";
 import React from "react";
 
@@ -8,6 +9,50 @@ export const Home: React.FunctionComponent = () => (
     <Row>
       <Col md={24}>
         <Title level={3}>Home</Title>
+      </Col>
+    </Row>
+    <Row
+      style={{
+        marginBottom: "16px",
+      }}
+    >
+      <Col md={24}>
+        <Card
+          style={{
+            background:
+              "left center / cover no-repeat rgb(26, 40, 49) url(https://app.fxr.one/platform/static/media/wave1366.ac1b871c.svg)",
+            borderRadius: "10px",
+          }}
+        >
+          <Row>
+            <Col md={24}>
+              <p
+                style={{
+                  color: "rgb(255, 255, 255)",
+                  fontSize: "1.375em",
+                }}
+              >
+                Total Available Funds
+              </p>
+              <p
+                style={{
+                  color: "rgb(173, 210, 200)",
+                  fontSize: "1.125em",
+                }}
+              >
+                Flex Plus Credit
+              </p>
+              <p
+                style={{
+                  color: "rgb(173, 210, 200)",
+                  fontSize: "1.125em",
+                }}
+              >
+                Business Account
+              </p>
+            </Col>
+          </Row>
+        </Card>
       </Col>
     </Row>
     <Row>

@@ -1,6 +1,7 @@
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { ProtectedRoute } from "./components/Auth";
 
 import { NavbarSide } from "./components/UI";
 import { Members } from "./views/CompanySettings/Members";
@@ -11,16 +12,16 @@ import { Profile } from "./views/Profile";
 export const Router: React.FunctionComponent = () => {
   return (
     <BrowserRouter>
-      <Layout className="layout" style={{ marginLeft: 200 }}>
+      <Layout className="layout" style={{ marginLeft: 260 }}>
         <NavbarSide />
-        <Content style={{ padding: "16px 32px" }}>
+        <Content style={{ padding: "38px" }}>
           <Switch>
             <Route exact path="/">
               <Home />
             </Route>
-            <Route exact path="/profile">
+            <ProtectedRoute exact path="/platform/user/profile">
               <Profile />
-            </Route>
+            </ProtectedRoute>
             <Route exact={true} path="/platform/organization/members">
               <Members />
             </Route>

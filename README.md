@@ -1,4 +1,6 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/45482a42-8274-44a7-aa47-ad785436314d/deploy-status)](https://app.netlify.com/sites/flexjr/deploys)
+# Flex Jr's Subscriptions Proof-of-Concept
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/46aab2c0-2da6-4c0c-b6ae-fc94420cd798/deploy-status)](https://app.netlify.com/sites/flexjr/deploys)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

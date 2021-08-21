@@ -22,6 +22,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         position: "fixed",
         left: 0,
       }}
+      width="260px"
     >
       <Logo />
       <Menu theme="dark" mode="inline" defaultSelectedKeys={["home"]}>

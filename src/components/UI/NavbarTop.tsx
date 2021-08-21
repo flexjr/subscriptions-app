@@ -64,6 +64,10 @@ const AuthenticatedGroupButtons: React.FunctionComponent = () => {
   );
 };
 
+/*
+ * Not in use. Currently following app.fxr.one which uses NavbarSide.
+ */
+
 export const NavbarTop: React.FunctionComponent = () => {
   return (
     <Header>
