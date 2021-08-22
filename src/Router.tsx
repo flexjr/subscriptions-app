@@ -7,7 +7,8 @@ import { NavbarSide } from "./components/UI";
 import { Members } from "./views/CompanySettings/Members";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
-import { Profile } from "./views/Profile";
+import { Onboarding } from "./views/Onboarding.tsx";
+import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {
   return (
@@ -19,15 +20,18 @@ export const Router: React.FunctionComponent = () => {
             <Route exact path="/">
               <Home />
             </Route>
-            <ProtectedRoute exact path="/platform/user/profile">
-              <Profile />
+            <ProtectedRoute exact path="/onboarding">
+              <Onboarding />
             </ProtectedRoute>
-            <Route exact={true} path="/platform/organization/members">
+            <ProtectedRoute exact path="/platform/organization/members">
               <Members />
-            </Route>
-            <Route exact={true} path="/platform/organization/saved_cards">
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/platform/organization/saved_cards">
               <SavedCards />
-            </Route>
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/platform/user/profile">
+              <UserSettings />
+            </ProtectedRoute>
           </Switch>
           <Footer style={{ textAlign: "center" }}>
             <p>

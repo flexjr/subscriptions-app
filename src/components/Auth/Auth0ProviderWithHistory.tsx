@@ -2,7 +2,15 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-export const Auth0ProviderWithHistory: React.FunctionComponent = ({ children }) => {
+interface Props {
+  domain: string;
+  clientId: string;
+  redirectUri?: string;
+  onRedirectCallback?: string;
+  useRefreshTokens?: boolean;
+}
+
+export const Auth0ProviderWithHistory: React.FunctionComponent<Props> = ({ useRefreshTokens, children }) => {
   const domain = process.env.REACT_APP_AUTH0_DOMAIN;
   const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
@@ -18,6 +26,7 @@ export const Auth0ProviderWithHistory: React.FunctionComponent = ({ children }) 
       clientId={clientId as string}
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
+      useRefreshTokens={useRefreshTokens}
     >
       {children}
     </Auth0Provider>
