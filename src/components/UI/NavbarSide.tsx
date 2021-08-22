@@ -22,19 +22,13 @@ export const NavbarSide: React.FunctionComponent = () => {
         position: "fixed",
         left: 0,
       }}
+      width="260px"
     >
       <Logo />
       <Menu theme="dark" mode="inline" defaultSelectedKeys={["home"]}>
         <Menu.Item key="home">
           <Link to="/">Home</Link>
         </Menu.Item>
-        {isAuthenticated ? (
-          <Menu.Item key="profile">
-            <Link to="/profile">Profile</Link>
-          </Menu.Item>
-        ) : (
-          <></>
-        )}
         {isAuthenticated ? (
           <Menu.Item key="teamMembers">
             <Link to="/platform/organization/members">My Subscriptions</Link>
@@ -45,6 +39,14 @@ export const NavbarSide: React.FunctionComponent = () => {
         {isAuthenticated ? (
           <Menu.Item key="savedCards">
             <Link to="/platform/organization/saved_cards">Payment Methods</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="profile">
+            <Link to="/platform/user/profile">User Profile</Link>
           </Menu.Item>
         ) : (
           <></>

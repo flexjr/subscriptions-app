@@ -1,3 +1,5 @@
+const CracoLessPlugin = require("craco-less");
+
 // use craco until https://github.com/facebook/create-react-app/issues/9887 is fixed
 // if not, RJ will resign
 module.exports = {
@@ -10,4 +12,16 @@ module.exports = {
       return webpackConfig;
     },
   },
+  plugins: [
+    {
+      plugin: CracoLessPlugin,
+      options: {
+        lessLoaderOptions: {
+          lessOptions: {
+            javascriptEnabled: true,
+          },
+        },
+      },
+    },
+  ],
 };

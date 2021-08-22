@@ -3,7 +3,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/react";
 import styled from "@emotion/styled";
-import { FunctionComponent, useState } from "react";
+import React, { useState } from "react";
 
 interface CounterProps {
   /** Initial counter value */
@@ -36,7 +36,7 @@ const StyledButton = styled.button`
 /**
  * Use `Counter` to embed a simple counter into your awesome application. It provides 2 buttons to increment / decrement counter value as well as an initial optional value.
  */
-export const Counter: FunctionComponent<CounterProps> = ({ initialValue = 0 }) => {
+export const Counter: React.FunctionComponent<CounterProps> = ({ initialValue = 0 }) => {
   const [counter, setCounter] = useState(initialValue);
   return (
     <div className="flex flex-col items-center counter">
