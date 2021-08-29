@@ -7,7 +7,7 @@ import { NavbarSide } from "./components/UI";
 import { Members } from "./views/CompanySettings/Members";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
-import { Onboarding } from "./views/Onboarding.tsx";
+import { Onboarding } from "./views/Onboarding";
 import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {

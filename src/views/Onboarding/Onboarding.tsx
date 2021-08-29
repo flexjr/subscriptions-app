@@ -1,8 +1,7 @@
 import { RightOutlined } from "@ant-design/icons";
 import { Row, Col, Typography, Form, Input, Button } from "antd";
-
 import React from "react";
-import { API_URL } from "../../utils";
+import { API_URL, AUTH0_DOMAIN } from "../../utils";
 
 const { Title } = Typography;
 
@@ -32,13 +31,16 @@ export const Onboarding: React.FunctionComponent = () => {
           body: JSON.stringify(values), // POST-ed data
         });
         const data = await response.json();
-        console.log(data);
+        return data;
       } catch (e) {
         console.error(e.message);
       }
     };
 
-    postOnboardingData();
+    postOnboardingData().then(() => {
+      const state = params.get("state");
+      window.location.href = `${AUTH0_DOMAIN}/continue?state=${state}`;
+    });
 
     // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
     return function cleanup() {
