@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Modal } from "antd";
+import { Button, Table, Modal, Row } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
@@ -38,6 +38,9 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("");
   const [manageSubscriptionsUrl, setManageSubscriptionsUrl] = useState("");
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
+  const [currentOrgInfo, setCurrentOrgInfo] = useState({
+    companyname: "⌛...",
+  });
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
@@ -74,6 +77,29 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
     getCurrentOrgUsers();
 
+    const getOrgInfo = async () => {
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "read:current_user openid profile email",
+      });
+
+      try {
+        const apiUrl = `${API_URL}/organizations/current_org`;
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          signal,
+        });
+        const data = await response.json();
+        setCurrentOrgInfo(data["data"][0]);
+      } catch (e) {
+        console.error(e.message);
+      }
+    };
+
+    getOrgInfo();
+
     // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
     return function cleanup() {
       abortController.abort();
@@ -106,11 +132,6 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   const handleUpgrade = () => {
     setLoading(true);
-    // // ajax request after empty completing
-    // setTimeout(() => {
-    //   setSelectedRowKeys([]);
-    //   setLoading(false);
-    // }, 1000);
 
     const abortController = new AbortController();
     const { signal } = abortController;
@@ -208,8 +229,26 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>Users</h2>
-      <div style={{ marginBottom: 16 }}>
+      <h2>My Organization’s Subscriptions</h2>
+      <div
+        style={{
+          backgroundImage: "url(https://app.fxr.one/flex/static/media/company-name-background.5dd40cbe.svg)",
+          fontWeight: "bold",
+          fontSize: "22px",
+          color: "rgb(255, 255, 255)",
+          padding: "34px",
+          lineHeight: "32px",
+          letterSpacing: "0.5px",
+          borderRadius: "10px",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "auto",
+          backgroundPosition: "100% 0",
+          backgroundColor: "rgb(26, 40, 49)",
+        }}
+      >
+        {currentOrgInfo?.companyname}
+      </div>
+      <div style={{ marginTop: 16, marginBottom: 16 }}>
         <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={loading}>
           Upgrade
         </Button>{" "}
