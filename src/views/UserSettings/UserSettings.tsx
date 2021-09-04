@@ -5,7 +5,7 @@ import Avatar from "antd/lib/avatar/avatar";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { API_URL } from "../../utils";
+import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -42,7 +42,7 @@ const UserDetails: React.FunctionComponent = () => {
 };
 
 export const UserSettings: React.FunctionComponent = () => {
-  const { user, getIdTokenClaims } = useAuth0();
+  const { user, getIdTokenClaims, getAccessTokenSilently } = useAuth0();
   const [additionalUserInfo, setAdditionalUserInfo] = useState({
     id: -1 as number,
     email: "" as string,
@@ -58,16 +58,22 @@ export const UserSettings: React.FunctionComponent = () => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const getSavedCards = async () => {
       try {
-        const idToken = await (await getIdTokenClaims()).__raw;
+        // const idToken = await (await getIdTokenClaims()).__raw;
+        const accessToken = await getAccessTokenSilently({
+          audience: AUTH0_API_AUDIENCE,
+          scope: "read:current_user openid profile email",
+        });
+        console.log(accessToken);
         const apiUrl = `${API_URL}/users/current_user_details`;
         const response = await fetch(apiUrl, {
           headers: {
-            Authorization: `Bearer ${idToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           signal,
         });
         const data = await response.json();
         setAdditionalUserInfo(data.data[0]);
+        console.log(data.data[0]);
       } catch (e) {
         console.error(e.message);
       }
@@ -79,7 +85,7 @@ export const UserSettings: React.FunctionComponent = () => {
     return function cleanup() {
       abortController.abort();
     };
-  }, [getIdTokenClaims]);
+  }, [getAccessTokenSilently, getIdTokenClaims]);
 
   return (
     <>
