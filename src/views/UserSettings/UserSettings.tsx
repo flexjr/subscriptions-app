@@ -42,7 +42,7 @@ const UserDetails: React.FunctionComponent = () => {
 };
 
 export const UserSettings: React.FunctionComponent = () => {
-  const { user, getIdTokenClaims, getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently } = useAuth0();
   const [additionalUserInfo, setAdditionalUserInfo] = useState({
     id: -1 as number,
     email: "" as string,
@@ -58,13 +58,12 @@ export const UserSettings: React.FunctionComponent = () => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const getSavedCards = async () => {
       try {
-        // const idToken = await (await getIdTokenClaims()).__raw;
         const accessToken = await getAccessTokenSilently({
           audience: AUTH0_API_AUDIENCE,
           scope: "read:current_user openid profile email",
         });
         console.log(accessToken);
-        const apiUrl = `${API_URL}/users/current_user_details`;
+        const apiUrl = `${API_URL}/users/current_user_info`;
         const response = await fetch(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -85,7 +84,7 @@ export const UserSettings: React.FunctionComponent = () => {
     return function cleanup() {
       abortController.abort();
     };
-  }, [getAccessTokenSilently, getIdTokenClaims]);
+  }, [getAccessTokenSilently]);
 
   return (
     <>

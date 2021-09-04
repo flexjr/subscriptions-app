@@ -1,19 +1,15 @@
 import { Selector } from "testcafe";
 
-fixture("Counter Game").page`http://localhost:3000`;
+fixture("Login Page (/)").page`http://localhost:3000`;
 
-const Counter = Selector(".counter div").nth(0);
-const Increment = Selector(".counter button").nth(0);
-const Decrement = Selector(".counter button").nth(1);
+const LoginTitle = Selector("Title").nth(0);
+const LoginButton = Selector("Button").nth(0);
+const BuildLabel = Selector("p").nth(0);
 
-test("Custom certificate is rendered correctly", async (t) => {
-  await t.expect(Counter.textContent).eql("Counter: 0");
-  await t.click(Increment);
-  await t.click(Increment);
-  await t.click(Increment);
-  await t.click(Increment);
-  await t.expect(Counter.textContent).eql("Counter: 4");
-  await t.click(Decrement);
-  await t.click(Decrement);
-  await t.expect(Counter.textContent).eql("Counter: 2");
+test("Login page is rendered correctly", async (t) => {
+  await t.click(LoginButton);
+
+  await t.expect(LoginTitle.textContent).eql("Welcome back to Flex!");
+  await t.expect(LoginButton.textContent).eql("Welcome back to Flex!");
+  await t.expect(BuildLabel.textContent).contains("Build v1.0.0-");
 });

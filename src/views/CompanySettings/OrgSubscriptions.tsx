@@ -1,65 +1,84 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { Button, Table, Modal } from "antd";
 import React, { useState } from "react";
-import { API_URL } from "../../utils";
+import { useEffect } from "react";
+import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 
 const columns = [
   {
     title: "User ID",
-    dataIndex: "user_id",
+    dataIndex: "name",
   },
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "First Name",
+    dataIndex: "firstname",
+  },
+  {
+    title: "Last Name",
+    dataIndex: "lastname",
   },
   {
     title: "Member's Email",
     dataIndex: "email",
   },
   {
-    title: "Invitation Sent On",
-    dataIndex: "invitation_date",
-  },
-  {
-    title: "Account Status",
-    dataIndex: "account_status",
-  },
-  {
     title: "Plan Type",
     dataIndex: "subscription_plan",
   },
-  {
-    title: "Actions",
-    dataIndex: "actions",
-  },
 ];
 
-const data: object[] = [];
-for (let i = 1; i < 30; i++) {
-  data.push({
-    key: i,
-    user_id: `4851FX210${i}`,
-    name: `Edward King ${i}`,
-    email: "king@hooli.xyz",
-    invitation_date: `Jul ${i}, 2021`,
-    account_status: "Active",
-    subscription_plan: "Flex Starter",
-    actions: "",
-  });
-}
-
-export const Members: React.FunctionComponent = () => {
+export const OrgSubscriptions: React.FunctionComponent = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
   const [loading, setLoading] = useState(false);
   const [iframeRefresh, setIframeRefresh] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
   const [isManageSubscriptionsModalVisible, setIsManageSubscriptionsModalVisible] = useState(false);
-
   const [estimate, setEstimate] = useState(0);
-
   const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("");
-
   const [manageSubscriptionsUrl, setManageSubscriptionsUrl] = useState("");
+  const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
+  const { getAccessTokenSilently } = useAuth0();
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const getCurrentOrgUsers = async () => {
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "read:current_user openid profile email",
+      });
+
+      try {
+        const apiUrl = `${API_URL}/organizations/current_org_users`;
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          signal,
+        });
+        const data = await response.json();
+        const users = data["data"];
+        for (let i = 0; i < users.length; i++) {
+          users[i].key = users[i].userid;
+          users[i].subscription_plan = "Flex Starter";
+        }
+        console.log(users);
+        setCurrentOrgUsers(users);
+      } catch (e) {
+        console.error(e.message);
+      }
+    };
+
+    getCurrentOrgUsers();
+
+    // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [getAccessTokenSilently]);
 
   const handleOk = (): void => {
     setIsModalVisible(false);
@@ -200,7 +219,7 @@ export const Members: React.FunctionComponent = () => {
         </Button>
         <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />
       <Modal title="Add Card" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <iframe src={hostedPaymentMethodPageUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
       </Modal>

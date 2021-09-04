@@ -5,7 +5,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { ProtectedRoute } from "./components/Auth";
 
 import { LoginSide, NavbarSide } from "./components/UI";
-import { Members } from "./views/CompanySettings/Members";
+import { OrgSubscriptions } from "./views/CompanySettings/OrgSubscriptions";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
@@ -31,8 +31,8 @@ export const Router: React.FunctionComponent = () => {
             <Route exact path="/onboarding">
               <Onboarding />
             </Route>
-            <ProtectedRoute exact path="/platform/organization/members">
-              <Members />
+            <ProtectedRoute exact path="/platform/organization/subscriptions">
+              <OrgSubscriptions />
             </ProtectedRoute>
             <ProtectedRoute exact path="/platform/organization/saved_cards">
               <SavedCards />
@@ -42,7 +42,7 @@ export const Router: React.FunctionComponent = () => {
             </ProtectedRoute>
           </Switch>
           <Footer style={{ textAlign: "center" }}>
-            <p>
+            <p id="build-label">
               Build v1.0.0-
               <a href="https://github.com/flexjr/subscriptions-app" target="_blank" rel="noopener noreferrer">
                 {process.env.REACT_APP_COMMIT_REF?.substring(0, 7)}
