@@ -1,28 +1,36 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { ProtectedRoute } from "./components/Auth";
 
-import { NavbarSide } from "./components/UI";
+import { LoginSide, NavbarSide } from "./components/UI";
 import { Members } from "./views/CompanySettings/Members";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
+import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
 import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {
+  const { isAuthenticated } = useAuth0();
+  const marginLeftIfLoggedOut = isAuthenticated ? 260 : 359;
+
   return (
     <BrowserRouter>
-      <Layout className="layout" style={{ marginLeft: 260 }}>
-        <NavbarSide />
+      <Layout className="layout" style={{ marginLeft: marginLeftIfLoggedOut, minHeight: "100vh" }}>
+        {isAuthenticated ? <NavbarSide /> : <LoginSide />}
         <Content style={{ padding: "38px" }}>
           <Switch>
             <Route exact path="/">
+              <Login />
+            </Route>
+            <Route exact path="/home">
               <Home />
             </Route>
-            <ProtectedRoute exact path="/onboarding">
+            <Route exact path="/onboarding">
               <Onboarding />
-            </ProtectedRoute>
+            </Route>
             <ProtectedRoute exact path="/platform/organization/members">
               <Members />
             </ProtectedRoute>
