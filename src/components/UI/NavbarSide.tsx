@@ -31,7 +31,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         </Menu.Item>
         {isAuthenticated ? (
           <Menu.Item key="teamMembers">
-            <Link to="/platform/organization/members">My Subscriptions</Link>
+            <Link to="/platform/organization/subscriptions">My Org's Subscriptions</Link>
           </Menu.Item>
         ) : (
           <></>
