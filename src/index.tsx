@@ -2,11 +2,13 @@ import { AppState, Auth0Provider } from "@auth0/auth0-react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
 // it will fail in the ci because the file may not exist => disabled
 // eslint-disable-next-line import/no-unresolved
 // import "./index.css";
 import { App, history } from "./App";
-import { store } from "./app/store";
+import { initialState, reducer } from "./store/reducer";
 
 const onRedirectCallback = (appState: AppState) => {
   // If using a Hash Router, you need to use window.history.replaceState to
@@ -14,6 +16,9 @@ const onRedirectCallback = (appState: AppState) => {
   // window.history.replaceState({}, document.title, window.location.pathname);
   history.replace((appState && appState.returnTo) || window.location.pathname);
 };
+
+const store = createStore(reducer, initialState, applyMiddleware(thunk));
+
 
 ReactDOM.render(
   <React.StrictMode>
