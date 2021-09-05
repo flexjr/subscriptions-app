@@ -136,13 +136,11 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
     const abortController = new AbortController();
     const { signal } = abortController;
 
-    console.log(selectedRowKeys);
-
     setLoading(true);
     setTimeout(
       () =>
         history.push({
-          pathname: "/platform/subscription/checkout",
+          pathname: "/platform/subscription/checkout/plan_selection",
           state: {
             userIds: selectedRowKeys,
           },

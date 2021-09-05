@@ -53,8 +53,24 @@ export const NavbarSide: React.FunctionComponent = () => {
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout">
-            <Link to="/platform/subscription/checkout">! Checkout</Link>
+          <Menu.Item key="checkout/plan_selection">
+            <Link to="/platform/subscription/checkout/plan_selection">❗ Checkout Plan Selection</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="checkout/billing_frequency">
+            <Link to="/platform/subscription/checkout/billing_frequency">❗ Checkout Billing Frequency</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="checkout/summary">
+            <Link to="/platform/subscription/checkout/summary">❗ Checkout Summary</Link>
           </Menu.Item>
         ) : (
           <></>

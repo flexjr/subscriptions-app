@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { Button, Table, Modal, Row, Card, Col } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 
 const GreenCheckedOutline = styled(CheckOutlined)`
@@ -19,18 +19,62 @@ interface stateType {
   userIds?: any;
 }
 
-export const Checkout: React.FunctionComponent = () => {
+export const CheckoutPlanSelection: React.FunctionComponent = () => {
+  const history = useHistory();
   const location = useLocation<stateType>();
+  const [loading, setLoading] = useState(false);
+  const { getAccessTokenSilently } = useAuth0();
+
   const userIds = location.state?.userIds;
 
-  // If userIds does not exist, then redirect back...
+  // TODO: If userIds does not exist, then redirect back...
 
   const handleUpgrade = (subscriptionPlanType: string): void => {
+    console.log(userIds, subscriptionPlanType);
+    setLoading(true);
+    setTimeout(
+      () =>
+        history.push({
+          pathname: "/platform/subscription/checkout/billing_frequency",
+          state: {
+            userIds: userIds,
+            subscriptionPlanType: subscriptionPlanType,
+          },
+        }),
+      1000
+    );
+  };
+
+  useEffect(() => {
     const abortController = new AbortController();
     const { signal } = abortController;
 
-    console.log(userIds, subscriptionPlanType);
-  };
+    const createChargebeeCustomerIfNotExists = async () => {
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "read:current_user openid profile email",
+      });
+
+      try {
+        const apiUrl = `${API_URL}/subscriptions/chargebee_customer`;
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${accessToken}`, // So that our API will know who's calling it :)
+            "Content-Type": "application/json",
+          },
+          signal,
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (e) {
+        console.error(e.message);
+      }
+    };
+
+    createChargebeeCustomerIfNotExists();
+  }, [getAccessTokenSilently]);
 
   return (
     <>
@@ -51,7 +95,7 @@ export const Checkout: React.FunctionComponent = () => {
           backgroundColor: "rgb(26, 40, 49)",
         }}
       >
-        Select your shiny new plan!
+        Select your shiny new plan! 🎉
       </div>
 
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
@@ -96,7 +140,7 @@ export const Checkout: React.FunctionComponent = () => {
               bordered={false}
               extra={<>$7.99 per user per month</>}
               actions={[
-                <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("Flex Pro")}>
+                <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("FLEX_PRO")} loading={loading}>
                   Upgrade
                 </Button>,
               ]}
