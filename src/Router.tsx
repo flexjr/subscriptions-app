@@ -10,7 +10,7 @@ import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
-import { Checkout } from "./views/Subscriptions";
+import { CheckoutBillingFrequency, CheckoutPlanSelection, CheckoutSummary } from "./views/Subscriptions";
 import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {
@@ -41,8 +41,14 @@ export const Router: React.FunctionComponent = () => {
             <ProtectedRoute exact path="/platform/user/profile">
               <UserSettings />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout">
-              <Checkout />
+            <ProtectedRoute exact path="/platform/subscription/checkout/plan_selection">
+              <CheckoutPlanSelection />
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/platform/subscription/checkout/billing_frequency">
+              <CheckoutBillingFrequency />
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/platform/subscription/checkout/summary">
+              <CheckoutSummary />
             </ProtectedRoute>
           </Switch>
           <Footer style={{ textAlign: "center" }}>
