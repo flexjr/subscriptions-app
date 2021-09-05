@@ -81,6 +81,26 @@ export const Onboarding: React.FunctionComponent = () => {
                   onFinishFailed={onFinishFailed}
                 >
                   <Row>
+                    <Col md={24}>
+                      <Form.Item
+                        label="Company Name"
+                        name="companyName"
+                        initialValue="Example Co Pte Ltd"
+                        rules={[{ required: true, message: "This field is required" }]}
+                      >
+                        <Input placeholder="Enter Company Name e.g. Example Co Pte Ltd" />
+                      </Form.Item>
+                    </Col>
+                    <Col md={24}>
+                      <Form.Item
+                        label="UEN"
+                        name="crn"
+                        initialValue="202106812A"
+                        rules={[{ required: true, message: "This field is required" }]}
+                      >
+                        <Input placeholder="Enter Company Name e.g. Example Co Pte Ltd" />
+                      </Form.Item>
+                    </Col>
                     <Col
                       md={12}
                       style={{
@@ -107,6 +127,16 @@ export const Onboarding: React.FunctionComponent = () => {
                         rules={[{ required: true, message: "This field is required" }]}
                       >
                         <Input placeholder="Enter Last Name" />
+                      </Form.Item>
+                    </Col>
+                    <Col md={24}>
+                      <Form.Item
+                        label="Mobile Number"
+                        name="mobile"
+                        initialValue="+6591234567"
+                        rules={[{ required: true, message: "This field is required" }]}
+                      >
+                        <Input placeholder="Enter Mobile Number" />
                       </Form.Item>
                     </Col>
                   </Row>

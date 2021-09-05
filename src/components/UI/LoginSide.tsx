@@ -1,13 +1,6 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import styled from "@emotion/styled";
-import { Layout, Menu } from "antd";
 import React from "react";
-import { Link } from "react-router-dom";
-
-const { Sider } = Layout;
 
 export const LoginSide: React.FunctionComponent = () => {
-  const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
   return (
     <div
       style={{
