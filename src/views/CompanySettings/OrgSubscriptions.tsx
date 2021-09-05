@@ -65,7 +65,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
         const data = await response.json();
         const users = data["data"];
         for (let i = 0; i < users.length; i++) {
-          users[i].key = users[i].userid;
+          users[i].key = users[i].name;
           users[i].subscription_plan = "Flex Starter";
         }
         console.log(users);
@@ -136,50 +136,52 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
     const abortController = new AbortController();
     const { signal } = abortController;
 
-    const getPaymentSourcesCount = async () => {
-      try {
-        const response = fetch(`${API_URL}/chargebee/payment_source/count?id=4851`, {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            if (data.cards_found == 0) {
-              const getHostedPaymentMethodPage = async () => {
-                const response = fetch(`${API_URL}/chargebee/payment_source/customer/manage?id=4851`, {
-                  signal,
-                })
-                  .then((response) => response.json())
-                  .then((data2) => {
-                    setHostedPaymentMethodPageUrl(data2.url);
-                    setIframeRefresh(iframeRefresh + 1);
-                    setIsModalVisible(true);
-                    setLoading(false);
-                  });
-              };
-              getHostedPaymentMethodPage();
-            } else {
-              const getEstimate = async () => {
-                const response = fetch(`${API_URL}/chargebee/subscriptions/estimate?id=4851`, {
-                  signal,
-                })
-                  .then((response) => response.json())
-                  .then((data2) => {
-                    setEstimate(data2.amount_due / 100);
-                    setIsPaymentModalVisible(true);
-                    setLoading(false);
-                  });
-              };
-              getEstimate();
-            }
-          });
-      } catch (e) {
-        console.error(e.message);
-        setLoading(false);
-      }
-    };
+    console.log(selectedRowKeys);
 
-    getPaymentSourcesCount();
+    // const getPaymentSourcesCount = async () => {
+    //   try {
+    //     const response = fetch(`${API_URL}/chargebee/payment_source/count?id=4851`, {
+    //       signal,
+    //     })
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         console.log(data);
+    //         if (data.cards_found == 0) {
+    //           const getHostedPaymentMethodPage = async () => {
+    //             const response = fetch(`${API_URL}/chargebee/payment_source/customer/manage?id=4851`, {
+    //               signal,
+    //             })
+    //               .then((response) => response.json())
+    //               .then((data2) => {
+    //                 setHostedPaymentMethodPageUrl(data2.url);
+    //                 setIframeRefresh(iframeRefresh + 1);
+    //                 setIsModalVisible(true);
+    //                 setLoading(false);
+    //               });
+    //           };
+    //           getHostedPaymentMethodPage();
+    //         } else {
+    //           const getEstimate = async () => {
+    //             const response = fetch(`${API_URL}/chargebee/subscriptions/estimate?id=4851`, {
+    //               signal,
+    //             })
+    //               .then((response) => response.json())
+    //               .then((data2) => {
+    //                 setEstimate(data2.amount_due / 100);
+    //                 setIsPaymentModalVisible(true);
+    //                 setLoading(false);
+    //               });
+    //           };
+    //           getEstimate();
+    //         }
+    //       });
+    //   } catch (e) {
+    //     console.error(e.message);
+    //     setLoading(false);
+    //   }
+    // };
+
+    // getPaymentSourcesCount();
 
     // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
     return function cleanup() {

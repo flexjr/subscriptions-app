@@ -53,6 +53,14 @@ export const NavbarSide: React.FunctionComponent = () => {
         )}
 
         {isAuthenticated ? (
+          <Menu.Item key="checkout">
+            <Link to="/platform/subscription/checkout">! Checkout</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
           <Menu.Item
             key="logout"
             style={{ float: "right" }}
