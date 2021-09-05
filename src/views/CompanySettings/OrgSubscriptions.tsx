@@ -2,6 +2,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Button, Table, Modal, Row } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { store } from "../../store/store";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 
 const columns = [
@@ -28,6 +30,7 @@ const columns = [
 ];
 
 export const OrgSubscriptions: React.FunctionComponent = () => {
+  const history = useHistory();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
   const [loading, setLoading] = useState(false);
   const [iframeRefresh, setIframeRefresh] = useState(0);
@@ -130,12 +133,22 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   };
 
   const handleUpgrade = () => {
-    setLoading(true);
-
     const abortController = new AbortController();
     const { signal } = abortController;
 
     console.log(selectedRowKeys);
+
+    setLoading(true);
+    setTimeout(
+      () =>
+        history.push({
+          pathname: "/platform/subscription/checkout",
+          state: {
+            userIds: selectedRowKeys,
+          },
+        }),
+      1000
+    );
 
     // const getPaymentSourcesCount = async () => {
     //   try {

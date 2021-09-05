@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { Button, Table, Modal, Row, Card, Col } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 
 const GreenCheckedOutline = styled(CheckOutlined)`
@@ -14,7 +15,23 @@ const RedCloseOutlined = styled(CloseOutlined)`
   color: #f5222d;
 `;
 
+interface stateType {
+  userIds?: any;
+}
+
 export const Checkout: React.FunctionComponent = () => {
+  const location = useLocation<stateType>();
+  const userIds = location.state?.userIds;
+
+  // If userIds does not exist, then redirect back...
+
+  const handleUpgrade = (subscriptionPlanType: string): void => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+
+    console.log(userIds, subscriptionPlanType);
+  };
+
   return (
     <>
       <h2>Checkout</h2>
@@ -60,7 +77,7 @@ export const Checkout: React.FunctionComponent = () => {
                 <GreenCheckedOutline /> Accounting Software Integrations
               </div>
               <div>
-                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Cline
+                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Line
               </div>
               <div>
                 <GreenCheckedOutline /> Basic Spend Controls
@@ -79,7 +96,7 @@ export const Checkout: React.FunctionComponent = () => {
               bordered={false}
               extra={<>$7.99 per user per month</>}
               actions={[
-                <Button type="link" key="btn_upgrade">
+                <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("Flex Pro")}>
                   Upgrade
                 </Button>,
               ]}
@@ -94,7 +111,7 @@ export const Checkout: React.FunctionComponent = () => {
                 <GreenCheckedOutline /> Accounting Software Integrations
               </div>
               <div>
-                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Cline
+                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Line
               </div>
               <div>
                 <GreenCheckedOutline /> Advanced Spend Controls
