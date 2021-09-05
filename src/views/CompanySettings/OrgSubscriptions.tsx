@@ -7,15 +7,15 @@ import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 const columns = [
   {
     title: "User ID",
-    dataIndex: "name",
+    dataIndex: "id",
   },
   {
     title: "First Name",
-    dataIndex: "firstname",
+    dataIndex: "firstName",
   },
   {
     title: "Last Name",
-    dataIndex: "lastname",
+    dataIndex: "lastName",
   },
   {
     title: "Member's Email",
@@ -23,7 +23,7 @@ const columns = [
   },
   {
     title: "Plan Type",
-    dataIndex: "subscription_plan",
+    dataIndex: "subscriptionPlanType",
   },
 ];
 
@@ -39,7 +39,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   const [manageSubscriptionsUrl, setManageSubscriptionsUrl] = useState("");
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
   const [currentOrgInfo, setCurrentOrgInfo] = useState({
-    companyname: "⌛...",
+    name: "⌛...",
   });
   const { getAccessTokenSilently } = useAuth0();
 
@@ -65,8 +65,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
         const data = await response.json();
         const users = data["data"];
         for (let i = 0; i < users.length; i++) {
-          users[i].key = users[i].name;
-          users[i].subscription_plan = "Flex Starter";
+          users[i].key = users[i].id;
         }
         console.log(users);
         setCurrentOrgUsers(users);
@@ -248,7 +247,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
           backgroundColor: "rgb(26, 40, 49)",
         }}
       >
-        {currentOrgInfo?.companyname}
+        {currentOrgInfo?.name}
       </div>
       <div style={{ marginTop: 16, marginBottom: 16 }}>
         <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={loading}>

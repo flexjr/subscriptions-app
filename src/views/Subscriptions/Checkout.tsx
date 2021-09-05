@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Modal, Row } from "antd";
+import { Button, Table, Modal, Row, Card, Col } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
@@ -24,10 +24,23 @@ export const Checkout: React.FunctionComponent = () => {
           backgroundColor: "rgb(26, 40, 49)",
         }}
       >
-        Checkout
+        Select your plans
       </div>
 
-      <div style={{ marginTop: "16px", marginBottom: "16px" }}>test</div>
+      <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Card title="Flex Starter" bordered={false}>
+              <div>Card content</div>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card title="Flex Pro" bordered={false}>
+              Card content
+            </Card>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };
