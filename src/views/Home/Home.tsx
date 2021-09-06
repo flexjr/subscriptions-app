@@ -369,6 +369,40 @@ export const Home: React.FunctionComponent = () => (
             </PaddedCol>
           </Row>
         </RoundedCard>
+        <RoundedCard>
+          <Row>
+            <Col md={14}>
+              <Title
+                level={4}
+                style={{
+                  paddingBottom: "8px",
+                }}
+              >
+                Help and Support
+              </Title>
+              <div
+                style={{
+                  paddingBottom: "8px",
+                  color: "rgb(105, 105, 105)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                }}
+              >
+                Frequently Asked Questions
+              </div>
+              <div
+                style={{
+                  paddingBottom: "8px",
+                  color: "rgb(105, 105, 105)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                }}
+              >
+                Contact Us
+              </div>
+            </Col>
+          </Row>
+        </RoundedCard>
       </Col>
     </Row>
   </>
