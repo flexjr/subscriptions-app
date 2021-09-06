@@ -319,7 +319,9 @@ export const Home: React.FunctionComponent = () => (
                 }}
               />
             </Col>
-            <Col
+          </Row>
+          <Row>
+            <PaddedCol
               style={{
                 textAlign: "center",
               }}
@@ -336,16 +338,22 @@ export const Home: React.FunctionComponent = () => (
                   color: "rgb(112, 128, 144)",
                   fontSize: "1.175em",
                   fontWeight: 600,
-                  paddingBottom: "8px",
                 }}
               >
                 Blog
               </div>
+            </PaddedCol>
+            <PaddedCol
+              style={{
+                textAlign: "center",
+              }}
+            >
               <Image
                 src="https://app.fxr.one/flex/static/media/visa-offers-icon.94e6e160.svg"
                 preview={false}
                 style={{
-                  marginBottom: "15px",
+                  marginTop:"10px",
+                  marginBottom: "10px",
                   cursor: "pointer"
                 }}
               />
@@ -354,12 +362,11 @@ export const Home: React.FunctionComponent = () => (
                   color: "rgb(112, 128, 144)",
                   fontSize: "1.175em",
                   fontWeight: 600,
-                  paddingBottom: "8px",
                 }}
               >
                 Visa Commercial Offers
               </div>
-            </Col>
+            </PaddedCol>
           </Row>
         </RoundedCard>
       </Col>
