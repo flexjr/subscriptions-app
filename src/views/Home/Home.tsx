@@ -305,6 +305,66 @@ export const Home: React.FunctionComponent = () => (
             </Col>
           </Row>
         </RoundedCard>
+        <RoundedCard>
+          <Row>
+            <Col md={14}>
+              <Title
+                level={4}
+                style={{
+                  paddingBottom: "8px",
+                }}
+              >
+                Explore Flex
+              </Title>
+              <Row
+                style={{
+                  paddingBottom: "8px",
+                }}
+              />
+            </Col>
+            <Col
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <Image
+                src="https://app.fxr.one/flex/static/media/blog-icon.c4e6abfc.svg"
+                preview={false}
+                style={{
+                  cursor: "pointer"
+                }}
+              />
+              <div
+                style={{
+                  color: "rgb(112, 128, 144)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                  paddingBottom: "8px",
+                }}
+              >
+                Blog
+              </div>
+              <Image
+                src="https://app.fxr.one/flex/static/media/visa-offers-icon.94e6e160.svg"
+                preview={false}
+                style={{
+                  marginBottom: "15px",
+                  cursor: "pointer"
+                }}
+              />
+              <div
+                style={{
+                  color: "rgb(112, 128, 144)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                  paddingBottom: "8px",
+                }}
+              >
+                Visa Commercial Offers
+              </div>
+            </Col>
+          </Row>
+        </RoundedCard>
       </Col>
     </Row>
   </>
