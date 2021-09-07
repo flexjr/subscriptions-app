@@ -1,6 +1,6 @@
 import { Row, Col, Typography, Card, Modal, Image, Button } from "antd";
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../../utils";
+import { API_URL } from "../../shared";
 
 const { Title } = Typography;
 

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FlexBanner } from "../../components/Shared";
 import { store } from "../../store/store";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
+import { API_URL, AUTH0_API_AUDIENCE } from "../../shared";
 
 const columns = [
   {

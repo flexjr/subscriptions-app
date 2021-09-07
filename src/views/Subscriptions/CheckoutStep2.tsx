@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner } from "../../components/Shared";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
+import { API_URL, AUTH0_API_AUDIENCE } from "../../shared";
 const { Title } = Typography;
 
 const GreenCheckedOutline = styled(CheckOutlined)`

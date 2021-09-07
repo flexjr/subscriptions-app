@@ -1,87 +1,91 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import styled from "@emotion/styled";
-import { Row, Col, Typography, Card, Tabs, Skeleton } from "antd";
+import { Row, Col, Typography, Card, Tabs, Skeleton, Button } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
+import { RoundedCard } from "../../components/Shared";
+import { Semibold } from "../../components/Shared/Common";
+import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
+import { CurrentUserInfo } from "../../types";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
-const RoundedCard = styled(Card)`
-  border-radius: 10px;
-`;
+interface UserDetailsProps {
+  user: any;
+  additionalUserInfo: any;
+}
 
-const UserDetails: React.FunctionComponent = () => {
-  const { user } = useAuth0();
-
-  if (!user) {
-    return (
-      <Row style={{ marginTop: "-8px" }}>
-        <Skeleton
-          paragraph={{
-            rows: 1,
+const UserDetails: React.FunctionComponent<UserDetailsProps> = ({ user, additionalUserInfo }) => {
+  return (
+    <>
+      <Col md={2}>
+        <Avatar size={64} src={user?.picture} />
+      </Col>
+      <Col md={4}>
+        <Row>
+          <Semibold>
+            {user?.given_name} {user?.family_name}
+          </Semibold>
+        </Row>
+        <Row>{user?.email}</Row>
+      </Col>
+      <Col md={8}>
+        <Row>
+          <Semibold>{additionalUserInfo?.mobile}</Semibold>
+          <span
+            style={{
+              paddingLeft: "20px",
+              color: "rgb(38, 203, 147)",
+              fontWeight: 500,
+            }}
+          >
+            Verified <img src="https://app.fxr.one/flex/static/media/green-check-circle.b3f4a4fa.svg" />
+          </span>
+        </Row>
+        <Row>
+          <span>Language:</span> <Semibold>English (US)</Semibold>
+        </Row>
+      </Col>
+      <Col md={10}>
+        <Button
+          type="primary"
+          style={{
+            float: "right",
           }}
-          active
-        />
-      </Row>
-    );
-  } else {
-    return (
-      <>
-        <strong>
-          {user?.given_name} {user?.family_name}
-        </strong>
-      </>
-    );
-  }
+        >
+          Edit Profile
+        </Button>
+      </Col>
+    </>
+  );
 };
 
 export const UserSettings: React.FunctionComponent = () => {
   const { user, getAccessTokenSilently } = useAuth0();
-  const [additionalUserInfo, setAdditionalUserInfo] = useState({
-    id: -1 as number,
-    email: "" as string,
-    firstname: "" as string,
-    lastname: "" as string,
-    mobile: "" as string,
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [additionalUserInfo, setAdditionalUserInfo] = useState<void | CurrentUserInfo>();
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
+    const fetchData = async (): Promise<void> => {
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const getSavedCards = async () => {
-      try {
-        const accessToken = await getAccessTokenSilently({
-          audience: AUTH0_API_AUDIENCE,
-          scope: "read:current_user openid profile email",
+      const userInfo = await getData<{ data: CurrentUserInfo }>(`${API_URL}/users/current_user_info`, accessToken)
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
         });
-        console.log(accessToken);
-        const apiUrl = `${API_URL}/users/current_user_info`;
-        const response = await fetch(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          signal,
-        });
-        const data = await response.json();
-        setAdditionalUserInfo(data.data[0]);
-        console.log(data.data[0]);
-      } catch (e) {
-        console.error(e.message);
-      }
-    };
 
-    getSavedCards();
-
-    // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
-    return function cleanup() {
-      abortController.abort();
+      setAdditionalUserInfo(userInfo);
+      setIsLoading(false);
     };
+    fetchData();
   }, [getAccessTokenSilently]);
 
   return (
@@ -104,32 +108,11 @@ export const UserSettings: React.FunctionComponent = () => {
                 <Row>
                   <Col md={24}>
                     <Row>
-                      <Col>
-                        <Avatar size={64} src={user?.picture} />
-                      </Col>
-                      <Col style={{ marginLeft: "16px" }}>
-                        <Row>
-                          <UserDetails />
-                        </Row>
-                        <Row>{user?.email}</Row>
-                      </Col>
-                      <Col style={{ marginLeft: "48px" }}>
-                        <Row>
-                          {additionalUserInfo?.mobile}
-                          <span
-                            style={{
-                              paddingLeft: "20px",
-                              color: "rgb(38, 203, 147)",
-                              fontWeight: 500,
-                            }}
-                          >
-                            Verified
-                          </span>
-                        </Row>
-                        <Row>
-                          Language: <strong>English (US)</strong>
-                        </Row>
-                      </Col>
+                      {isLoading ? (
+                        <Skeleton avatar paragraph={{ rows: 1 }} active />
+                      ) : (
+                        <UserDetails user={user} additionalUserInfo={additionalUserInfo} />
+                      )}
                     </Row>
                   </Col>
                 </Row>
