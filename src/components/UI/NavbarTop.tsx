@@ -47,7 +47,7 @@ const ProfileButton: React.FunctionComponent = () => {
 const TeamMembersButton: React.FunctionComponent = () => {
   return (
     <Menu.Item key="teamMembers">
-      <Link to="/platform/organization/subscriptions">My Org’s Subscriptions</Link>
+      <Link to="/flex/organization/subscriptions">My Org’s Subscriptions</Link>
     </Menu.Item>
   );
 };

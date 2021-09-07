@@ -1,7 +1,7 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Button, Table, Modal, Row, Card, Col } from "antd";
+import { Button, Table, Modal, Row, Card, Col, Alert } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -24,9 +24,18 @@ export const CheckoutBillingFrequency: React.FunctionComponent = () => {
   const history = useHistory();
   const location = useLocation<stateType>();
   const [loading, setLoading] = useState(false);
+  const [debugData, setDebugData] = useState("Loading...");
 
   const userIds = location.state?.userIds;
   const subscriptionPlanType = location.state?.subscriptionPlanType;
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    setDebugData(
+      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlanType} / billing frequency NULL`
+    );
+  }, [subscriptionPlanType, userIds]);
 
   // If userIds does not exist, then redirect back...
 
@@ -35,7 +44,7 @@ export const CheckoutBillingFrequency: React.FunctionComponent = () => {
     setTimeout(
       () =>
         history.push({
-          pathname: "/platform/subscription/checkout/summary",
+          pathname: "/flex/subscription/checkout/summary",
           state: {
             userIds,
             subscriptionPlanType,
@@ -69,7 +78,15 @@ export const CheckoutBillingFrequency: React.FunctionComponent = () => {
       >
         Now... choose your billing frequency 📅
       </div>
-
+      <Alert
+        message={debugData}
+        type="info"
+        banner
+        style={{
+          borderRadius: "10px",
+          marginTop: "16px",
+        }}
+      />
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={12}>

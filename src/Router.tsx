@@ -26,28 +26,28 @@ export const Router: React.FunctionComponent = () => {
             <Route exact path="/">
               <Login />
             </Route>
-            <Route exact path="/home">
+            <Route exact path="/flex/dashboard">
               <Home />
             </Route>
             <Route exact path="/onboarding">
               <Onboarding />
             </Route>
-            <ProtectedRoute exact path="/platform/organization/subscriptions">
+            <ProtectedRoute exact path="/flex/organization/subscriptions">
               <OrgSubscriptions />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/organization/saved_cards">
+            <ProtectedRoute exact path="/flex/organization/saved_cards">
               <SavedCards />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/user/profile">
+            <ProtectedRoute exact path="/flex/user/profile">
               <UserSettings />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout/plan_selection">
+            <ProtectedRoute exact path="/flex/subscription/checkout/plan_selection">
               <CheckoutPlanSelection />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout/billing_frequency">
+            <ProtectedRoute exact path="/flex/subscription/checkout/billing_frequency">
               <CheckoutBillingFrequency />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout/summary">
+            <ProtectedRoute exact path="/flex/subscription/checkout/summary">
               <CheckoutSummary />
             </ProtectedRoute>
           </Switch>

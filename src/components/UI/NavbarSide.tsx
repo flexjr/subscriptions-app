@@ -1,8 +1,10 @@
+import { CreditCardOutlined, HomeOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Layout, Menu } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
+import "./NavbarSide.css";
 
 const { Sider } = Layout;
 
@@ -21,56 +23,57 @@ export const NavbarSide: React.FunctionComponent = () => {
         height: "100vh",
         position: "fixed",
         left: 0,
+        background: "rgb(26, 40, 49)",
       }}
       width="260px"
     >
       <Logo />
-      <Menu theme="dark" mode="inline" defaultSelectedKeys={["home"]}>
-        <Menu.Item key="home">
-          <Link to="/">Home</Link>
+      <Menu theme="dark" mode="inline" defaultSelectedKeys={["home"]} className="flex-menu">
+        <Menu.Item key="home" icon={<HomeOutlined />} className="flex-menu-item-selected">
+          <Link to="/flex/dashboard">Home</Link>
         </Menu.Item>
         {isAuthenticated ? (
-          <Menu.Item key="teamMembers">
-            <Link to="/platform/organization/subscriptions">My Org’s Subscriptions</Link>
+          <Menu.Item key="teamMembers" icon={<TagOutlined />} className="flex-menu-item-selected">
+            <Link to="/flex/organization/subscriptions">My Org’s Subscriptions</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
         {isAuthenticated ? (
-          <Menu.Item key="savedCards">
-            <Link to="/platform/organization/saved_cards">Payment Methods</Link>
-          </Menu.Item>
-        ) : (
-          <></>
-        )}
-
-        {isAuthenticated ? (
-          <Menu.Item key="profile">
-            <Link to="/platform/user/profile">User Profile</Link>
+          <Menu.Item key="savedCards" icon={<CreditCardOutlined />} className="flex-menu-item-selected">
+            <Link to="/flex/organization/saved_cards">Payment Methods</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout/plan_selection">
-            <Link to="/platform/subscription/checkout/plan_selection">❗ Checkout Plan Selection</Link>
+          <Menu.Item key="profile" icon={<UserOutlined />} className="flex-menu-item-selected">
+            <Link to="/flex/user/profile">User Profile</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout/billing_frequency">
-            <Link to="/platform/subscription/checkout/billing_frequency">❗ Checkout Billing Frequency</Link>
+          <Menu.Item key="checkout/plan_selection" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/checkout/plan_selection">❗ Checkout Plan Selection</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout/summary">
-            <Link to="/platform/subscription/checkout/summary">❗ Checkout Summary</Link>
+          <Menu.Item key="checkout/billing_frequency" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/checkout/billing_frequency">❗ Checkout Billing Frequency</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="checkout/summary" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/checkout/summary">❗ Checkout Summary</Link>
           </Menu.Item>
         ) : (
           <></>
@@ -85,6 +88,8 @@ export const NavbarSide: React.FunctionComponent = () => {
                 returnTo: window.location.origin,
               })
             }
+            icon={<LogoutOutlined />}
+            className="flex-menu-item-selected"
           >
             Logout
           </Menu.Item>

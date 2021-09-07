@@ -137,16 +137,38 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
     const { signal } = abortController;
 
     setLoading(true);
-    setTimeout(
-      () =>
+
+    const createChargebeeCustomerIfNotExists = async () => {
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "read:current_user openid profile email",
+      });
+
+      try {
+        const apiUrl = `${API_URL}/subscriptions/chargebee_customer`;
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${accessToken}`, // So that our API will know who's calling it :)
+            "Content-Type": "application/json",
+          },
+          signal,
+        });
+        const data = await response.json();
+        console.log(data);
+
         history.push({
-          pathname: "/platform/subscription/checkout/plan_selection",
+          pathname: "/flex/subscription/checkout/plan_selection",
           state: {
             userIds: selectedRowKeys,
           },
-        }),
-      1000
-    );
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    createChargebeeCustomerIfNotExists();
 
     // const getPaymentSourcesCount = async () => {
     //   try {
