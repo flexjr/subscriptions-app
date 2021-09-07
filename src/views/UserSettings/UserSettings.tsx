@@ -1,5 +1,5 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { Row, Col, Typography, Card, Tabs, Skeleton, Button } from "antd";
+import { useAuth0, User } from "@auth0/auth0-react";
+import { Row, Col, Typography, Tabs, Skeleton, Button } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import React from "react";
 import { useState } from "react";
@@ -13,8 +13,8 @@ const { Title } = Typography;
 const { TabPane } = Tabs;
 
 interface UserDetailsProps {
-  user: any;
-  additionalUserInfo: any;
+  user: User | undefined;
+  additionalUserInfo: CurrentUserInfo | undefined;
 }
 
 const UserDetails: React.FunctionComponent<UserDetailsProps> = ({ user, additionalUserInfo }) => {
@@ -65,25 +65,39 @@ const UserDetails: React.FunctionComponent<UserDetailsProps> = ({ user, addition
 export const UserSettings: React.FunctionComponent = () => {
   const { user, getAccessTokenSilently } = useAuth0();
   const [isLoading, setIsLoading] = useState(true);
-  const [additionalUserInfo, setAdditionalUserInfo] = useState<void | CurrentUserInfo>();
+  const [additionalUserInfo, setAdditionalUserInfo] = useState<undefined | CurrentUserInfo>();
 
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const fetchData = async () => {
+      const abortController = new AbortController();
+      const { signal } = abortController;
+
       const accessToken = await getAccessTokenSilently({
         audience: AUTH0_API_AUDIENCE,
         scope: "openid profile email",
       });
 
-      const userInfo = await getData<{ data: CurrentUserInfo }>(`${API_URL}/users/current_user_info`, accessToken)
+      const userInfo = await getData<{ data: CurrentUserInfo }>(
+        `${API_URL}/users/current_user_info`,
+        accessToken,
+        signal
+      )
         .then(({ data }) => {
           return data;
         })
         .catch((error) => {
           console.error(error);
+          return undefined;
         });
 
       setAdditionalUserInfo(userInfo);
       setIsLoading(false);
+
+      // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
+      return function cleanup() {
+        abortController.abort();
+      };
     };
     fetchData();
   }, [getAccessTokenSilently]);
