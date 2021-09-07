@@ -40,15 +40,15 @@ export const NavbarSide: React.FunctionComponent = () => {
           <></>
         )}
         {isAuthenticated ? (
-          <Menu.Item key="savedCards" icon={<CreditCardOutlined />} className="flex-menu-item-selected">
-            <Link to="/flex/organization/saved_cards">Payment Methods</Link>
+          <Menu.Item key="organization/saved-cards" icon={<CreditCardOutlined />} className="flex-menu-item-selected">
+            <Link to="/flex/organization/saved-cards">Payment Methods</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="profile" icon={<UserOutlined />} className="flex-menu-item-selected">
+          <Menu.Item key="user/profile" icon={<UserOutlined />} className="flex-menu-item-selected">
             <Link to="/flex/user/profile">User Profile</Link>
           </Menu.Item>
         ) : (
@@ -56,24 +56,40 @@ export const NavbarSide: React.FunctionComponent = () => {
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout/plan_selection" className="flex-menu-item-selected">
-            <Link to="/flex/subscription/checkout/plan_selection">❗ Checkout Plan Selection</Link>
+          <Menu.Item key="subscription/checkout/plan-selection" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/checkout/plan-selection">❗ Checkout Plan Selection</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout/billing_frequency" className="flex-menu-item-selected">
-            <Link to="/flex/subscription/checkout/billing_frequency">❗ Checkout Billing Frequency</Link>
+          <Menu.Item key="subscription/checkout/billing-frequency" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/checkout/billing-frequency">❗ Checkout Billing Frequency</Link>
           </Menu.Item>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="checkout/summary" className="flex-menu-item-selected">
+          <Menu.Item key="subscription/checkout/summary" className="flex-menu-item-selected">
             <Link to="/flex/subscription/checkout/summary">❗ Checkout Summary</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="subscription/payment-success" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/payment-success">❗ Payment Success</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="subscription/payment-failed" className="flex-menu-item-selected">
+            <Link to="/flex/subscription/payment-failed">❗ Payment Failed</Link>
           </Menu.Item>
         ) : (
           <></>

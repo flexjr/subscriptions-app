@@ -3,6 +3,7 @@ import { Button, Table, Modal, Row } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { FlexBanner } from "../../components/Shared";
 import { store } from "../../store/store";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
 
@@ -108,30 +109,6 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
     };
   }, [getAccessTokenSilently]);
 
-  const handleOk = (): void => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = (): void => {
-    setIsModalVisible(false);
-  };
-
-  const handlePaymentOk = (): void => {
-    setIsPaymentModalVisible(false);
-  };
-
-  const handlePaymentCancel = (): void => {
-    setIsPaymentModalVisible(false);
-  };
-
-  const handleManageSubscriptionsOk = (): void => {
-    setIsManageSubscriptionsModalVisible(false);
-  };
-
-  const handleManageSubscriptionsCancel = (): void => {
-    setIsManageSubscriptionsModalVisible(false);
-  };
-
   const handleUpgrade = () => {
     const abortController = new AbortController();
     const { signal } = abortController;
@@ -159,7 +136,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
         console.log(data);
 
         history.push({
-          pathname: "/flex/subscription/checkout/plan_selection",
+          pathname: "/flex/subscription/checkout/plan-selection",
           state: {
             userIds: selectedRowKeys,
           },
@@ -264,24 +241,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   return (
     <>
       <h2>My Organization’s Subscriptions</h2>
-      <div
-        style={{
-          backgroundImage: "url(https://app.fxr.one/flex/static/media/company-name-background.5dd40cbe.svg)",
-          fontWeight: "bold",
-          fontSize: "22px",
-          color: "rgb(255, 255, 255)",
-          padding: "34px",
-          lineHeight: "32px",
-          letterSpacing: "0.5px",
-          borderRadius: "10px",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "auto",
-          backgroundPosition: "100% 0",
-          backgroundColor: "rgb(26, 40, 49)",
-        }}
-      >
-        {currentOrgInfo?.name}
-      </div>
+      <FlexBanner>{currentOrgInfo?.name}</FlexBanner>
       <div style={{ marginTop: 16, marginBottom: 16 }}>
         <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={loading}>
           Upgrade
@@ -293,25 +253,6 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
         <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />
-      <Modal title="Add Card" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <iframe src={hostedPaymentMethodPageUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
-      </Modal>
-      <Modal title="Upgrade! 🎉" visible={isPaymentModalVisible} onOk={handlePaymentOk} onCancel={handlePaymentCancel}>
-        <p>Your monthly recurring payment is SGD {estimate}</p>
-        <p>By making payment, you agree to our Subscribers Terms and Conditions blah blah</p>
-        <p>
-          NOTE: After clicking Make Payment, will need to call OUR APIs to process payment for SGD 7.99 x (users
-          picked)!!
-        </p>
-      </Modal>
-      <Modal
-        title="Manage Subscriptions"
-        visible={isManageSubscriptionsModalVisible}
-        onOk={handleManageSubscriptionsOk}
-        onCancel={handleManageSubscriptionsCancel}
-      >
-        <iframe src={manageSubscriptionsUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
-      </Modal>
     </>
   );
 };

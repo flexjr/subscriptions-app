@@ -1,11 +1,14 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { CardComponent, CardNumber, CardExpiry, CardCVV } from "@chargebee/chargebee-js-react-wrapper";
-import { Button, Table, Modal, Row, Card, Col, Alert, Skeleton } from "antd";
+import { Button, Table, Modal, Row, Card, Col, Alert, Skeleton, Typography } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { RoundedCard } from "../../components/Shared";
+import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
+
+const { Title } = Typography;
+
 interface stateType {
   userIds?: any;
   subscriptionPlanType?: any;
@@ -18,7 +21,7 @@ declare global {
   }
 }
 
-export const CheckoutSummary: React.FunctionComponent = () => {
+export const CheckoutStep3: React.FunctionComponent = () => {
   const location = useLocation<stateType>();
   const [debugData, setDebugData] = useState("Loading...");
   const [chargebeeToken, setChargebeeToken] = useState("");
@@ -133,25 +136,8 @@ export const CheckoutSummary: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>Checkout</h2>
-      <div
-        style={{
-          backgroundImage: "url(https://app.fxr.one/flex/static/media/company-name-background.5dd40cbe.svg)",
-          fontWeight: "bold",
-          fontSize: "22px",
-          color: "rgb(255, 255, 255)",
-          padding: "34px",
-          lineHeight: "32px",
-          letterSpacing: "0.5px",
-          borderRadius: "10px",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "auto",
-          backgroundPosition: "100% 0",
-          backgroundColor: "rgb(26, 40, 49)",
-        }}
-      >
-        You’re almost there! 😀
-      </div>
+      <Title level={3}>Checkout</Title>
+      <FlexBanner>You’re almost there! 😀</FlexBanner>
       <Alert
         message={debugData}
         type="info"
@@ -166,7 +152,7 @@ export const CheckoutSummary: React.FunctionComponent = () => {
           <Col span={16}>
             <RoundedCard title="Your Saved Payment Methods" bordered={false}>
               {isLoadingCards ? (
-                <Skeleton />
+                <Skeleton active />
               ) : primaryCard.last4 ? (
                 <Row>
                   <Col md={6}>{primaryCard?.brand}</Col>
