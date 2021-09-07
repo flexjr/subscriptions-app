@@ -1,12 +1,9 @@
 import styled from "@emotion/styled";
-import { Row, Col, Typography, Card, Divider, Image } from "antd";
+import { Row, Col, Typography, Divider, Image } from "antd";
 import React from "react";
+import { RoundedCard } from "../../components/Shared";
 
 const { Title } = Typography;
-
-const RoundedCard = styled(Card)`
-  border-radius: 10px;
-`;
 
 const PaddedCol = styled(Col)`
   padding-left: 16px;

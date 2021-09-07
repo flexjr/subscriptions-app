@@ -1,7 +1,7 @@
 import { RightOutlined } from "@ant-design/icons";
 import { Row, Col, Typography, Form, Input, Button } from "antd";
 import React from "react";
-import { API_URL, AUTH0_DOMAIN } from "../../utils";
+import { API_URL, AUTH0_DOMAIN } from "../../shared";
 
 const { Title } = Typography;
 

@@ -10,7 +10,9 @@ import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
-import { CheckoutBillingFrequency, CheckoutPlanSelection, CheckoutSummary } from "./views/Subscriptions";
+import { CheckoutStep2, CheckoutStep1, CheckoutStep3 } from "./views/Subscriptions";
+import { PaymentFailed } from "./views/Subscriptions/PaymentFailure";
+import { PaymentSuccess } from "./views/Subscriptions/PaymentSuccess";
 import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {
@@ -26,29 +28,35 @@ export const Router: React.FunctionComponent = () => {
             <Route exact path="/">
               <Login />
             </Route>
-            <Route exact path="/home">
+            <Route exact path="/flex/dashboard">
               <Home />
             </Route>
             <Route exact path="/onboarding">
               <Onboarding />
             </Route>
-            <ProtectedRoute exact path="/platform/organization/subscriptions">
+            <ProtectedRoute exact path="/flex/organization/subscriptions">
               <OrgSubscriptions />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/organization/saved_cards">
+            <ProtectedRoute exact path="/flex/organization/saved-cards">
               <SavedCards />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/user/profile">
+            <ProtectedRoute exact path="/flex/user/profile">
               <UserSettings />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout/plan_selection">
-              <CheckoutPlanSelection />
+            <ProtectedRoute exact path="/flex/subscription/checkout/plan-selection">
+              <CheckoutStep1 />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout/billing_frequency">
-              <CheckoutBillingFrequency />
+            <ProtectedRoute exact path="/flex/subscription/checkout/billing-frequency">
+              <CheckoutStep2 />
             </ProtectedRoute>
-            <ProtectedRoute exact path="/platform/subscription/checkout/summary">
-              <CheckoutSummary />
+            <ProtectedRoute exact path="/flex/subscription/checkout/summary">
+              <CheckoutStep3 />
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/flex/subscription/payment-success">
+              <PaymentSuccess />
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/flex/subscription/payment-failed">
+              <PaymentFailed />
             </ProtectedRoute>
           </Switch>
           <Footer style={{ textAlign: "center" }}>

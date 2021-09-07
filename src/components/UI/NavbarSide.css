@@ -1,0 +1,7 @@
+.ant-menu.ant-menu-dark.flex-menu {
+    background-color: transparent !important;
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected.flex-menu-item-selected {
+    background-color: rgba(196, 196, 196, 0.15) !important;
+}

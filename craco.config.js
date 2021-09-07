@@ -21,7 +21,7 @@ module.exports = {
             modifyVars: {
               // "primary-color": "#1a2831",
               "highlight-color": "#79b8ff",
-              "success-color": "#3f505a",
+              // "success-color": "#3f505a",
             },
             javascriptEnabled: true,
           },

@@ -19,7 +19,7 @@ export const Login: React.FunctionComponent = () => {
   };
 
   if (isAuthenticated) {
-    history.push("/home");
+    history.push("/flex/dashboard");
   }
 
   return (

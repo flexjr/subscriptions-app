@@ -1,12 +1,12 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Button, Table, Modal, Row, Card, Col } from "antd";
+import { Button, Row, Card, Col, Alert, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
-
+import { FlexBanner } from "../../components/Shared";
+const { Title } = Typography;
 const GreenCheckedOutline = styled(CheckOutlined)`
   color: #52c41a;
 `;
@@ -19,11 +19,11 @@ interface stateType {
   userIds?: any;
 }
 
-export const CheckoutPlanSelection: React.FunctionComponent = () => {
+export const CheckoutStep1: React.FunctionComponent = () => {
   const history = useHistory();
   const location = useLocation<stateType>();
   const [loading, setLoading] = useState(false);
-  const { getAccessTokenSilently } = useAuth0();
+  const [debugData, setDebugData] = useState("Loading...");
 
   const userIds = location.state?.userIds;
 
@@ -35,7 +35,7 @@ export const CheckoutPlanSelection: React.FunctionComponent = () => {
     setTimeout(
       () =>
         history.push({
-          pathname: "/platform/subscription/checkout/billing_frequency",
+          pathname: "/flex/subscription/checkout/billing-frequency",
           state: {
             userIds: userIds,
             subscriptionPlanType: subscriptionPlanType,
@@ -48,56 +48,24 @@ export const CheckoutPlanSelection: React.FunctionComponent = () => {
   useEffect(() => {
     const abortController = new AbortController();
     const { signal } = abortController;
-
-    const createChargebeeCustomerIfNotExists = async () => {
-      const accessToken = await getAccessTokenSilently({
-        audience: AUTH0_API_AUDIENCE,
-        scope: "read:current_user openid profile email",
-      });
-
-      try {
-        const apiUrl = `${API_URL}/subscriptions/chargebee_customer`;
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${accessToken}`, // So that our API will know who's calling it :)
-            "Content-Type": "application/json",
-          },
-          signal,
-        });
-        const data = await response.json();
-        console.log(data);
-      } catch (e) {
-        console.error(e.message);
-      }
-    };
-
-    createChargebeeCustomerIfNotExists();
-  }, [getAccessTokenSilently]);
+    setDebugData(
+      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan NULL / billing frequency NULL`
+    );
+  }, [userIds]);
 
   return (
     <>
-      <h2>Checkout</h2>
-      <div
+      <Title level={3}>Checkout</Title>
+      <FlexBanner>Select your shiny new plan! 🎉</FlexBanner>
+      <Alert
+        message={debugData}
+        type="info"
+        banner
         style={{
-          backgroundImage: "url(https://app.fxr.one/flex/static/media/company-name-background.5dd40cbe.svg)",
-          fontWeight: "bold",
-          fontSize: "22px",
-          color: "rgb(255, 255, 255)",
-          padding: "34px",
-          lineHeight: "32px",
-          letterSpacing: "0.5px",
           borderRadius: "10px",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "auto",
-          backgroundPosition: "100% 0",
-          backgroundColor: "rgb(26, 40, 49)",
+          marginTop: "16px",
         }}
-      >
-        Select your shiny new plan! 🎉
-      </div>
-
+      />
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={12}>

@@ -1,11 +1,13 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Button, Table, Modal, Row, Card, Col } from "antd";
+import { Button, Table, Modal, Row, Card, Col, Alert, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../utils";
+import { FlexBanner } from "../../components/Shared";
+import { API_URL, AUTH0_API_AUDIENCE } from "../../shared";
+const { Title } = Typography;
 
 const GreenCheckedOutline = styled(CheckOutlined)`
   color: #52c41a;
@@ -20,13 +22,22 @@ interface stateType {
   subscriptionPlanType?: any;
 }
 
-export const CheckoutBillingFrequency: React.FunctionComponent = () => {
+export const CheckoutStep2: React.FunctionComponent = () => {
   const history = useHistory();
   const location = useLocation<stateType>();
   const [loading, setLoading] = useState(false);
+  const [debugData, setDebugData] = useState("Loading...");
 
   const userIds = location.state?.userIds;
   const subscriptionPlanType = location.state?.subscriptionPlanType;
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    setDebugData(
+      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlanType} / billing frequency NULL`
+    );
+  }, [subscriptionPlanType, userIds]);
 
   // If userIds does not exist, then redirect back...
 
@@ -35,7 +46,7 @@ export const CheckoutBillingFrequency: React.FunctionComponent = () => {
     setTimeout(
       () =>
         history.push({
-          pathname: "/platform/subscription/checkout/summary",
+          pathname: "/flex/subscription/checkout/summary",
           state: {
             userIds,
             subscriptionPlanType,
@@ -50,26 +61,17 @@ export const CheckoutBillingFrequency: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>Checkout</h2>
-      <div
+      <Title level={3}>Checkout</Title>
+      <FlexBanner>Now... choose your billing frequency 📅</FlexBanner>
+      <Alert
+        message={debugData}
+        type="info"
+        banner
         style={{
-          backgroundImage: "url(https://app.fxr.one/flex/static/media/company-name-background.5dd40cbe.svg)",
-          fontWeight: "bold",
-          fontSize: "22px",
-          color: "rgb(255, 255, 255)",
-          padding: "34px",
-          lineHeight: "32px",
-          letterSpacing: "0.5px",
           borderRadius: "10px",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "auto",
-          backgroundPosition: "100% 0",
-          backgroundColor: "rgb(26, 40, 49)",
+          marginTop: "16px",
         }}
-      >
-        Now... choose your billing frequency 📅
-      </div>
-
+      />
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={12}>
