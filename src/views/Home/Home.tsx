@@ -302,7 +302,11 @@ export const Home: React.FunctionComponent = () => (
             </Col>
           </Row>
         </RoundedCard>
-        <RoundedCard>
+        <RoundedCard
+          style={{
+            marginTop: "16px",
+          }}
+        >
           <Row>
             <Col md={14}>
               <Title
@@ -321,7 +325,8 @@ export const Home: React.FunctionComponent = () => (
             </Col>
           </Row>
           <Row>
-            <PaddedCol
+            <Col
+              md={12}
               style={{
                 textAlign: "center",
               }}
@@ -330,7 +335,8 @@ export const Home: React.FunctionComponent = () => (
                 src="https://app.fxr.one/flex/static/media/blog-icon.c4e6abfc.svg"
                 preview={false}
                 style={{
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  height: "100px",
                 }}
               />
               <div
@@ -342,8 +348,9 @@ export const Home: React.FunctionComponent = () => (
               >
                 Blog
               </div>
-            </PaddedCol>
-            <PaddedCol
+            </Col>
+            <Col
+              md={12}
               style={{
                 textAlign: "center",
               }}
@@ -352,9 +359,8 @@ export const Home: React.FunctionComponent = () => (
                 src="https://app.fxr.one/flex/static/media/visa-offers-icon.94e6e160.svg"
                 preview={false}
                 style={{
-                  marginTop:"10px",
-                  marginBottom: "10px",
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  height: "100px",
                 }}
               />
               <div
@@ -366,12 +372,16 @@ export const Home: React.FunctionComponent = () => (
               >
                 Visa Commercial Offers
               </div>
-            </PaddedCol>
+            </Col>
           </Row>
         </RoundedCard>
-        <RoundedCard>
+        <RoundedCard
+          style={{
+            marginTop: "16px",
+          }}
+        >
           <Row>
-            <Col md={14}>
+            <Col md={24}>
               <Title
                 level={4}
                 style={{
