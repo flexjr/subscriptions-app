@@ -302,6 +302,117 @@ export const Home: React.FunctionComponent = () => (
             </Col>
           </Row>
         </RoundedCard>
+        <RoundedCard
+          style={{
+            marginTop: "16px",
+          }}
+        >
+          <Row>
+            <Col md={14}>
+              <Title
+                level={4}
+                style={{
+                  paddingBottom: "8px",
+                }}
+              >
+                Explore Flex
+              </Title>
+              <Row
+                style={{
+                  paddingBottom: "8px",
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col
+              md={12}
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <Image
+                src="https://app.fxr.one/flex/static/media/blog-icon.c4e6abfc.svg"
+                preview={false}
+                style={{
+                  cursor: "pointer",
+                  height: "100px",
+                }}
+              />
+              <div
+                style={{
+                  color: "rgb(112, 128, 144)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                }}
+              >
+                Blog
+              </div>
+            </Col>
+            <Col
+              md={12}
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <Image
+                src="https://app.fxr.one/flex/static/media/visa-offers-icon.94e6e160.svg"
+                preview={false}
+                style={{
+                  cursor: "pointer",
+                  height: "100px",
+                }}
+              />
+              <div
+                style={{
+                  color: "rgb(112, 128, 144)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                }}
+              >
+                Visa Commercial Offers
+              </div>
+            </Col>
+          </Row>
+        </RoundedCard>
+        <RoundedCard
+          style={{
+            marginTop: "16px",
+          }}
+        >
+          <Row>
+            <Col md={24}>
+              <Title
+                level={4}
+                style={{
+                  paddingBottom: "8px",
+                }}
+              >
+                Help and Support
+              </Title>
+              <div
+                style={{
+                  paddingBottom: "8px",
+                  color: "rgb(105, 105, 105)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                }}
+              >
+                Frequently Asked Questions
+              </div>
+              <div
+                style={{
+                  paddingBottom: "8px",
+                  color: "rgb(105, 105, 105)",
+                  fontSize: "1.175em",
+                  fontWeight: 600,
+                }}
+              >
+                Contact Us
+              </div>
+            </Col>
+          </Row>
+        </RoundedCard>
       </Col>
     </Row>
   </>
