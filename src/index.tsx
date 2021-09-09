@@ -18,7 +18,7 @@ ReactDOM.render(
       domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
       audience="https://api.flexjr.one/"
-      scope="read:current_user write:current_user openid profile email"
+      scope="write:current_user openid profile email"
       redirectUri={window.location.origin}
       useRefreshTokens={true}
       onRedirectCallback={onRedirectCallback}

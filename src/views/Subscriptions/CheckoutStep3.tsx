@@ -3,9 +3,9 @@ import { CardComponent, CardNumber, CardExpiry, CardCVV } from "@chargebee/charg
 import { Button, Table, Modal, Row, Card, Col, Alert, Skeleton, Typography } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../shared";
+import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
 const { Title } = Typography;
 
@@ -23,6 +23,7 @@ declare global {
 
 export const CheckoutStep3: React.FunctionComponent = () => {
   const location = useLocation<stateType>();
+  const history = useHistory();
   const [debugData, setDebugData] = useState("Loading...");
   const [chargebeeToken, setChargebeeToken] = useState("");
   const { getAccessTokenSilently } = useAuth0();
@@ -40,6 +41,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
   const cardRef = createRef<CardComponent>();
 
+  const abortController = new AbortController();
+  const { signal } = abortController;
+
   // You have to set window.Chargebee.init() here and NOT in index.html (see https://github.com/chargebee/chargebee-checkout-samples/blob/master/components/react-app/src/App.js)
   window.Chargebee.init({
     site: "pixely-test",
@@ -47,91 +51,101 @@ export const CheckoutStep3: React.FunctionComponent = () => {
   });
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
     setDebugData(
       `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlanType} / billing frequency ${subscriptionPlanTypeWithBillingFrequency} / cb token ${chargebeeToken}`
     );
 
-    const listPaymentMethods = async () => {
+    const fetchData = async (): Promise<void> => {
       const accessToken = await getAccessTokenSilently({
         audience: AUTH0_API_AUDIENCE,
-        scope: "read:current_user openid profile email",
+        scope: "openid profile email",
       });
 
-      try {
-        const apiUrl = `${API_URL}/subscriptions/list_payment_methods`;
-        const response = await fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${accessToken}`, // So that our API will know who's calling it :)
-            "Content-Type": "application/json",
-          },
-          signal,
+      const savedPaymentMethods = await getData<{ cards }>(
+        `${API_URL}/subscriptions/list_payment_methods`,
+        accessToken,
+        signal
+      )
+        .then(({ cards }) => {
+          return cards;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
         });
-        const data = await response.json();
-        console.log(data);
-        if ("cards" in data && data.cards.length > 0) {
-          const primaryCard = data.cards[0]; // First card is the default, primary payment method used for auto-collection
-          setPrimaryCard(primaryCard);
-          setIsLoadingCards(false);
-        } else {
-          setIsLoadingCards(false);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
 
-    listPaymentMethods();
-  }, [subscriptionPlanType, subscriptionPlanTypeWithBillingFrequency, userIds, chargebeeToken, getAccessTokenSilently]);
-
-  // If userIds does not exist, then redirect back...
-
-  const handleSaveCard = async (chargebeeToken: string) => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
-
-    const accessToken = await getAccessTokenSilently({
-      audience: AUTH0_API_AUDIENCE,
-      scope: "read:current_user openid profile email",
-    });
-
-    console.log({ chargebee_token: chargebeeToken });
-
-    try {
-      setIsLoadingCards(true);
-      const apiUrl = `${API_URL}/subscriptions/save_payment_method`;
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ token: chargebeeToken }),
-        signal,
-      });
-      const data = await response.json();
-      if ("cards" in data && data.cards.length > 0) {
-        const primaryCard = data.cards[0]; // First card is the default, primary payment method used for auto-collection
-        setPrimaryCard(primaryCard);
+      if (savedPaymentMethods && savedPaymentMethods.length > 0) {
+        const primaryCard = savedPaymentMethods[0]; // First card is the default, primary payment method used for auto-collection
         console.log(primaryCard);
+        setPrimaryCard(primaryCard);
         setIsLoadingCards(false);
       } else {
         setIsLoadingCards(false);
       }
-    } catch (e) {
-      console.error(e);
-    }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleAddCard = async (chargebeeToken: string): Promise<void> => {
+    const accessToken = await getAccessTokenSilently({
+      audience: AUTH0_API_AUDIENCE,
+      scope: "openid profile email",
+    });
+
+    setIsLoadingCards(true);
+
+    const payload = {
+      token: chargebeeToken,
+    };
+
+    const addCard = await postData<{ data }>(
+      `${API_URL}/subscriptions/save_payment_method`,
+      accessToken,
+      signal,
+      payload
+    )
+      .then(({ data }) => {
+        console.info(data);
+        setPrimaryCard(primaryCard);
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return undefined;
+      });
+    setIsLoadingCards(false);
   };
 
-  const tokenizeCard = (): void => {
+  const handleTokenizeCard = (): void => {
     cardRef.current.tokenize().then((data) => {
       console.log("Chargebee token", data.token);
       setChargebeeToken(data.token);
-      handleSaveCard(data.token);
+      handleAddCard(data.token);
     });
+  };
+
+  const handlePayNow = async (): Promise<void> => {
+    const accessToken = await getAccessTokenSilently({
+      audience: AUTH0_API_AUDIENCE,
+      scope: "openid profile email",
+    });
+
+    const addCard = await postData<{ invoice; subscription }>(`${API_URL}/subscriptions/checkout`, accessToken, signal)
+      .then(({ invoice, subscription }) => {
+        console.info(invoice, subscription);
+        return { invoice, subscription };
+      })
+      .catch((error) => {
+        console.error(error);
+        return undefined;
+      });
+
+    if (addCard?.invoice.status) {
+      history.push({
+        pathname: "/flex/subscription/payment-success",
+      });
+    }
   };
 
   return (
@@ -162,13 +176,13 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                   </Col>
                   <Col md={6}>Change Payment Method</Col>
                   <Col md={6}>
-                    <Button>Pay Now</Button>
+                    <Button onClick={handlePayNow}>Pay Now</Button>
                   </Col>
                 </Row>
               ) : (
                 <>
                   <CardComponent ref={cardRef} />
-                  <Button onClick={tokenizeCard}>Add Payment Method</Button>
+                  <Button onClick={handleTokenizeCard}>Add Payment Method</Button>
                 </>
               )}
             </RoundedCard>

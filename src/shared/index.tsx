@@ -20,7 +20,7 @@ export function getData<T>(url: string, accessToken: string, signal: AbortSignal
   });
 }
 
-export function postData<T>(url: string, accessToken: string, signal: AbortSignal, payload?: T): Promise<T> {
+export function postData<T>(url: string, accessToken: string, signal: AbortSignal, payload?: any): Promise<T> {
   return fetch(url, {
     method: "POST",
     headers: {
@@ -29,6 +29,7 @@ export function postData<T>(url: string, accessToken: string, signal: AbortSigna
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
+    signal,
   }).then((response) => {
     if (!response.ok) {
       throw new Error(response.statusText);
