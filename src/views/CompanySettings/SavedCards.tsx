@@ -1,6 +1,7 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Typography, Card, Modal, Image, Button } from "antd";
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../../shared";
+import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 
 const { Title } = Typography;
 
@@ -19,6 +20,7 @@ export const SavedCards: React.FunctionComponent = () => {
   const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("");
   const [iframeRefresh, setIframeRefresh] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { getAccessTokenSilently } = useAuth0();
 
   const showModal = (): void => {
     setIsModalVisible(true);
@@ -36,21 +38,29 @@ export const SavedCards: React.FunctionComponent = () => {
     const abortController = new AbortController();
     const { signal } = abortController;
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const getSavedCards = async () => {
-      try {
-        const apiUrl = `${API_URL}/chargebee/payment_source/customer?id=4851`;
-        const response = await fetch(apiUrl, {
-          signal,
+    const fetchData = async (): Promise<void> => {
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      const primaryCard = await getData<{ cards } | undefined>(
+        `${API_URL}/subscriptions/list_saved_payment_methods`,
+        accessToken,
+        signal
+      )
+        .then((data) => {
+          console.info(data);
+          setSavedCards(data?.cards);
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
         });
-        const data = await response.json();
-        setSavedCards(data.cards);
-      } catch (e) {
-        console.error(e.message);
-      }
     };
 
-    getSavedCards();
+    fetchData();
 
     // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
     return function cleanup() {
@@ -106,10 +116,15 @@ export const SavedCards: React.FunctionComponent = () => {
           <Row>
             {savedCards ? (
               savedCards.map((card) => (
-                <Card key={card["id"]}>
+                <Card
+                  key={card["id"]}
+                  style={{
+                    borderRadius: "10px",
+                    marginRight: "16px",
+                  }}
+                >
                   <Row>
                     <Col md={24}>
-                      <Title level={4}>Saved Card</Title>
                       <Row>
                         <Col>
                           <Image
@@ -122,11 +137,11 @@ export const SavedCards: React.FunctionComponent = () => {
                     <Col md={24}>
                       <Row>
                         <Col md={24}>
-                          <p>{card["brand"]}</p>
-                          <p>Ending in {card["last4"]}</p>
-                          <p>
+                          <div>{card["brand"]}</div>
+                          <div>Ending in {card["last4"]}</div>
+                          <div>
                             Expiry {card["expiry_month"]}/{card["expiry_year"]}
-                          </p>
+                          </div>
                         </Col>
                       </Row>
                     </Col>

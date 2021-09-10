@@ -36,7 +36,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
-  const [currentOrgInfo, setCurrentOrgInfo] = useState({
+  const [currentOrgInfo, setCurrentOrgInfo] = useState<{ name: string } | undefined>({
     name: "⌛...",
   });
 
@@ -66,9 +66,9 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
           return undefined;
         });
 
-      const orgInfo = await getData<{ data }>(`${API_URL}/organizations/current_org`, accessToken, signal)
-        .then(({ data }) => {
-          return data;
+      const orgInfo = await getData<{ name: string }>(`${API_URL}/organizations/current_org`, accessToken, signal)
+        .then(({ name }) => {
+          return { name };
         })
         .catch((error) => {
           console.error(error);

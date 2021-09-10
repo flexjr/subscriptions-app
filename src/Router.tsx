@@ -2,7 +2,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { ProtectedRoute } from "./components/Auth";
 
 import { LoginSide, NavbarSide } from "./components/UI";
 import { OrgSubscriptions } from "./views/CompanySettings/OrgSubscriptions";
@@ -18,7 +17,6 @@ import { UserSettings } from "./views/UserSettings";
 export const Router: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
   const marginLeftIfLoggedOut = isAuthenticated ? 260 : 359;
-
   return (
     <BrowserRouter>
       <Layout className="layout" style={{ marginLeft: marginLeftIfLoggedOut, minHeight: "100vh" }}>
@@ -34,30 +32,30 @@ export const Router: React.FunctionComponent = () => {
             <Route exact path="/onboarding">
               <Onboarding />
             </Route>
-            <ProtectedRoute exact path="/flex/organization/subscriptions">
+            <Route exact path="/flex/organization/subscriptions">
               <OrgSubscriptions />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/organization/saved-cards">
+            </Route>
+            <Route exact path="/flex/organization/saved-cards">
               <SavedCards />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/user/profile">
+            </Route>
+            <Route exact path="/flex/user/profile">
               <UserSettings />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/subscription/checkout/plan-selection">
+            </Route>
+            <Route exact path="/flex/subscription/checkout/plan-selection">
               <CheckoutStep1 />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/subscription/checkout/billing-frequency">
+            </Route>
+            <Route exact path="/flex/subscription/checkout/billing-frequency">
               <CheckoutStep2 />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/subscription/checkout/summary">
+            </Route>
+            <Route exact path="/flex/subscription/checkout/summary">
               <CheckoutStep3 />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/subscription/payment-success">
+            </Route>
+            <Route exact path="/flex/subscription/payment-success">
               <PaymentSuccess />
-            </ProtectedRoute>
-            <ProtectedRoute exact path="/flex/subscription/payment-failed">
+            </Route>
+            <Route exact path="/flex/subscription/payment-failed">
               <PaymentFailed />
-            </ProtectedRoute>
+            </Route>
           </Switch>
           <Footer style={{ textAlign: "center" }}>
             <p id="build-label">

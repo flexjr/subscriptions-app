@@ -3,9 +3,9 @@ import { CardComponent, CardNumber, CardExpiry, CardCVV } from "@chargebee/charg
 import { Button, Table, Modal, Row, Card, Col, Alert, Skeleton, Typography } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../shared";
+import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
 const { Title } = Typography;
 
@@ -23,6 +23,7 @@ declare global {
 
 export const CheckoutStep3: React.FunctionComponent = () => {
   const location = useLocation<stateType>();
+  const history = useHistory();
   const [debugData, setDebugData] = useState("Loading...");
   const [chargebeeToken, setChargebeeToken] = useState("");
   const { getAccessTokenSilently } = useAuth0();
@@ -32,6 +33,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     expiry_month: null,
     expiry_year: null,
   });
+  const [title, setTitle] = useState("");
   const [isLoadingCards, setIsLoadingCards] = useState(true);
 
   const userIds = location.state?.userIds;
@@ -40,6 +42,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
   const cardRef = createRef<CardComponent>();
 
+  const abortController = new AbortController();
+  const { signal } = abortController;
+
   // You have to set window.Chargebee.init() here and NOT in index.html (see https://github.com/chargebee/chargebee-checkout-samples/blob/master/components/react-app/src/App.js)
   window.Chargebee.init({
     site: "pixely-test",
@@ -47,91 +52,100 @@ export const CheckoutStep3: React.FunctionComponent = () => {
   });
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
     setDebugData(
       `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlanType} / billing frequency ${subscriptionPlanTypeWithBillingFrequency} / cb token ${chargebeeToken}`
     );
 
-    const listPaymentMethods = async () => {
+    const fetchData = async (): Promise<void> => {
       const accessToken = await getAccessTokenSilently({
         audience: AUTH0_API_AUDIENCE,
-        scope: "read:current_user openid profile email",
+        scope: "openid profile email",
       });
 
-      try {
-        const apiUrl = `${API_URL}/subscriptions/list_payment_methods`;
-        const response = await fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${accessToken}`, // So that our API will know who's calling it :)
-            "Content-Type": "application/json",
-          },
-          signal,
+      const primaryCard = await getData<{ brand; last4; expiry_month; expiry_year } | undefined>(
+        `${API_URL}/subscriptions/list_primary_card`,
+        accessToken,
+        signal
+      )
+        .then((data) => {
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
         });
-        const data = await response.json();
-        console.log(data);
-        if ("cards" in data && data.cards.length > 0) {
-          const primaryCard = data.cards[0]; // First card is the default, primary payment method used for auto-collection
-          setPrimaryCard(primaryCard);
-          setIsLoadingCards(false);
-        } else {
-          setIsLoadingCards(false);
-        }
-      } catch (e) {
-        console.error(e);
+      console.log(primaryCard);
+      if (primaryCard) {
+        console.log(primaryCard);
+        setPrimaryCard(primaryCard);
+        setIsLoadingCards(false);
+        setTitle("Your Saved Payment Methods");
+      } else {
+        setIsLoadingCards(false);
+        setTitle("Add your Flex Visa card");
       }
     };
 
-    listPaymentMethods();
-  }, [subscriptionPlanType, subscriptionPlanTypeWithBillingFrequency, userIds, chargebeeToken, getAccessTokenSilently]);
+    fetchData();
+  }, []);
 
-  // If userIds does not exist, then redirect back...
-
-  const handleSaveCard = async (chargebeeToken: string) => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
-
+  const handleAddCard = async (chargebeeToken: string): Promise<void> => {
     const accessToken = await getAccessTokenSilently({
       audience: AUTH0_API_AUDIENCE,
-      scope: "read:current_user openid profile email",
+      scope: "openid profile email",
     });
 
-    console.log({ chargebee_token: chargebeeToken });
+    setIsLoadingCards(true);
 
-    try {
-      setIsLoadingCards(true);
-      const apiUrl = `${API_URL}/subscriptions/save_payment_method`;
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ token: chargebeeToken }),
-        signal,
+    const payload = {
+      token: chargebeeToken,
+    };
+
+    const addCard = await postData<{ brand; expiry_month; expiry_year; last4 }>(
+      `${API_URL}/subscriptions/save_payment_method`,
+      accessToken,
+      signal,
+      payload
+    )
+      .then((data) => {
+        setPrimaryCard(data);
+      })
+      .catch((error) => {
+        console.error(error);
+        return undefined;
       });
-      const data = await response.json();
-      if ("cards" in data && data.cards.length > 0) {
-        const primaryCard = data.cards[0]; // First card is the default, primary payment method used for auto-collection
-        setPrimaryCard(primaryCard);
-        console.log(primaryCard);
-        setIsLoadingCards(false);
-      } else {
-        setIsLoadingCards(false);
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    setIsLoadingCards(false);
   };
 
-  const tokenizeCard = (): void => {
+  const handleTokenizeCard = (): void => {
     cardRef.current.tokenize().then((data) => {
       console.log("Chargebee token", data.token);
       setChargebeeToken(data.token);
-      handleSaveCard(data.token);
+      handleAddCard(data.token);
     });
+  };
+
+  const handlePayNow = async (): Promise<void> => {
+    const accessToken = await getAccessTokenSilently({
+      audience: AUTH0_API_AUDIENCE,
+      scope: "openid profile email",
+    });
+
+    const addCard = await postData<{ invoice; subscription }>(`${API_URL}/subscriptions/checkout`, accessToken, signal)
+      .then(({ invoice, subscription }) => {
+        console.info(invoice, subscription);
+        return { invoice, subscription };
+      })
+      .catch((error) => {
+        console.error(error);
+        return undefined;
+      });
+
+    if (addCard?.invoice.status) {
+      history.push({
+        pathname: "/flex/subscription/payment-success",
+      });
+    }
   };
 
   return (
@@ -150,25 +164,52 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={16}>
-            <RoundedCard title="Your Saved Payment Methods" bordered={false}>
+            <RoundedCard title={title} bordered={false}>
               {isLoadingCards ? (
                 <Skeleton active />
               ) : primaryCard.last4 ? (
-                <Row>
-                  <Col md={6}>{primaryCard?.brand}</Col>
-                  <Col md={6}>{primaryCard?.last4}</Col>
-                  <Col md={6}>
-                    {primaryCard?.expiry_month}/{primaryCard?.expiry_year}
-                  </Col>
-                  <Col md={6}>Change Payment Method</Col>
-                  <Col md={6}>
-                    <Button>Pay Now</Button>
-                  </Col>
-                </Row>
+                <>
+                  <Row
+                    style={{
+                      paddingBottom: "16px",
+                    }}
+                  >
+                    <Col md={6}>{primaryCard?.brand}</Col>
+                    <Col md={6}>{primaryCard?.last4}</Col>
+                    <Col md={6}>
+                      {primaryCard?.expiry_month}/{primaryCard?.expiry_year}
+                    </Col>
+                    <Col md={6}>Change Payment Method</Col>
+                  </Row>
+                  <Row>
+                    <Col md={6}>
+                      <Button onClick={handlePayNow}>Pay Now</Button>
+                    </Col>
+                  </Row>
+                </>
               ) : (
                 <>
-                  <CardComponent ref={cardRef} />
-                  <Button onClick={tokenizeCard}>Add Payment Method</Button>
+                  <Col
+                    md={24}
+                    style={{
+                      paddingBottom: "16px",
+                    }}
+                  >
+                    <Alert
+                      message="🔒 Processed securely by PCI DSS"
+                      type="info"
+                      showIcon={false}
+                      banner
+                      style={{
+                        borderRadius: "10px",
+                        marginBottom: "16px",
+                      }}
+                    />
+                    <CardComponent ref={cardRef} />
+                  </Col>
+                  <Col md={24}>
+                    <Button onClick={handleTokenizeCard}>Add Payment Method</Button>
+                  </Col>
                 </>
               )}
             </RoundedCard>
