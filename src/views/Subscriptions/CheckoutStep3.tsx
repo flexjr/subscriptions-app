@@ -33,6 +33,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     expiry_month: null,
     expiry_year: null,
   });
+  const [title, setTitle] = useState("");
   const [isLoadingCards, setIsLoadingCards] = useState(true);
 
   const userIds = location.state?.userIds;
@@ -61,26 +62,27 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         scope: "openid profile email",
       });
 
-      const savedPaymentMethods = await getData<{ cards }>(
-        `${API_URL}/subscriptions/list_payment_methods`,
+      const primaryCard = await getData<{ brand; last4; expiry_month; expiry_year } | undefined>(
+        `${API_URL}/subscriptions/list_primary_card`,
         accessToken,
         signal
       )
-        .then(({ cards }) => {
-          return cards;
+        .then((data) => {
+          return data;
         })
         .catch((error) => {
           console.error(error);
           return undefined;
         });
-
-      if (savedPaymentMethods && savedPaymentMethods.length > 0) {
-        const primaryCard = savedPaymentMethods[0]; // First card is the default, primary payment method used for auto-collection
+      console.log(primaryCard);
+      if (primaryCard) {
         console.log(primaryCard);
         setPrimaryCard(primaryCard);
         setIsLoadingCards(false);
+        setTitle("Your Saved Payment Methods");
       } else {
         setIsLoadingCards(false);
+        setTitle("Add your Flex Visa card");
       }
     };
 
@@ -99,16 +101,14 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       token: chargebeeToken,
     };
 
-    const addCard = await postData<{ data }>(
+    const addCard = await postData<{ brand; expiry_month; expiry_year; last4 }>(
       `${API_URL}/subscriptions/save_payment_method`,
       accessToken,
       signal,
       payload
     )
-      .then(({ data }) => {
-        console.info(data);
-        setPrimaryCard(primaryCard);
-        return data;
+      .then((data) => {
+        setPrimaryCard(data);
       })
       .catch((error) => {
         console.error(error);
@@ -164,25 +164,52 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={16}>
-            <RoundedCard title="Your Saved Payment Methods" bordered={false}>
+            <RoundedCard title={title} bordered={false}>
               {isLoadingCards ? (
                 <Skeleton active />
               ) : primaryCard.last4 ? (
-                <Row>
-                  <Col md={6}>{primaryCard?.brand}</Col>
-                  <Col md={6}>{primaryCard?.last4}</Col>
-                  <Col md={6}>
-                    {primaryCard?.expiry_month}/{primaryCard?.expiry_year}
-                  </Col>
-                  <Col md={6}>Change Payment Method</Col>
-                  <Col md={6}>
-                    <Button onClick={handlePayNow}>Pay Now</Button>
-                  </Col>
-                </Row>
+                <>
+                  <Row
+                    style={{
+                      paddingBottom: "16px",
+                    }}
+                  >
+                    <Col md={6}>{primaryCard?.brand}</Col>
+                    <Col md={6}>{primaryCard?.last4}</Col>
+                    <Col md={6}>
+                      {primaryCard?.expiry_month}/{primaryCard?.expiry_year}
+                    </Col>
+                    <Col md={6}>Change Payment Method</Col>
+                  </Row>
+                  <Row>
+                    <Col md={6}>
+                      <Button onClick={handlePayNow}>Pay Now</Button>
+                    </Col>
+                  </Row>
+                </>
               ) : (
                 <>
-                  <CardComponent ref={cardRef} />
-                  <Button onClick={handleTokenizeCard}>Add Payment Method</Button>
+                  <Col
+                    md={24}
+                    style={{
+                      paddingBottom: "16px",
+                    }}
+                  >
+                    <Alert
+                      message="🔒 Processed securely by PCI DSS"
+                      type="info"
+                      showIcon={false}
+                      banner
+                      style={{
+                        borderRadius: "10px",
+                        marginBottom: "16px",
+                      }}
+                    />
+                    <CardComponent ref={cardRef} />
+                  </Col>
+                  <Col md={24}>
+                    <Button onClick={handleTokenizeCard}>Add Payment Method</Button>
+                  </Col>
                 </>
               )}
             </RoundedCard>
