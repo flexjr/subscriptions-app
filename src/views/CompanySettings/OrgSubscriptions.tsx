@@ -1,11 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Modal, Row, Skeleton } from "antd";
+import { Button, Table, Skeleton } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
-import { store } from "../../store/store";
 
 const columns = [
   {
