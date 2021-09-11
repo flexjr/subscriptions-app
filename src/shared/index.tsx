@@ -20,6 +20,7 @@ export function getData<T>(url: string, accessToken: string, signal: AbortSignal
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function postData<T>(url: string, accessToken: string, signal: AbortSignal, payload?: any): Promise<T> {
   return fetch(url, {
     method: "POST",
