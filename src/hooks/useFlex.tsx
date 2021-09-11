@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../shared";
 
-export const useFlex = (): { isOnboarded } => {
+export const useFlex = (): { isOnboarded; setIsOnboarded } => {
   const [isOnboarded, setIsOnboarded] = useState<boolean | undefined>(undefined);
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
@@ -38,5 +38,5 @@ export const useFlex = (): { isOnboarded } => {
     getOnboardingStatus();
   }, [getAccessTokenSilently, isAuthenticated]);
 
-  return { isOnboarded };
+  return { isOnboarded, setIsOnboarded };
 };

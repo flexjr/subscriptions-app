@@ -1,46 +1,46 @@
 import { RightOutlined } from "@ant-design/icons";
-import { Row, Col, Typography, Form, Input, Button, Checkbox } from "antd";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Row, Col, Typography, Form, Input, Button, Checkbox, Alert } from "antd";
 import React, { useState } from "react";
-import { API_URL, AUTH0_DOMAIN } from "../../shared";
+import { useHistory } from "react-router";
+import { useFlex } from "../../hooks";
+import { API_URL, AUTH0_API_AUDIENCE, postData } from "../../shared";
 
 const { Title } = Typography;
 
 export const Onboarding: React.FunctionComponent = () => {
   const [continueIsEnabled, setContinueIsEnabled] = useState(true);
-  const token = "TODO";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { getAccessTokenSilently } = useAuth0();
+  const { setIsOnboarded } = useFlex();
+  const history = useHistory();
 
-  const onFinish = (values: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onFinish = (values: any): void => {
     console.log("Success:", values);
 
-    const abortController = new AbortController();
-    const { signal } = abortController;
+    const onboardOrgAndUser = async (): Promise<{ message } | undefined> => {
+      const abortController = new AbortController();
+      const { signal } = abortController;
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const postOnboardingData = async () => {
-      try {
-        const apiUrl = `${API_URL}/users/onboarding`;
-        const response = await fetch(apiUrl, {
-          signal,
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`, // So that our API will know who's calling it :)
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values), // POST-ed data
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      return await postData<{ message }>(`${API_URL}/users/onboarding`, accessToken, signal, values)
+        .then(({ message }) => {
+          localStorage.setItem("isOnboarded", "true");
+          setIsOnboarded(true);
+          history.push("/flex/dashboard");
+          return { message };
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
         });
-        const data = await response.json();
-        return data;
-      } catch (e) {
-        console.error(e.message);
-      }
     };
 
-    // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
-    return function cleanup() {
-      abortController.abort();
-    };
+    onboardOrgAndUser();
   };
 
   const toggleContinue = (): void => {
@@ -55,11 +55,21 @@ export const Onboarding: React.FunctionComponent = () => {
     <>
       <Row
         style={{
-          marginBottom: "40px",
+          marginBottom: "16px",
         }}
       >
         <Col md={24}>
           <Title level={3}>Let’s begin your journey with Flex!</Title>
+        </Col>
+      </Row>
+      <Row>
+        <Col
+          md={24}
+          style={{
+            marginBottom: "16px",
+          }}
+        >
+          <Alert message="This is a demo app and no KYC will be performed." type="info" banner />
         </Col>
       </Row>
       <Row>
@@ -80,7 +90,7 @@ export const Onboarding: React.FunctionComponent = () => {
                   onFinishFailed={onFinishFailed}
                 >
                   <Row>
-                  <Col
+                    <Col
                       md={12}
                       style={{
                         paddingRight: "8px",

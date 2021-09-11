@@ -1,8 +1,6 @@
 import styled from "@emotion/styled";
 import { Row, Col, Typography, Divider, Image, Skeleton } from "antd";
 import React from "react";
-import { useHistory } from "react-router";
-import { Redirect } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 import { useFlex } from "../../hooks";
 
@@ -15,12 +13,6 @@ const PaddedCol = styled(Col)`
 
 export const Home: React.FunctionComponent = () => {
   const { isOnboarded } = useFlex();
-  const history = useHistory();
-  console.log("home.tsx", isOnboarded);
-  if (isOnboarded != undefined && !isOnboarded) {
-    // history.push("/onboarding");
-    <Redirect to="/onboarding" />;
-  }
   return <>{isOnboarded == undefined ? <Skeleton active /> : <HomeContent />}</>;
 };
 
