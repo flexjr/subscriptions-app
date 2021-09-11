@@ -63,11 +63,12 @@ export const NavbarSide: React.FunctionComponent = () => {
           <Menu.Item
             key="logout"
             style={{ float: "right" }}
-            onClick={() =>
+            onClick={() => {
+              localStorage.clear();
               logout({
                 returnTo: window.location.origin,
-              })
-            }
+              });
+            }}
             icon={<LogoutOutlined />}
             className="flex-menu-item-selected"
           >

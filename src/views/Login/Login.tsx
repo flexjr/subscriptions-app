@@ -18,9 +18,11 @@ export const Login: React.FunctionComponent = () => {
     loginWithRedirect();
   };
 
-  if (isAuthenticated) {
-    history.push("/flex/dashboard");
-  }
+  // if (isAuthenticated) {
+  //   console.log("You are authenticated and are being redirected");
+  //   history.push("/flex/dashboard");
+  //   // <Redirect push to="/flex/dashboard" />;
+  // }
 
   return (
     <>

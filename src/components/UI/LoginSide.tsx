@@ -1,6 +1,15 @@
+import { Steps } from "antd";
 import React from "react";
+import "./LoginSide.css";
 
-export const LoginSide: React.FunctionComponent = () => {
+const { Step } = Steps;
+
+interface LoginSideProps {
+  isAuthenticated: boolean;
+  isOnboarded: boolean | undefined;
+}
+
+export const LoginSide: React.FunctionComponent<LoginSideProps> = ({ isAuthenticated, isOnboarded }) => {
   return (
     <div
       style={{
@@ -30,7 +39,7 @@ export const LoginSide: React.FunctionComponent = () => {
       >
         <div
           style={{
-            marginBottom: "35px",
+            marginBottom: "32px",
           }}
         >
           <img
@@ -41,8 +50,30 @@ export const LoginSide: React.FunctionComponent = () => {
             alt="Flex Logo"
           />
         </div>
-        <div>Grow your business with flexible business funds</div>
+        <div
+          style={{
+            marginBottom: "32px",
+          }}
+        >
+          Grow your business with flexible business funds
+        </div>
+        {isAuthenticated && !isOnboarded ? <OnboardingSideSteps /> : <></>}
       </div>
     </div>
+  );
+};
+
+const OnboardingSideSteps: React.FunctionComponent = () => {
+  return (
+    <Steps direction="vertical" current={0}>
+      <Step
+        title="Create an account"
+        className="flex-item-title"
+        style={{
+          paddingBottom: "16px",
+        }}
+      />
+      <Step title="Begin your journey with Flex" />
+    </Steps>
   );
 };
