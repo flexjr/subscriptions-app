@@ -1,9 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { Skeleton } from "antd";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-
+import { Redirect, BrowserRouter, Switch, Route } from "react-router-dom";
 import { LoginSide, NavbarSide } from "./components/UI";
+import { useFlex } from "./hooks";
 import { OrgSubscriptions } from "./views/CompanySettings/OrgSubscriptions";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
@@ -16,15 +17,21 @@ import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
-  const marginLeftIfLoggedOut = isAuthenticated ? 260 : 359;
+  const { isOnboarded } = useFlex();
+  const marginLeftIfLoggedOut = isAuthenticated && isOnboarded ? 260 : 359;
+  console.log("isAuthenticated", isAuthenticated, "isOnboarded", isOnboarded);
   return (
     <BrowserRouter>
       <Layout className="layout" style={{ marginLeft: marginLeftIfLoggedOut, minHeight: "100vh" }}>
-        {isAuthenticated ? <NavbarSide /> : <LoginSide />}
+        {isAuthenticated && isOnboarded ? (
+          <NavbarSide />
+        ) : (
+          <LoginSide isAuthenticated={isAuthenticated} isOnboarded={isOnboarded} />
+        )}
         <Content style={{ padding: "38px" }}>
           <Switch>
             <Route exact path="/">
-              <Login />
+              <LoginSwitcher isAuthenticated={isAuthenticated} isOnboarded={isOnboarded} />
             </Route>
             <Route exact path="/flex/dashboard">
               <Home />
@@ -69,4 +76,21 @@ export const Router: React.FunctionComponent = () => {
       </Layout>
     </BrowserRouter>
   );
+};
+
+interface LoginSwitcherProps {
+  isAuthenticated: boolean | undefined;
+  isOnboarded: boolean | undefined;
+}
+
+const LoginSwitcher: React.FunctionComponent<LoginSwitcherProps> = ({ isAuthenticated, isOnboarded }) => {
+  if (isAuthenticated == true && isOnboarded == undefined) {
+    return <Skeleton active />;
+  } else if (isAuthenticated && isOnboarded) {
+    return <Redirect to="/flex/dashboard" />;
+  } else if (isAuthenticated && !isOnboarded) {
+    return <Redirect to="/onboarding" />;
+  } else {
+    return <Login />;
+  }
 };
