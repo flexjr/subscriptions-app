@@ -2,7 +2,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../shared";
 
-export const useFlex = (): { isOnboarded; setIsOnboarded } => {
+export const useFlex = (): { isOnboarded; isLoadingOnboarded; setIsOnboarded } => {
+  const [isLoadingOnboarded, setIsLoadingOnboarded] = useState(true);
   const [isOnboarded, setIsOnboarded] = useState<boolean | undefined>(undefined);
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
@@ -16,6 +17,7 @@ export const useFlex = (): { isOnboarded; setIsOnboarded } => {
       }
       if (localStorage.getItem("isOnboarded") === "true") {
         setIsOnboarded(true);
+        setIsLoadingOnboarded(false);
         return { onboarded: true };
       }
 
@@ -27,6 +29,7 @@ export const useFlex = (): { isOnboarded; setIsOnboarded } => {
       return await getData<{ onboarded }>(`${API_URL}/organizations/onboarded`, accessToken, signal)
         .then(({ onboarded }) => {
           setIsOnboarded(onboarded);
+          setIsLoadingOnboarded(false);
           localStorage.setItem("isOnboarded", onboarded.toString());
           return onboarded;
         })
@@ -38,5 +41,5 @@ export const useFlex = (): { isOnboarded; setIsOnboarded } => {
     getOnboardingStatus();
   }, [getAccessTokenSilently, isAuthenticated]);
 
-  return { isOnboarded, setIsOnboarded };
+  return { isOnboarded, isLoadingOnboarded, setIsOnboarded };
 };
