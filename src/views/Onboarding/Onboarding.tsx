@@ -27,7 +27,7 @@ export const Onboarding: React.FunctionComponent = () => {
         scope: "openid profile email",
       });
 
-      return await postData<{ message }>(`${API_URL}/users/onboarding`, accessToken, signal, values)
+      return await postData<{ message }>(`${API_URL}/organizations/onboarding`, accessToken, signal, values)
         .then(({ message }) => {
           localStorage.setItem("isOnboarded", "true");
           setIsOnboarded(true);
