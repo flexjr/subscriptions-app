@@ -13,19 +13,19 @@ const columns = [
   },
   {
     title: "First Name",
-    dataIndex: "firstName",
+    dataIndex: "first_name",
   },
   {
     title: "Last Name",
-    dataIndex: "lastName",
+    dataIndex: "last_name",
   },
   {
     title: "Member's Email",
     dataIndex: "email",
   },
   {
-    title: "Plan Type",
-    dataIndex: "subscriptionPlanType",
+    title: "Subscription Plan",
+    dataIndex: "subscription_plan",
   },
 ];
 
@@ -35,8 +35,8 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
-  const [currentOrgInfo, setCurrentOrgInfo] = useState<{ name: string } | undefined>({
-    name: "⌛...",
+  const [currentOrgInfo, setCurrentOrgInfo] = useState<{ company_name: string } | undefined>({
+    company_name: "⌛...",
   });
 
   const { getAccessTokenSilently } = useAuth0();
@@ -65,9 +65,13 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
           return undefined;
         });
 
-      const orgInfo = await getData<{ name: string }>(`${API_URL}/organizations/current_org`, accessToken, signal)
-        .then(({ name }) => {
-          return { name };
+      const orgInfo = await getData<{ company_name: string }>(
+        `${API_URL}/organizations/current_org`,
+        accessToken,
+        signal
+      )
+        .then(({ company_name }) => {
+          return { company_name };
         })
         .catch((error) => {
           console.error(error);
@@ -142,7 +146,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
         <Skeleton active />
       ) : (
         <>
-          <FlexBanner>{currentOrgInfo?.name}</FlexBanner>
+          <FlexBanner>{currentOrgInfo?.company_name}</FlexBanner>
           <RoundedCard style={{ marginTop: 16 }}>
             <div style={{ marginBottom: 16 }}>
               <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
