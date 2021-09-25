@@ -6,6 +6,7 @@ import { Redirect, BrowserRouter, Switch, Route } from "react-router-dom";
 import { LoginSide, NavbarSide } from "./components/UI";
 import { Loading } from "./components/UI/Loading";
 import { useFlex } from "./hooks";
+import { Members } from "./views/CompanySettings";
 import { OrgSubscriptions } from "./views/CompanySettings/OrgSubscriptions";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
@@ -48,6 +49,9 @@ export const Router: React.FunctionComponent = () => {
                 </Route>
                 <Route exact path="/flex/organization/subscriptions">
                   <OrgSubscriptions />
+                </Route>
+                <Route exact path="/flex/organization/members">
+                  <Members />
                 </Route>
                 <Route exact path="/flex/organization/saved-cards">
                   <SavedCards />
