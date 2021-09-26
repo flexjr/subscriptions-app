@@ -1,10 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Skeleton } from "antd";
+import { Button, Table, Skeleton, Tabs } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
+
+const { TabPane } = Tabs;
 
 const columns = [
   {
@@ -147,16 +149,30 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
       ) : (
         <>
           <FlexBanner>{currentOrgInfo?.company_name}</FlexBanner>
-          <RoundedCard style={{ marginTop: 16 }}>
-            <div style={{ marginBottom: 16 }}>
-              <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
-                Upgrade
-              </Button>{" "}
-              <Button type="primary">Downgrade</Button>
-              <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
-            </div>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />
-          </RoundedCard>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Upgrades" key="1">
+              <RoundedCard style={{ marginTop: 16 }}>
+                <div style={{ marginBottom: 16 }}>
+                  <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
+                    Upgrade
+                  </Button>{" "}
+                  <Button type="primary">Downgrade</Button>
+                  <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
+                </div>
+                <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />
+              </RoundedCard>
+            </TabPane>
+            <TabPane tab="All Subscriptions" key="2">
+              <RoundedCard style={{ marginTop: 16 }}>
+                <div style={{ marginBottom: 16 }}>
+                  <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
+                    Manage Subscriptions [TODO]
+                  </Button>
+                </div>
+                <Table columns={columns} dataSource={currentOrgUsers} />
+              </RoundedCard>
+            </TabPane>
+          </Tabs>
         </>
       )}
     </>

@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { CardComponent, CardNumber, CardExpiry, CardCVV } from "@chargebee/chargebee-js-react-wrapper";
-import { Button, Table, Modal, Row, Card, Col, Alert, Skeleton, Typography } from "antd";
+import { CardComponent } from "@chargebee/chargebee-js-react-wrapper";
+import { Button, Row, Col, Alert, Skeleton, Typography } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";

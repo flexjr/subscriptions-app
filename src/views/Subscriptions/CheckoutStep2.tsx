@@ -1,21 +1,9 @@
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { useAuth0 } from "@auth0/auth0-react";
-import styled from "@emotion/styled";
-import { Button, Table, Modal, Row, Card, Col, Alert, Typography } from "antd";
+import { Button, Row, Card, Col, Alert, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner } from "../../components/Shared";
-import { API_URL, AUTH0_API_AUDIENCE } from "../../shared";
 const { Title } = Typography;
-
-const GreenCheckedOutline = styled(CheckOutlined)`
-  color: #52c41a;
-`;
-
-const RedCloseOutlined = styled(CloseOutlined)`
-  color: #f5222d;
-`;
 
 interface stateType {
   userIds?: any;
