@@ -12,9 +12,7 @@ import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
-import { CheckoutStep2, CheckoutStep1, CheckoutStep3 } from "./views/Subscriptions";
-import { PaymentFailed } from "./views/Subscriptions/PaymentFailure";
-import { PaymentSuccess } from "./views/Subscriptions/PaymentSuccess";
+import { CheckoutStep2, CheckoutStep1, CheckoutStep3, PaymentFailed, PaymentSuccess } from "./views/Subscriptions";
 import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {

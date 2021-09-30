@@ -3,7 +3,7 @@ import { CardComponent } from "@chargebee/chargebee-js-react-wrapper";
 import { Button, Row, Col, Alert, Skeleton, Typography } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
@@ -131,21 +131,34 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       scope: "openid profile email",
     });
 
-    const addCard = await postData<{ invoice; subscription }>(`${API_URL}/subscriptions/checkout`, accessToken, signal)
+    const checkout = await postData<{ invoice; subscription }>(`${API_URL}/subscriptions/checkout`, accessToken, signal)
       .then(({ invoice, subscription }) => {
         console.info(invoice, subscription);
+
+        if (invoice.status) {
+          history.push({
+            pathname: "/flex/subscription/payment-success",
+          });
+        }
         return { invoice, subscription };
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((e) => {
+        console.error(e); // TODO
+        history.push({
+          pathname: "/flex/subscription/payment-failed",
+          state: {
+            error: e, // TODO
+          },
+        });
+
+        // <Link
+        //   to={{
+        //     pathname: "/flex/subscription/payment-failed",
+        //     state: { error: e },
+        //   }}
+        // />;
         return undefined;
       });
-
-    if (addCard?.invoice.status) {
-      history.push({
-        pathname: "/flex/subscription/payment-success",
-      });
-    }
   };
 
   return (

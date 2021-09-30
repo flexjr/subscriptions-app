@@ -2,10 +2,16 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { Result, Button, Typography } from "antd";
 
 import React from "react";
+import { useLocation } from "react-router";
 import { RoundedCard } from "../../components/Shared";
 const { Paragraph, Text, Title } = Typography;
+interface stateType {
+  error?: any;
+}
 
 export const PaymentFailed: React.FunctionComponent = () => {
+  const location = useLocation<stateType>();
+  console.log(location.state?.error);
   return (
     <>
       <Title level={3}>Payment Failed</Title>
