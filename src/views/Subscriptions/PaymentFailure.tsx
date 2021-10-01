@@ -2,10 +2,19 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { Result, Button, Typography } from "antd";
 
 import React from "react";
+import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 const { Paragraph, Text, Title } = Typography;
+interface stateType {
+  error?: any;
+}
 
 export const PaymentFailed: React.FunctionComponent = () => {
+  const location = useLocation<stateType>();
+  const error = location.state?.error;
+  const errorMessage = error?.message;
+  const errorDebug = error?.debug;
   return (
     <>
       <Title level={3}>Payment Failed</Title>
@@ -16,8 +25,8 @@ export const PaymentFailed: React.FunctionComponent = () => {
       >
         <Result
           status="error"
-          title="Submission Failed"
-          subTitle="Please check and modify the following information before resubmitting."
+          title="Payment Failed"
+          subTitle={errorMessage}
           extra={[
             <Button type="primary" key="console">
               Go Console
@@ -33,16 +42,12 @@ export const PaymentFailed: React.FunctionComponent = () => {
                   fontSize: 16,
                 }}
               >
-                The content you submitted has the following error:
+                The payment failed because:
               </Text>
             </Paragraph>
             <Paragraph>
-              <CloseCircleOutlined className="site-result-demo-error-icon" /> Your account has been frozen.{" "}
-              <a>Thaw immediately &gt;</a>
-            </Paragraph>
-            <Paragraph>
-              <CloseCircleOutlined className="site-result-demo-error-icon" /> Your account is not yet eligible to apply.{" "}
-              <a>Apply Unlock &gt;</a>
+              <CloseCircleOutlined className="site-result-demo-error-icon" /> {errorDebug}{" "}
+              <Link to="/flex/organization/subscriptions">Try again &gt;</Link>
             </Paragraph>
           </div>
         </Result>
