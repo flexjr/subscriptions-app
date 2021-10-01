@@ -3,7 +3,7 @@ import { CardComponent } from "@chargebee/chargebee-js-react-wrapper";
 import { Button, Row, Col, Alert, Skeleton, Typography } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
@@ -143,18 +143,18 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         return { invoice, subscription };
       })
       .catch((e) => {
-        console.error(e); // TODO
+        const error = JSON.parse(e.message);
         history.push({
           pathname: "/flex/subscription/payment-failed",
           state: {
-            error: e, // TODO
+            error: error, // TODO
           },
         });
 
-        // <Link
+        // <Redirect
         //   to={{
         //     pathname: "/flex/subscription/payment-failed",
-        //     state: { error: e },
+        //     state: { error: error },
         //   }}
         // />;
         return undefined;

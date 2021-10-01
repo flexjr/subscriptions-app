@@ -21,7 +21,7 @@ export function getData<T>(url: string, accessToken: string, signal: AbortSignal
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function postData<T>(url: string, accessToken: string, signal: AbortSignal, payload?: any): Promise<T> {
+export async function postData<T>(url: string, accessToken: string, signal: AbortSignal, payload?: any): Promise<T> {
   return fetch(url, {
     method: "POST",
     headers: {
@@ -31,9 +31,9 @@ export function postData<T>(url: string, accessToken: string, signal: AbortSigna
     },
     body: JSON.stringify(payload),
     signal,
-  }).then((response) => {
+  }).then(async (response) => {
     if (!response.ok) {
-      throw new Error(response.statusText);
+      throw new Error(await response.json().then((data) => JSON.stringify(data)));
     }
     return response.json() as Promise<T>;
   });
