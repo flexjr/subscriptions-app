@@ -41,7 +41,7 @@ export const CheckoutStep2: React.FunctionComponent = () => {
             subscriptionPlanTypeWithBillingFrequency,
           },
         }),
-      1000
+      1800
     );
 
     console.log(userIds, subscriptionPlanType, subscriptionPlanTypeWithBillingFrequency);
