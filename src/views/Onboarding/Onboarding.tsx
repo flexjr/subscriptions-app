@@ -2,7 +2,7 @@ import { RightOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Typography, Form, Input, Button, Checkbox, Alert } from "antd";
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { useFlex } from "../../hooks";
 import { API_URL, AUTH0_API_AUDIENCE, postData } from "../../shared";
 
@@ -14,9 +14,13 @@ export const Onboarding: React.FunctionComponent = () => {
   const { setIsOnboarded } = useFlex();
   const history = useHistory();
 
+  if (localStorage.getItem("isOnboarded") === "true") {
+    return <Redirect to="/flex/dashboard" />;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any): void => {
-    console.log("Success:", values);
+    console.log("Form logger:", values);
 
     const onboardOrgAndUser = async (): Promise<{ message } | undefined> => {
       const abortController = new AbortController();
@@ -31,7 +35,8 @@ export const Onboarding: React.FunctionComponent = () => {
         .then(({ message }) => {
           localStorage.setItem("isOnboarded", "true");
           setIsOnboarded(true);
-          history.push("/flex/dashboard");
+          history.go(0);
+          // history.push("/flex/dashboard");
           return { message };
         })
         .catch((error) => {
