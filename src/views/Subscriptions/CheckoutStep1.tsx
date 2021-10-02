@@ -41,7 +41,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
             subscriptionPlanType: subscriptionPlanType,
           },
         }),
-      1800
+      2800
     );
   };
 
