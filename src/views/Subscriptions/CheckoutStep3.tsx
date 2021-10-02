@@ -35,6 +35,14 @@ export const CheckoutStep3: React.FunctionComponent = () => {
   });
   const [title, setTitle] = useState("");
   const [isLoadingCards, setIsLoadingCards] = useState(true);
+  const [isLoadingPricing, setIsLoadingPricing] = useState(true);
+  const [usersList, setUsersList] = useState([]);
+  const [estimate, setEstimate] = useState({
+    estimated_price: null,
+    unit_price: null,
+    frequency: null,
+    friendly_name: null,
+  });
 
   const userIds = location.state?.userIds;
   const subscriptionPlan = location.state?.subscriptionPlan;
@@ -84,22 +92,34 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         setTitle("Add your Flex Visa card");
       }
 
-      const payload = {
+      const payloadEstimate = {
         userIds: userIds,
         subscriptionPlan: subscriptionPlan,
         subscriptionPlanId: subscriptionPlanId,
       };
-
-      console.log(payload);
-
-      const estimateSubscriptionPricing = await postData<{ status; estimated_price } | undefined>(
+      const estimateSubscriptionPricing = await postData<{ estimated_price; unit_price; frequency; friendly_name }>(
         `${API_URL}/subscriptions/estimate_checkout`,
         accessToken,
         signal,
-        payload
+        payloadEstimate
       ).then((data) => {
         console.log(data);
-        return { data };
+        setEstimate(data);
+        setIsLoadingPricing(false);
+        return data;
+      });
+
+      const payloadUserIds = {
+        userIds: userIds,
+      };
+      const getUsersEmails = await postData<{ data } | undefined>(
+        `${API_URL}/users/users_by_user_ids`,
+        accessToken,
+        signal,
+        payloadUserIds
+      ).then((data) => {
+        console.log(data);
+        setUsersList(data?.data);
       });
     };
 
@@ -254,28 +274,79 @@ export const CheckoutStep3: React.FunctionComponent = () => {
           </Col>
           <Col span={8}>
             <RoundedCard title="Pricing Summary" bordered={false}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>Flex Pro</div>
-                <div />
-              </div>
-              <div>
-                <ol />
-              </div>
-              <Divider />
-              <div
-                style={{
-                  fontSize: "0.65rem",
-                }}
-              >
-                You will be charged S$xx/year when you click “Pay Now”. Your paid subscription will automatically renew
-                until you cancel it. You can cancel at any time but only after 3 months by visiting My Org's
-                Subscriptions. By clicking “Pay Now”, you agree to our Terms of Service and Privacy Policy.
-              </div>
+              {isLoadingPricing ? (
+                <Skeleton active />
+              ) : (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      {estimate.friendly_name}
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      SGD {estimate.unit_price}
+                    </div>
+                  </div>
+                  <div>
+                    <ol>
+                      {usersList ? usersList.map((user) => <li key={user["id"]}>{user["email"]}</li>) : <>Error</>}
+                    </ol>
+                  </div>
+                  <Divider />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      Total (per {estimate.frequency})
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        fontSize: "1.2rem",
+                      }}
+                    >
+                      SGD {estimate.estimated_price}
+                    </div>
+                  </div>
+                  <Divider />
+                  <div
+                    style={{
+                      fontSize: "0.65rem",
+                    }}
+                  >
+                    You will be charged SGD{estimate.estimated_price}/{estimate.frequency} when you click “Pay Now”.
+                    Your paid subscription will automatically renew until you cancel it. You can cancel at any time but
+                    only after 3 months by visiting My Org's Subscriptions. By clicking “Pay Now”, you agree to our{" "}
+                    <a href="https://app.fxr.one/originate/terms" target="_blank" rel="noopener noreferrer">
+                      terms of use
+                    </a>{" "}
+                    and{" "}
+                    <a href="https://app.fxr.one/originate/privacy" target="_blank" rel="noopener noreferrer">
+                      privacy policy
+                    </a>
+                    .
+                  </div>
+                </>
+              )}
             </RoundedCard>
           </Col>
         </Row>
