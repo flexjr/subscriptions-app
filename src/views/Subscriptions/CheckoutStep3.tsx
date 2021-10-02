@@ -137,21 +137,21 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     };
     console.log(values);
 
-    const checkout = await postData<{ invoice; subscription }>(
+    const checkout = await postData<{ status; result }>(
       `${API_URL}/subscriptions/checkout`,
       accessToken,
       signal,
       values
     )
-      .then(({ invoice, subscription }) => {
-        console.info(invoice, subscription);
+      .then(({ status, result }) => {
+        console.info(status, result);
 
-        if (invoice.status) {
+        if (status == "success") {
           history.push({
             pathname: "/flex/subscription/payment-success",
           });
         }
-        return { invoice, subscription };
+        return true;
       })
       .catch((e) => {
         const error = JSON.parse(e.message);
