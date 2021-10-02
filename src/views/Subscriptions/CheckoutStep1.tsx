@@ -29,8 +29,8 @@ export const CheckoutStep1: React.FunctionComponent = () => {
 
   // TODO: If userIds does not exist, then redirect back...
 
-  const handleUpgrade = (subscriptionPlanType: string): void => {
-    console.log(userIds, subscriptionPlanType);
+  const handleUpgrade = (subscriptionPlan: string): void => {
+    console.log(userIds, subscriptionPlan);
     setLoading(true);
     setTimeout(
       () =>
@@ -38,10 +38,10 @@ export const CheckoutStep1: React.FunctionComponent = () => {
           pathname: "/flex/subscription/checkout/billing-frequency",
           state: {
             userIds: userIds,
-            subscriptionPlanType: subscriptionPlanType,
+            subscriptionPlan: subscriptionPlan,
           },
         }),
-      1000
+      2800
     );
   };
 
@@ -57,16 +57,66 @@ export const CheckoutStep1: React.FunctionComponent = () => {
     <>
       <Title level={3}>Checkout</Title>
       <FlexBanner>Select your shiny new plan! 🎉</FlexBanner>
-      <Alert
-        message={debugData}
-        type="info"
-        banner
-        style={{
-          borderRadius: "10px",
-          marginTop: "16px",
-        }}
-      />
+      {process.env.NODE_ENV === "development" && (
+        <Alert
+          message={debugData}
+          type="info"
+          banner
+          style={{
+            borderRadius: "10px",
+            marginTop: "16px",
+          }}
+        />
+      )}
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+        {/* <Row gutter={16}>
+          <Col span={12}>
+            <div
+              style={{
+                padding: "16px",
+                borderRadius: "10px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                backgroundColor: "rgba(255, 255, 255)",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: "24px",
+                    textAlign: "center",
+                    fontWeight: 600,
+                    marginBottom: "24px",
+                    flexGrow: 0,
+                  }}
+                >
+                  Flex Starter
+                </div>
+                <div
+                  style={{
+                    fontSize: "32px",
+                    textAlign: "center",
+                    fontWeight: 600,
+                    marginBottom: "16px",
+                    flexGrow: 0,
+                  }}
+                >
+                  SGD 7.99
+                  <span
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    /month
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row> */}
         <Row gutter={16}>
           <Col span={12}>
             <Card
@@ -106,7 +156,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
             <Card
               title="Flex Pro"
               bordered={false}
-              extra={<>$7.99 per user per month</>}
+              extra={<>SGD 7.99 per user per month</>}
               actions={[
                 <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("FLEX_PRO")} loading={loading}>
                   Upgrade

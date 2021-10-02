@@ -1,5 +1,6 @@
 import { Button, Result, Typography } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 const { Title } = Typography;
 
@@ -14,13 +15,15 @@ export const PaymentSuccess: React.FunctionComponent = () => {
       >
         <Result
           status="success"
-          title="Successfully Purchased Cloud Server ECS!"
-          subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+          title="Successfully Upgraded!"
+          subTitle="Thank you for upgrading to Flex Pro, give us 1-5 minutes while we prepare your account."
           extra={[
             <Button type="primary" key="console">
-              Go Console
+              <Link to="/flex/dashboard">Go to Dashboard</Link>
             </Button>,
-            <Button key="buy">Buy Again</Button>,
+            <Button key="buy">
+              <Link to="/flex/organization/subscriptions">Upgrade Again</Link>
+            </Button>,
           ]}
         />
       </RoundedCard>
