@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { CardComponent } from "@chargebee/chargebee-js-react-wrapper";
-import { Button, Row, Col, Alert, Skeleton, Typography } from "antd";
+import { Button, Row, Col, Alert, Skeleton, Typography, Divider } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -11,8 +11,8 @@ const { Title } = Typography;
 
 interface stateType {
   userIds?: any;
-  subscriptionPlanType?: any;
-  subscriptionPlanTypeWithBillingFrequency?: any;
+  subscriptionPlan?: any;
+  subscriptionPlanId?: any;
 }
 declare global {
   interface Window {
@@ -37,8 +37,8 @@ export const CheckoutStep3: React.FunctionComponent = () => {
   const [isLoadingCards, setIsLoadingCards] = useState(true);
 
   const userIds = location.state?.userIds;
-  const subscriptionPlanType = location.state?.subscriptionPlanType;
-  const subscriptionPlanTypeWithBillingFrequency = location.state?.subscriptionPlanTypeWithBillingFrequency;
+  const subscriptionPlan = location.state?.subscriptionPlan;
+  const subscriptionPlanId = location.state?.subscriptionPlanId;
 
   const cardRef = createRef<CardComponent>();
 
@@ -53,7 +53,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
   useEffect(() => {
     setDebugData(
-      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlanType} / billing frequency ${subscriptionPlanTypeWithBillingFrequency} / cb token ${chargebeeToken}`
+      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlan} / billing frequency ${subscriptionPlanId} / cb token ${chargebeeToken}`
     );
 
     const fetchData = async (): Promise<void> => {
@@ -83,9 +83,28 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         setIsLoadingCards(false);
         setTitle("Add your Flex Visa card");
       }
+
+      const payload = {
+        userIds: userIds,
+        subscriptionPlan: subscriptionPlan,
+        subscriptionPlanId: subscriptionPlanId,
+      };
+
+      console.log(payload);
+
+      const estimateSubscriptionPricing = await postData<{ status; estimated_price } | undefined>(
+        `${API_URL}/subscriptions/estimate_checkout`,
+        accessToken,
+        signal,
+        payload
+      ).then((data) => {
+        console.log(data);
+        return { data };
+      });
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddCard = async (chargebeeToken: string): Promise<void> => {
@@ -132,8 +151,8 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
     const values = {
       userIds: userIds,
-      subscriptionPlan: subscriptionPlanType,
-      subscriptionPlanId: subscriptionPlanTypeWithBillingFrequency,
+      subscriptionPlan: subscriptionPlan,
+      subscriptionPlanId: subscriptionPlanId,
     };
     console.log(values);
 
@@ -169,15 +188,17 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     <>
       <Title level={3}>Checkout</Title>
       <FlexBanner>You’re almost there! 😀</FlexBanner>
-      <Alert
-        message={debugData}
-        type="info"
-        banner
-        style={{
-          borderRadius: "10px",
-          marginTop: "16px",
-        }}
-      />
+      {process.env.NODE_ENV === "development" && (
+        <Alert
+          message={debugData}
+          type="info"
+          banner
+          style={{
+            borderRadius: "10px",
+            marginTop: "16px",
+          }}
+        />
+      )}
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={16}>
@@ -233,9 +254,28 @@ export const CheckoutStep3: React.FunctionComponent = () => {
           </Col>
           <Col span={8}>
             <RoundedCard title="Pricing Summary" bordered={false}>
-              <div>To show card layout</div>
-              <div>To show LIST of users as part of this checkout</div>
-              <div>To get pricing summary (no. of users x chosen plan billing frequency)</div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>Flex Pro</div>
+                <div />
+              </div>
+              <div>
+                <ol />
+              </div>
+              <Divider />
+              <div
+                style={{
+                  fontSize: "0.65rem",
+                }}
+              >
+                You will be charged S$xx/year when you click “Pay Now”. Your paid subscription will automatically renew
+                until you cancel it. You can cancel at any time but only after 3 months by visiting My Org's
+                Subscriptions. By clicking “Pay Now”, you agree to our Terms of Service and Privacy Policy.
+              </div>
             </RoundedCard>
           </Col>
         </Row>

@@ -7,7 +7,7 @@ const { Title } = Typography;
 
 interface stateType {
   userIds?: any;
-  subscriptionPlanType?: any;
+  subscriptionPlan?: any;
 }
 
 export const CheckoutStep2: React.FunctionComponent = () => {
@@ -17,19 +17,19 @@ export const CheckoutStep2: React.FunctionComponent = () => {
   const [debugData, setDebugData] = useState("Loading...");
 
   const userIds = location.state?.userIds;
-  const subscriptionPlanType = location.state?.subscriptionPlanType;
+  const subscriptionPlan = location.state?.subscriptionPlan;
 
   useEffect(() => {
     const abortController = new AbortController();
     const { signal } = abortController;
     setDebugData(
-      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlanType} / billing frequency NULL`
+      `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlan} / billing frequency NULL`
     );
-  }, [subscriptionPlanType, userIds]);
+  }, [subscriptionPlan, userIds]);
 
   // If userIds does not exist, then redirect back...
 
-  const handleUpgrade = (subscriptionPlanTypeWithBillingFrequency: string): void => {
+  const handleUpgrade = (subscriptionPlanId: string): void => {
     setLoading(true);
     setTimeout(
       () =>
@@ -37,29 +37,31 @@ export const CheckoutStep2: React.FunctionComponent = () => {
           pathname: "/flex/subscription/checkout/summary",
           state: {
             userIds,
-            subscriptionPlanType,
-            subscriptionPlanTypeWithBillingFrequency,
+            subscriptionPlan: subscriptionPlan,
+            subscriptionPlanId: subscriptionPlanId,
           },
         }),
       1800
     );
 
-    console.log(userIds, subscriptionPlanType, subscriptionPlanTypeWithBillingFrequency);
+    console.log(userIds, subscriptionPlan, subscriptionPlanId);
   };
 
   return (
     <>
       <Title level={3}>Checkout</Title>
       <FlexBanner>Now... choose your billing frequency 📅</FlexBanner>
-      <Alert
-        message={debugData}
-        type="info"
-        banner
-        style={{
-          borderRadius: "10px",
-          marginTop: "16px",
-        }}
-      />
+      {process.env.NODE_ENV === "development" && (
+        <Alert
+          message={debugData}
+          type="info"
+          banner
+          style={{
+            borderRadius: "10px",
+            marginTop: "16px",
+          }}
+        />
+      )}
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
         <Row gutter={16}>
           <Col span={12}>
@@ -95,7 +97,7 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                 </Button>,
               ]}
             >
-              <div>SGD 89.99 per user per year (x% discount!)</div>
+              <div>SGD 89.99 per user per year (10% discount!)</div>
             </Card>
           </Col>
         </Row>
