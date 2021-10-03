@@ -1,6 +1,6 @@
 import { Selector } from "testcafe";
 
-fixture("Login Page (/)").page`http://localhost:3000`;
+fixture("Login Page (/)").page`https://localhost:3000`;
 
 const LoginTitle = Selector("Title").nth(0);
 const LoginButton = Selector("Button").nth(0);
