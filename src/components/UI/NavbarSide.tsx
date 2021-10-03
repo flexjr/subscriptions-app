@@ -1,4 +1,4 @@
-import { CreditCardOutlined, HomeOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
+import { CreditCardOutlined, HomeOutlined, InfoCircleOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Layout, Menu } from "antd";
@@ -54,6 +54,14 @@ export const NavbarSide: React.FunctionComponent = () => {
         {isAuthenticated ? (
           <Menu.Item key="/flex/user/profile" icon={<UserOutlined />} className="flex-menu-item-selected">
             <Link to="/flex/user/profile">User Profile</Link>
+          </Menu.Item>
+        ) : (
+          <></>
+        )}
+
+        {isAuthenticated ? (
+          <Menu.Item key="/debugger" icon={<InfoCircleOutlined />} className="flex-menu-item-selected">
+            <Link to="/debugger">Debugger</Link>
           </Menu.Item>
         ) : (
           <></>

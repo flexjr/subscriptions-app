@@ -9,6 +9,7 @@ import { useFlex } from "./hooks";
 import { Members } from "./views/CompanySettings";
 import { OrgSubscriptions } from "./views/CompanySettings/OrgSubscriptions";
 import { SavedCards } from "./views/CompanySettings/SavedCards";
+import { Debugger } from "./views/Debugger";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
@@ -71,6 +72,9 @@ export const Router: React.FunctionComponent = () => {
                 </Route>
                 <Route exact path="/flex/subscription/payment-failed">
                   <PaymentFailed />
+                </Route>
+                <Route exact path="/debugger">
+                  <Debugger />
                 </Route>
               </Switch>
               <Footer style={{ textAlign: "center" }}>
