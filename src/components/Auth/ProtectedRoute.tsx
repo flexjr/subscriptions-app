@@ -3,7 +3,8 @@ import React from "react";
 import { Route } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
-export const ProtectedRoute = ({ component, ...args }: React.PropsWithChildren<any>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const ProtectedRoute = ({ component, ...args }: React.PropsWithChildren<any>): JSX.Element => {
   const { isAuthenticated } = useAuth0();
   const history = useHistory();
 

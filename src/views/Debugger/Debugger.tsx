@@ -1,37 +1,13 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Skeleton, Tabs, Row, Col, Input } from "antd";
+import { Button, Skeleton, Tabs, Row, Col, Input } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useHistory } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
-import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
+import { AUTH0_API_AUDIENCE } from "../../shared";
 
 const { TabPane } = Tabs;
 const { TextArea } = Input;
-
-const columns = [
-  {
-    title: "User ID",
-    dataIndex: "id",
-  },
-  {
-    title: "First Name",
-    dataIndex: "first_name",
-  },
-  {
-    title: "Last Name",
-    dataIndex: "last_name",
-  },
-  {
-    title: "Member's Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Subscription Plan",
-    dataIndex: "subscription_plan",
-  },
-];
 
 export const Debugger: React.FunctionComponent = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -51,6 +27,7 @@ export const Debugger: React.FunctionComponent = () => {
     };
     fetchData();
     setIsPageLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -16,7 +16,7 @@ export const Auth0ProviderWithHistory: React.FunctionComponent<Props> = ({ useRe
 
   const history = useHistory();
 
-  const onRedirectCallback = (appState) => {
+  const onRedirectCallback = (appState): void => {
     history.push(appState?.returnTo || window.location.pathname);
   };
 

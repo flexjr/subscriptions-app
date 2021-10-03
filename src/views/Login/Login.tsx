@@ -3,26 +3,17 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Typography, Button } from "antd";
 import React from "react";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 
 const { Title } = Typography;
 
 export const Login: React.FunctionComponent = () => {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
   const [loading, setLoading] = useState(false);
-
-  const history = useHistory();
 
   const handleAuth0Login = (): void => {
     setLoading(true);
     loginWithRedirect();
   };
-
-  // if (isAuthenticated) {
-  //   console.log("You are authenticated and are being redirected");
-  //   history.push("/flex/dashboard");
-  //   // <Redirect push to="/flex/dashboard" />;
-  // }
 
   return (
     <>
