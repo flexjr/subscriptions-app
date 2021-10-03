@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 const { Paragraph, Text, Title } = Typography;
 interface stateType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error?: any;
 }
 

@@ -1,5 +1,4 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Button, Row, Card, Col, Alert, Typography } from "antd";
 import React, { useState } from "react";
@@ -15,13 +14,14 @@ const RedCloseOutlined = styled(CloseOutlined)`
   color: #f5222d;
 `;
 
-interface stateType {
+interface StateType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   userIds?: any;
 }
 
 export const CheckoutStep1: React.FunctionComponent = () => {
   const history = useHistory();
-  const location = useLocation<stateType>();
+  const location = useLocation<StateType>();
   const [loading, setLoading] = useState(false);
   const [debugData, setDebugData] = useState("Loading...");
 
@@ -46,8 +46,6 @@ export const CheckoutStep1: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
     setDebugData(
       `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan NULL / billing frequency NULL`
     );

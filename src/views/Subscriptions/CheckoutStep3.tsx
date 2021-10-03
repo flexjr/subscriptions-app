@@ -9,9 +9,12 @@ import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
 const { Title } = Typography;
 
-interface stateType {
+interface StateType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   userIds?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscriptionPlan?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscriptionPlanId?: any;
 }
 declare global {
@@ -22,7 +25,7 @@ declare global {
 }
 
 export const CheckoutStep3: React.FunctionComponent = () => {
-  const location = useLocation<stateType>();
+  const location = useLocation<StateType>();
   const history = useHistory();
   const [debugData, setDebugData] = useState("Loading...");
   const [chargebeeToken, setChargebeeToken] = useState("");
@@ -97,7 +100,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         subscriptionPlan: subscriptionPlan,
         subscriptionPlanId: subscriptionPlanId,
       };
-      const estimateSubscriptionPricing = await postData<{ estimated_price; unit_price; frequency; friendly_name }>(
+
+      // estimateSubscriptionPricing
+      await postData<{ estimated_price; unit_price; frequency; friendly_name }>(
         `${API_URL}/subscriptions/estimate_checkout`,
         accessToken,
         signal,
@@ -112,7 +117,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       const payloadUserIds = {
         userIds: userIds,
       };
-      const getUsersEmails = await postData<{ data } | undefined>(
+
+      // getUsersEmails
+      await postData<{ data } | undefined>(
         `${API_URL}/users/users_by_user_ids`,
         accessToken,
         signal,
@@ -139,7 +146,8 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       token: chargebeeToken,
     };
 
-    const addCard = await postData<{ brand; expiry_month; expiry_year; last4 }>(
+    // addCard
+    await postData<{ brand; expiry_month; expiry_year; last4 }>(
       `${API_URL}/subscriptions/save_payment_method`,
       accessToken,
       signal,
@@ -176,12 +184,8 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     };
     console.log(values);
 
-    const checkout = await postData<{ status; result }>(
-      `${API_URL}/subscriptions/checkout`,
-      accessToken,
-      signal,
-      values
-    )
+    // Checkout
+    await postData<{ status; result }>(`${API_URL}/subscriptions/checkout`, accessToken, signal, values)
       .then(({ status, result }) => {
         console.info(status, result);
 
@@ -194,12 +198,12 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       })
       .catch((e) => {
         const error = JSON.parse(e.message);
-        // history.push({
-        //   pathname: "/flex/subscription/payment-failed",
-        //   state: {
-        //     error: error, // TODO
-        //   },
-        // });
+        history.push({
+          pathname: "/flex/subscription/payment-failed",
+          state: {
+            error: error, // TODO
+          },
+        });
         return undefined;
       });
   };

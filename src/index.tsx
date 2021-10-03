@@ -5,7 +5,8 @@ import ReactDOM from "react-dom";
 // eslint-disable-next-line import/no-unresolved
 // import "./index.css";
 import { App, history } from "./App";
-const onRedirectCallback = (appState: AppState) => {
+
+const onRedirectCallback = (appState: AppState): void => {
   // If using a Hash Router, you need to use window.history.replaceState to
   // remove the `code` and `state` query parameters from the callback url.
   // window.history.replaceState({}, document.title, window.location.pathname);

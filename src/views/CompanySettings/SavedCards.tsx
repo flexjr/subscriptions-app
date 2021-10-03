@@ -22,10 +22,6 @@ export const SavedCards: React.FunctionComponent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { getAccessTokenSilently } = useAuth0();
 
-  const showModal = (): void => {
-    setIsModalVisible(true);
-  };
-
   const handleOk = (): void => {
     setIsModalVisible(false);
   };
@@ -44,11 +40,8 @@ export const SavedCards: React.FunctionComponent = () => {
         scope: "openid profile email",
       });
 
-      const primaryCard = await getData<{ cards } | undefined>(
-        `${API_URL}/subscriptions/list_saved_payment_methods`,
-        accessToken,
-        signal
-      )
+      // Get cards
+      await getData<{ cards } | undefined>(`${API_URL}/subscriptions/list_saved_payment_methods`, accessToken, signal)
         .then((data) => {
           console.info(data);
           setSavedCards(data?.cards);
@@ -66,13 +59,14 @@ export const SavedCards: React.FunctionComponent = () => {
     return function cleanup() {
       abortController.abort();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleAddCard = () => {
+  const handleAddCard = (): void => {
     const abortController = new AbortController();
     const { signal } = abortController;
 
-    const getHostedPaymentMethodPageUrl = async () => {
+    const getHostedPaymentMethodPageUrl = async (): Promise<void> => {
       try {
         const apiUrl = `${API_URL}/chargebee/payment_source/customer/manage?id=4851`;
         const response = await fetch(apiUrl, {
@@ -85,16 +79,11 @@ export const SavedCards: React.FunctionComponent = () => {
         console.log(data.url);
         setIsModalVisible(true);
       } catch (e) {
-        console.error(e.message);
+        return undefined;
       }
     };
 
     getHostedPaymentMethodPageUrl();
-
-    // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
-    return function cleanup() {
-      abortController.abort();
-    };
   };
 
   return (

@@ -5,14 +5,16 @@ import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner } from "../../components/Shared";
 const { Title } = Typography;
 
-interface stateType {
+interface StateType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   userIds?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscriptionPlan?: any;
 }
 
 export const CheckoutStep2: React.FunctionComponent = () => {
   const history = useHistory();
-  const location = useLocation<stateType>();
+  const location = useLocation<StateType>();
   const [loading, setLoading] = useState(false);
   const [debugData, setDebugData] = useState("Loading...");
 
@@ -20,8 +22,6 @@ export const CheckoutStep2: React.FunctionComponent = () => {
   const subscriptionPlan = location.state?.subscriptionPlan;
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
     setDebugData(
       `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlan} / billing frequency NULL`
     );

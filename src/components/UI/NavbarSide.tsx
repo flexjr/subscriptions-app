@@ -1,4 +1,11 @@
-import { CreditCardOutlined, HomeOutlined, InfoCircleOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  CreditCardOutlined,
+  HomeOutlined,
+  InfoCircleOutlined,
+  LogoutOutlined,
+  TagOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Layout, Menu } from "antd";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const API_URL: string =
   process.env.NODE_ENV === "development" ? "http://localhost:8000" : "https://api.flexjr.one";
 
@@ -20,7 +21,7 @@ export function getData<T>(url: string, accessToken: string, signal: AbortSignal
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function postData<T>(url: string, accessToken: string, signal: AbortSignal, payload?: any): Promise<T> {
   return fetch(url, {
     method: "POST",
