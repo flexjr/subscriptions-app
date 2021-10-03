@@ -74,7 +74,7 @@ export const Debugger: React.FunctionComponent = () => {
                   <a href="https://api.flexjr.one/docs" target="_blank" rel="noopener noreferrer">
                     our API docs
                   </a>{" "}
-                  and put it under Auth0HTTPBearer (http, Bearer) and click Authorize.
+                  and put it under <code>Auth0HTTPBearer (http, Bearer)</code> and click Authorize.
                 </Row>
                 <Row
                   style={{
