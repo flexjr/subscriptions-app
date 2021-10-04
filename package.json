@@ -52,6 +52,7 @@
     "cypress": "^8.5.0",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.3",
     "eslint-plugin-prettier": "^3.2.0",
@@ -98,7 +99,8 @@
     "parser": "@typescript-eslint/parser",
     "env": {
       "browser": true,
-      "jest": true
+      "jest": true,
+      "cypress/globals": true
     },
     "extends": [
       "plugin:@typescript-eslint/recommended",
@@ -200,9 +202,9 @@
           "*.spec.tsx"
         ],
         "plugins": [
-          "testcafe-community"
+          "cypress"
         ],
-        "extends": "plugin:testcafe-community/recommended"
+        "extends": "plugin:cypress/recommended"
       }
     ]
   },

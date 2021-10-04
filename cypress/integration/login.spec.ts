@@ -1,3 +1,5 @@
+export {};
+
 describe("Login Page", () => {
   it("should render correctly", () => {
     cy.visit("/");
