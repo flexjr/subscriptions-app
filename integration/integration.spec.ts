@@ -45,29 +45,29 @@ test("User should NOT be able to login with invalid credentials", async (t) => {
   await t.expect(Auth0WrongCredentialsError.textContent).eql("Wrong email or password");
 });
 
-// const exampleUserRole: Role = Role(
-//   "https://localhost:3000/",
-//   async (t) => {
-//     // We have a valid user in the database with the following credentials
-//     const username = "user@example.com";
-//     const password = "user@example.com2021";
+const exampleUserRole: Role = Role(
+  "https://localhost:3000/",
+  async (t) => {
+    // We have a valid user in the database with the following credentials
+    const username = "user@example.com";
+    const password = "user@example.com2021";
 
-//     await t.click(LoginButton);
-//     await t
-//       .wait(5000)
-//       .click(Auth0EmailInput)
-//       .typeText(Auth0EmailInput, username)
-//       .click(Auth0PasswordInput)
-//       .typeText(Auth0PasswordInput, password)
-//       .click(Auth0ContinueButton)
-//       .wait(10000);
-//   },
-//   { preserveUrl: true }
-// );
+    await t.click(LoginButton);
+    await t
+      .wait(5000)
+      .click(Auth0EmailInput)
+      .typeText(Auth0EmailInput, username)
+      .click(Auth0PasswordInput)
+      .typeText(Auth0PasswordInput, password)
+      .click(Auth0ContinueButton)
+      .wait(10000);
+  },
+  { preserveUrl: true }
+);
 
-// test("User should be able to login with valid credentials", async (t) => {
-//   t.useRole(exampleUserRole);
+test("User should be able to login with valid credentials", async (t) => {
+  t.useRole(exampleUserRole);
 
-//   // Should be redirected back to app
-//   await t.expect(getLocation()).contains("/flex/dashboard");
-// });
+  // Should be redirected back to app
+  await t.expect(getLocation()).contains("/flex/dashboard");
+});

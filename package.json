@@ -21,8 +21,7 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "redux": "^4.1.1",
-    "redux-thunk": "^2.3.0",
-    "testcafe-react-selectors": "^4.1.5"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -50,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",
     "commitizen": "^4.2.2",
+    "cypress": "^8.5.0",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-import": "^2.22.1",
@@ -57,7 +57,6 @@
     "eslint-plugin-prettier": "^3.2.0",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-plugin-testcafe-community": "^1.1.0",
     "eslint-plugin-testing-library": "^3.10.1",
     "file-loader": "^6.2.0",
     "git-cz": "^4.7.6",
@@ -68,8 +67,8 @@
     "postcss-import": "^13.0.0",
     "prettier": "^2.2.1",
     "react-scripts": "4.0.1",
+    "start-server-and-test": "^1.14.0",
     "tailwindcss": "^2.0.1",
-    "testcafe": "1.9.4",
     "typescript": "~4.1.2"
   },
   "scripts": {
@@ -79,10 +78,8 @@
     "commit": "git-cz",
     "commit:retry": "npm run commit -- --retry",
     "eject": "react-scripts eject",
-    "integration": "testcafe chrome integration/**/*.spec.ts --ts-config-path ./tsconfig.testcafe.json --app \"BROWSER=none npm run start\"",
-    "integration:https": "testcafe 'chrome: --allow-insecure-localhost' --ignore-certificate-errors --hostname localhost integration/**/*.spec.ts --app \"HTTPS=true BROWSER=none npm run start\" --app-init-delay 8000 --ts-config-path ./tsconfig.testcafe.json --ssl pfx=integration/certificates/localhost.pfx;rejectUnauthorized=true;",
-    "integration:headless": "testcafe chrome:headless integration/**/*.spec.ts --ts-config-path ./tsconfig.testcafe.json --app \"http-server ./build --port 3000\" --app-init-delay 5000",
-    "integration:headless:https": "testcafe 'chrome:headless --allow-insecure-localhost' --ignore-certificate-errors --hostname localhost integration/**/*.spec.ts --app \"http-server ./build --ssl --cert integration/certificates/localhost.crt --key integration/certificates/localhost.key --port 3000\" --app-init-delay 5000 --ts-config-path ./tsconfig.testcafe.json --ssl pfx=integration/certificates/localhost.pfx;rejectUnauthorized=true;",
+    "cy:run": "cypress run",
+    "integration": "START_SERVER_AND_TEST_INSECURE=1 start-server-and-test start https-get://localhost:3000 cy:run",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "start": "HTTPS=true REACT_APP_COMMIT_REF=$(git rev-parse --short HEAD) REACT_APP_AUTH0_DOMAIN=$(grep REACT_APP_AUTH0_DOMAIN .env | cut -d '=' -f2) REACT_APP_AUTH0_CLIENT_ID=$(grep REACT_APP_AUTH0_CLIENT_ID .env | cut -d '=' -f2)  npm-run-all -p start:*",
