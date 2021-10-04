@@ -10,7 +10,7 @@ describe("Login Page", () => {
   });
 
   it("should successfully log into our app with valid credentials", () => {
-    cy.login() 
+    cy.login()s
       .then((resp) => {
         return resp.body;
       })
