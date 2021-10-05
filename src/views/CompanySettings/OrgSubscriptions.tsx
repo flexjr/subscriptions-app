@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Skeleton, Tabs } from "antd";
+import { Button, Table, Skeleton, Tabs, Modal } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -31,6 +31,22 @@ const columns = [
   },
 ];
 
+const Iframe = ({ src, height, width }): JSX.Element => {
+  return (
+    <div>
+      <iframe
+        src={src}
+        height={height}
+        width={width}
+        style={{
+          border: "none",
+        }}
+        scrolling="no"
+      />
+    </div>
+  );
+};
+
 export const OrgSubscriptions: React.FunctionComponent = () => {
   const history = useHistory();
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -40,6 +56,8 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   const [currentOrgInfo, setCurrentOrgInfo] = useState<{ company_name: string } | undefined>({
     company_name: "⌛...",
   });
+  const [isChargebeeModalVisible, setIsChargebeeModalVisible] = useState(false);
+  const [chargebeeUrl, setChargebeeUrl] = useState("");
 
   const { getAccessTokenSilently } = useAuth0();
 
@@ -129,6 +147,40 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
     fetchData();
   };
 
+  const handleChargebeeSSO = (): void => {
+    const fetchData = async (): Promise<void> => {
+      const abortController = new AbortController();
+      const { signal } = abortController;
+
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      await getData<{ access_url }>(`${API_URL}/subscriptions/chargebee/sso`, accessToken, signal)
+        .then(({ access_url }) => {
+          console.log(access_url);
+          setIsChargebeeModalVisible(true);
+          setChargebeeUrl(access_url);
+          return access_url;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
+        });
+
+      setIsButtonLoading(false);
+    };
+    fetchData();
+  };
+
+  const handleChargebeeOk = (): void => {
+    setIsChargebeeModalVisible(false);
+  };
+  const handleChargebeeCancel = (): void => {
+    setIsChargebeeModalVisible(false);
+  };
+
   const onSelectChange = (selectedRowKeys): void => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(selectedRowKeys);
@@ -165,14 +217,22 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
             <TabPane tab="All Subscriptions" key="2">
               <RoundedCard style={{ marginTop: 16 }}>
                 <div style={{ marginBottom: 16 }}>
-                  <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
-                    Manage Subscriptions [TODO]
+                  <Button type="primary" onClick={handleChargebeeSSO} loading={isButtonLoading}>
+                    Manage Subscriptions
                   </Button>
                 </div>
                 <Table columns={columns} dataSource={currentOrgUsers} />
               </RoundedCard>
             </TabPane>
           </Tabs>
+          <Modal
+            title="Manage Subscriptions"
+            visible={isChargebeeModalVisible}
+            onOk={handleChargebeeOk}
+            onCancel={handleChargebeeCancel}
+          >
+            <Iframe src={chargebeeUrl} width="100%" height="500px" />
+          </Modal>
         </>
       )}
     </>
