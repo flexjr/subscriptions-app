@@ -27,6 +27,7 @@
   "include": [
     "src",
     "integration",
+    "cypress",
     "custom.d.ts"
   ]
 }

@@ -6,6 +6,8 @@ export const AUTH0_API_AUDIENCE = "https://api.flexjr.one/"; // Must end with tr
 
 export const AUTH0_DOMAIN = "https://flexjr.us.auth0.com";
 
+export const cacheLocation = process.env.NODE_ENV === "production" ? "memory" : "localstorage";
+
 export function getData<T>(url: string, accessToken: string, signal: AbortSignal): Promise<T> {
   return fetch(url, {
     method: "GET",

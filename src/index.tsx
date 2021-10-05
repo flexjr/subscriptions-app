@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 // eslint-disable-next-line import/no-unresolved
 // import "./index.css";
 import { App, history } from "./App";
+import { cacheLocation } from "./shared";
 
 const onRedirectCallback = (appState: AppState): void => {
   // If using a Hash Router, you need to use window.history.replaceState to
@@ -19,10 +20,11 @@ ReactDOM.render(
       domain={process.env.REACT_APP_AUTH0_DOMAIN as string}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID as string}
       audience="https://api.flexjr.one/"
-      scope="write:current_user openid profile email"
+      scope="openid profile email"
       redirectUri={window.location.origin}
       useRefreshTokens={true}
       onRedirectCallback={onRedirectCallback}
+      cacheLocation={cacheLocation}
     >
       <App />
     </Auth0Provider>
