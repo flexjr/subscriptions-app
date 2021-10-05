@@ -28,7 +28,7 @@ Cypress.Commands.add("login", (overrides = {}) => {
     name: "loginViaAuth0",
   });
 
-  const options = {
+  cy.request({
     method: "POST",
     url: Cypress.env("auth_url"),
     body: {
@@ -36,10 +36,9 @@ Cypress.Commands.add("login", (overrides = {}) => {
       username: Cypress.env("auth_username"),
       password: Cypress.env("auth_password"),
       audience: Cypress.env("auth_audience"),
-      scope: "openid profile email",
+      scope: Cypress.env("auth_scope"),
       client_id: Cypress.env("auth_client_id"),
       client_secret: Cypress.env("auth_client_secret"),
     },
-  };
-  cy.request(options);
+  });
 });
