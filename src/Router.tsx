@@ -46,7 +46,7 @@ export const Router: React.FunctionComponent = () => {
                 <Route exact path="/onboarding">
                   <Onboarding />
                 </Route>
-                <Route exact path="/flex/organization/subscriptions">
+                <Route path="/flex/organization/subscriptions">
                   <OrgSubscriptions />
                 </Route>
                 <Route exact path="/flex/organization/members">

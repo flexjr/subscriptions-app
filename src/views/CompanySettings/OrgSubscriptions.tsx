@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Button, Table, Skeleton, Tabs, Modal } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
@@ -46,6 +46,10 @@ const Iframe = ({ src, height, width }): JSX.Element => {
     </div>
   );
 };
+
+interface MatchProps {
+  path: string;
+}
 
 export const OrgSubscriptions: React.FunctionComponent = () => {
   const history = useHistory();
@@ -193,6 +197,9 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   const hasSelected = selectedRowKeys.length > 0;
 
+  const match = useRouteMatch<MatchProps>("/flex/organization/subscriptions/:path");
+  console.log(match?.params);
+
   return (
     <>
       <h2>My Organization’s Subscriptions</h2>
@@ -201,8 +208,15 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
       ) : (
         <>
           <FlexBanner>{currentOrgInfo?.company_name}</FlexBanner>
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Upgrades" key="1">
+          <Tabs
+            defaultActiveKey="upgrade"
+            activeKey={match?.params.path ? match.params.path : "upgrade"}
+            onChange={(key) => {
+              history.push(`/flex/organization/subscriptions/${key}`);
+            }}
+            tabBarGutter={10}
+          >
+            <TabPane tab="Upgrades" key="upgrade">
               <RoundedCard style={{ marginTop: 16 }}>
                 <div style={{ marginBottom: 16 }}>
                   <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
@@ -214,7 +228,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
                 <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />
               </RoundedCard>
             </TabPane>
-            <TabPane tab="All Subscriptions" key="2">
+            <TabPane tab="Manage Subscriptions" key="manage">
               <RoundedCard style={{ marginTop: 16 }}>
                 <div style={{ marginBottom: 16 }}>
                   <Button type="primary" onClick={handleChargebeeSSO} loading={isButtonLoading}>
