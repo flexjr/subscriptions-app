@@ -1,7 +1,7 @@
-import Icon, { CreditCardOutlined, DownOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
+import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Col, Layout, Menu, Row } from "antd";
+import { Col, Layout, Menu, Popover, Row } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import "./NavbarSide.css";
@@ -40,8 +40,13 @@ const FlexTransactionsIcon = (props): JSX.Element => <Icon component={FlexTransa
 const FlexCreditLineIcon = (props): JSX.Element => <Icon component={FlexCreditLineSvg} {...props} />;
 const FlexSettingsIcon = (props): JSX.Element => <Icon component={FlexSettingsSvg} {...props} />;
 
+interface FlexUserSettingsPopoverProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user: any;
+}
+
 export const NavbarSide: React.FunctionComponent = () => {
-  const { logout, isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
   return (
     <Sider
       style={{
@@ -198,52 +203,98 @@ export const NavbarSide: React.FunctionComponent = () => {
               <UserOutlined style={{ fontSize: "20px" }} />
             </Col>
             <Col md={16}>
-              <Link to="/flex/user/profile">
-                <div>{user?.name}</div>
-                <div>Admin</div>
-              </Link>
+              <div>{user?.name}</div>
+              <div>Admin</div>
             </Col>
             <Col md={2}>
-              <DownOutlined />
+              <Popover
+                content={<FlexUserSettingsPopover user={user} />}
+                placement="right"
+                overlayClassName="user-settings-popover"
+                trigger="click"
+              >
+                <DownOutlined />
+              </Popover>
             </Col>
           </FlexMenuUserProfileRow>
         ) : (
           <></>
         )}
-
-        {/* {isAuthenticated ? (
-          <Menu.Item
-            key="logout"
-            onClick={() => {
-              localStorage.clear();
-              logout({
-                returnTo: window.location.origin,
-              });
-            }}
-            icon={<LogoutOutlined />}
-          >
-            Logout
-          </Menu.Item>
-        ) : (
-          <></>
-        )} */}
       </Menu>
     </Sider>
   );
 };
 
-const FlexUserSettingsPopover: React.FunctionComponent = () => {
+const RoleDiv = styled.div`
+  padding: 15px 15px 0px 20px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgb(86, 96, 109);
+`;
+
+const CompanyDiv = styled.div`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 10px 15px 15px 20px;
+  color: rgb(26, 40, 49);
+`;
+
+const FlexUserSettingsPopover: React.FunctionComponent<FlexUserSettingsPopoverProps> = () => {
+  const { logout, user } = useAuth0();
   return (
     <>
       <div
         style={{
           background: "rgb(51, 63, 71)",
-          borderRadius: " 6px 6px 0px 0px",
+          borderRadius: "6px 6px 0px 0px",
         }}
-        className="user-settings-popover"
       >
-        a
+        <Row
+          style={{
+            padding: "15px",
+            flexFlow: "unset",
+            fontWeight: 600,
+            fontSize: "14px",
+            color: "rgb(255, 255, 255)",
+          }}
+        >
+          <Col />
+          <Col
+            style={{
+              marginLeft: "15px",
+              fontWeight: 600,
+              fontSize: "18px",
+              lineHeight: "23px",
+              alignSelf: "center",
+            }}
+          >
+            {user?.name}
+          </Col>
+        </Row>
       </div>
+      <RoleDiv>Admin</RoleDiv>
+      <CompanyDiv>Example Co Pte Ltd</CompanyDiv>
+      <Menu theme="light" mode="vertical" defaultSelectedKeys={[location.pathname]} className="flex-menu">
+        <Menu.Item key="/flex/user/profile" icon={<UserOutlined />}>
+          <Link to="/flex/user/profile">User Profile</Link>
+        </Menu.Item>
+        <Menu.Item
+          key="logout"
+          onClick={() => {
+            localStorage.clear();
+            logout({
+              returnTo: window.location.origin,
+            });
+          }}
+          icon={<LogoutOutlined />}
+        >
+          Logout
+        </Menu.Item>
+      </Menu>
     </>
   );
 };

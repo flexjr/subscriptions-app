@@ -49,3 +49,18 @@
 .ant-menu.ant-menu-light .ant-menu-item-selected a {
     color: rgb(38, 203, 147) !important;
 }
+
+.user-settings-popover.user-settings-popover.user-settings-popover .ant-popover-inner-content {
+    padding: 0px !important;
+    border-radius: 6px;
+    width: 230px;
+}
+
+.ant-popover .ant-popover-content .ant-popover-inner .ant-popover-inner-content {
+    line-height: 16px;
+    -webkit-box-align: center;
+    align-items: center;
+    color: rgb(34, 55, 69);
+    font-size: 15px;
+    padding: 5px 16px;
+}
