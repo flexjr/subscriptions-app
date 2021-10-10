@@ -337,9 +337,10 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                       fontSize: "0.65rem",
                     }}
                   >
-                    You will be charged SGD{estimate.estimated_price}/{estimate.frequency} when you click “Pay Now”.
-                    Your paid subscription will automatically renew until you cancel it. You can cancel at any time but
-                    only after 3 months by visiting My Org's Subscriptions. By clicking “Pay Now”, you agree to our{" "}
+                    You will be charged SGD {estimate.estimated_price}/{estimate.frequency} immediately when you click
+                    “Pay Now”. Your paid subscription will automatically renew until you cancel it. You can cancel at
+                    any time but only after 3 months by visiting My Org’s Subscriptions. By clicking “Pay Now”, you
+                    agree to our{" "}
                     <a href="https://app.fxr.one/originate/terms" target="_blank" rel="noopener noreferrer">
                       terms of use
                     </a>{" "}
