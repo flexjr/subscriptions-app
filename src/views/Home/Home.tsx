@@ -3,6 +3,7 @@ import { Row, Col, Typography, Divider, Image, Skeleton } from "antd";
 import React from "react";
 import { RoundedCard } from "../../components/Shared";
 import { useFlex } from "../../hooks";
+import { CompanyExpensesChart } from ".";
 
 const { Title } = Typography;
 
@@ -292,7 +293,7 @@ const HomeContent: React.FunctionComponent = () => {
         <Col md={8}>
           <RoundedCard>
             <Row>
-              <Col md={14}>
+              <Col md={24}>
                 <Title
                   level={4}
                   style={{
@@ -301,11 +302,7 @@ const HomeContent: React.FunctionComponent = () => {
                 >
                   Company Expenses
                 </Title>
-                <Row
-                  style={{
-                    paddingBottom: "8px",
-                  }}
-                />
+                <CompanyExpensesChart />
               </Col>
             </Row>
           </RoundedCard>
@@ -315,7 +312,7 @@ const HomeContent: React.FunctionComponent = () => {
             }}
           >
             <Row>
-              <Col md={14}>
+              <Col md={24}>
                 <Title
                   level={4}
                   style={{
@@ -324,11 +321,6 @@ const HomeContent: React.FunctionComponent = () => {
                 >
                   Explore Flex
                 </Title>
-                <Row
-                  style={{
-                    paddingBottom: "8px",
-                  }}
-                />
               </Col>
             </Row>
             <Row>

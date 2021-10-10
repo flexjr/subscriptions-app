@@ -12,6 +12,7 @@
     "@emotion/styled": "^11.0.0",
     "antd": "^4.16.9",
     "craco-less": "^1.18.0",
+    "date-fns": "^2.25.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-copy-to-clipboard": "^5.0.4",
