@@ -24,7 +24,7 @@ export const Loading: React.FunctionComponent = () => {
               height: "80px",
             }}
           />
-          Loading...
+          <div>Loading...</div>
         </div>
       </StyledDiv>
     </>
