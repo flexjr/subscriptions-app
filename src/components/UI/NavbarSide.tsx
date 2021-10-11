@@ -139,6 +139,8 @@ interface FlexUserSettingsPopoverContentProps {
 
 export const NavbarSide: React.FunctionComponent = () => {
   const { isAuthenticated, user } = useAuth0();
+  const featureName = "FLEXJR_DEV_TOOLS";
+
   return (
     <Sider
       style={{
@@ -270,6 +272,21 @@ export const NavbarSide: React.FunctionComponent = () => {
           <></>
         )}
 
+        {isAuthenticated && localStorage.getItem(featureName) ? (
+          <FlexMenuItem key="/debugger">
+            <Link to="/debugger">
+              <Row>
+                <FlexMenuItemCol>
+                  <InfoCircleOutlined style={{ fontSize: "20px" }} />
+                </FlexMenuItemCol>
+                <Col>Dev Tools</Col>
+              </Row>
+            </Link>
+          </FlexMenuItem>
+        ) : (
+          <></>
+        )}
+
         {isAuthenticated ? (
           <FlexMenuUserProfileRow
             style={{
@@ -298,21 +315,6 @@ export const NavbarSide: React.FunctionComponent = () => {
               <DownOutlined />
             </Col>
           </FlexMenuUserProfileRow>
-        ) : (
-          <></>
-        )}
-
-        {isAuthenticated && localStorage.getItem("FLEX_JR_DEV_TOOLS") ? (
-          <FlexMenuItem key="/debugger">
-            <Link to="/debugger">
-              <Row>
-                <FlexMenuItemCol>
-                  <InfoCircleOutlined style={{ fontSize: "20px" }} />
-                </FlexMenuItemCol>
-                <Col>Dev Tools</Col>
-              </Row>
-            </Link>
-          </FlexMenuItem>
         ) : (
           <></>
         )}

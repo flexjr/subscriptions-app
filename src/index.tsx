@@ -1,4 +1,5 @@
 import { AppState, Auth0Provider } from "@auth0/auth0-react";
+import { SplitFactory } from "@splitsoftware/splitio-react";
 import React from "react";
 import ReactDOM from "react-dom";
 // it will fail in the ci because the file may not exist => disabled
@@ -14,6 +15,13 @@ const onRedirectCallback = (appState: AppState): void => {
   history.replace((appState && appState.returnTo) || window.location.pathname);
 };
 
+const sdkConfig: SplitIO.IBrowserSettings = {
+  core: {
+    authorizationKey: process.env.REACT_APP_SPLITIO_KEY as string,
+    key: "key",
+  },
+};
+
 ReactDOM.render(
   <React.StrictMode>
     <Auth0Provider
@@ -26,7 +34,9 @@ ReactDOM.render(
       onRedirectCallback={onRedirectCallback}
       cacheLocation={cacheLocation}
     >
-      <App />
+      <SplitFactory config={sdkConfig}>
+        <App />
+      </SplitFactory>
     </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")
