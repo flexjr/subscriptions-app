@@ -1,7 +1,14 @@
-import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
+import Icon, {
+  CreditCardOutlined,
+  DownOutlined,
+  InfoCircleOutlined,
+  LogoutOutlined,
+  TagOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Col, Layout, Menu, Popover, Row } from "antd";
+import { Col, Divider, Layout, Menu, Popover, Row } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import "./NavbarSide.css";
@@ -33,6 +40,87 @@ const FlexMenuUserProfileRow = styled(Row)`
   cursor: pointer;
 `;
 
+const FlexMenu = styled(Menu)`
+  background: transparent;
+  border-right: none;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: rgb(186, 191, 193);
+
+  & a {
+    color: rgb(186, 191, 193);
+  }
+
+  .ant-menu-item {
+    padding: 0px 37px;
+    height: 52px;
+    line-height: 52px;
+  }
+`;
+
+const FlexMenuItem = styled(Menu.Item)`
+  &:hover {
+    color: rgb(38, 203, 147);
+    transition: none 0s ease 0s;
+  }
+  &:hover a {
+    color: rgb(38, 203, 147);
+    transition: none 0s ease 0s;
+  }
+
+  &.ant-menu-item-active {
+    background-color: transparent;
+  }
+
+  &.ant-menu-item-active.ant-menu-item-selected {
+    background-color: transparent;
+    background-color: rgba(196, 196, 196, 0.15);
+  }
+
+  &.ant-menu-item-selected {
+    color: rgb(38, 203, 147);
+    background-color: rgba(196, 196, 196, 0.15) !important;
+  }
+  &.ant-menu-item-selected a {
+    color: rgb(38, 203, 147);
+  }
+`;
+
+const FlexPopoverMenu = styled(Menu)`
+  border-right: none;
+  border-radius: 0px 0px 6px 6px;
+  padding: 0px 4px 2px;
+  font-weight: 500;
+  font-size: 14px;
+  color: rgb(86, 96, 109);
+  letter-spacing: 0.110416px;
+
+  &.ant-menu-item-active {
+    color: rgb(38, 203, 147);
+  }
+`;
+const FlexPopoverMenuItem = styled(Menu.Item)`
+  &:hover {
+    color: rgb(38, 203, 147);
+    transition: none 0s ease 0s;
+  }
+  &:hover a {
+    color: rgb(38, 203, 147);
+    transition: none 0s ease 0s;
+  }
+
+  &.ant-menu-item-selected {
+    color: rgb(38, 203, 147);
+    background-color: transparent !important;
+  }
+  &.ant-menu-item-selected a {
+    color: rgb(38, 203, 147);
+  }
+`;
+
+const FlexUserSettingsPopover = styled(Popover)``;
+
 const FlexHomeIcon = (props): JSX.Element => <Icon component={FlexHomeSvg} {...props} />;
 const FlexPhysicalCardIcon = (props): JSX.Element => <Icon component={FlexPhysicalCardSvg} {...props} />;
 const FlexVirtualCardIcon = (props): JSX.Element => <Icon component={FlexVirtuallCardSvg} {...props} />;
@@ -40,7 +128,7 @@ const FlexTransactionsIcon = (props): JSX.Element => <Icon component={FlexTransa
 const FlexCreditLineIcon = (props): JSX.Element => <Icon component={FlexCreditLineSvg} {...props} />;
 const FlexSettingsIcon = (props): JSX.Element => <Icon component={FlexSettingsSvg} {...props} />;
 
-interface FlexUserSettingsPopoverProps {
+interface FlexUserSettingsPopoverContentProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any;
 }
@@ -59,8 +147,8 @@ export const NavbarSide: React.FunctionComponent = () => {
       width="260px"
     >
       <Logo />
-      <Menu theme="light" mode="vertical" defaultSelectedKeys={[location.pathname]} className="flex-menu">
-        <Menu.Item key="/flex/dashboard">
+      <FlexMenu theme="light" mode="vertical" defaultSelectedKeys={[location.pathname]}>
+        <FlexMenuItem key="/flex/dashboard">
           <Link to="/flex/dashboard">
             <Row>
               <FlexMenuItemCol>
@@ -69,10 +157,10 @@ export const NavbarSide: React.FunctionComponent = () => {
               <Col>Home</Col>
             </Row>
           </Link>
-        </Menu.Item>
+        </FlexMenuItem>
 
         {isAuthenticated ? (
-          <Menu.Item key="/flex/physical-cards/my-card">
+          <FlexMenuItem key="/flex/physical-cards/my-card">
             <Link to="/flex/physical-cards/my-card">
               <Row>
                 <FlexMenuItemCol>
@@ -81,13 +169,13 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Physical Card</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="/flex/virtual-cards">
+          <FlexMenuItem key="/flex/virtual-cards">
             <Link to="/flex/virtual-cards">
               <Row>
                 <FlexMenuItemCol>
@@ -96,13 +184,13 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Virtual Card</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="/flex/transactions">
+          <FlexMenuItem key="/flex/transactions">
             <Link to="/flex/transactions">
               <Row>
                 <FlexMenuItemCol>
@@ -111,13 +199,13 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Transactions</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="/flex/flex-plus-credit">
+          <FlexMenuItem key="/flex/flex-plus-credit">
             <Link to="/flex/flex-plus-credit">
               <Row>
                 <FlexMenuItemCol>
@@ -126,7 +214,7 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Flex Plus Credit</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
@@ -134,7 +222,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         <Menu.Divider style={{ backgroundColor: "rgb(50, 69, 81)" }} />
 
         {isAuthenticated ? (
-          <Menu.Item key="/flex/organization/subscriptions">
+          <FlexMenuItem key="/flex/organization/subscriptions">
             <Link to="/flex/organization/subscriptions">
               <Row>
                 <FlexMenuItemCol>
@@ -143,13 +231,13 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Subscriptions</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
 
         {isAuthenticated ? (
-          <Menu.Item key="/flex/organization/saved-cards">
+          <FlexMenuItem key="/flex/organization/saved-cards">
             <Link to="/flex/organization/saved-cards">
               <Row>
                 <FlexMenuItemCol>
@@ -158,28 +246,13 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Payment Methods</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
 
-        {/* {isAuthenticated ? (
-          <Menu.Item key="/debugger">
-            <Link to="/debugger">
-              <Row>
-                <FlexMenuItemCol>
-                  <InfoCircleOutlined style={{ fontSize: "20px" }} />
-                </FlexMenuItemCol>
-                <Col>Dev Tools</Col>
-              </Row>
-            </Link>
-          </Menu.Item>
-        ) : (
-          <></>
-        )} */}
-
         {isAuthenticated ? (
-          <Menu.Item key="/flex/organization/members">
+          <FlexMenuItem key="/flex/organization/members">
             <Link to="/flex/organization/members">
               <Row>
                 <FlexMenuItemCol>
@@ -188,7 +261,7 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <Col>Company Settings</Col>
               </Row>
             </Link>
-          </Menu.Item>
+          </FlexMenuItem>
         ) : (
           <></>
         )}
@@ -199,28 +272,47 @@ export const NavbarSide: React.FunctionComponent = () => {
               rowGap: "0px",
             }}
           >
+            {" "}
             <Col md={6}>
               <UserOutlined style={{ fontSize: "20px" }} />
             </Col>
             <Col md={16}>
-              <div>{user?.name}</div>
-              <div>Admin</div>
+              <FlexUserSettingsPopover
+                content={<FlexUserSettingsPopoverContent user={user} />}
+                placement="rightBottom"
+                trigger="click"
+                overlayClassName="user-settings-popover"
+                overlayInnerStyle={{
+                  borderRadius: "6px",
+                }}
+              >
+                <div>{user?.name}</div>
+                <div>Admin</div>
+              </FlexUserSettingsPopover>
             </Col>
             <Col md={2}>
-              <Popover
-                content={<FlexUserSettingsPopover user={user} />}
-                placement="right"
-                overlayClassName="user-settings-popover"
-                trigger="click"
-              >
-                <DownOutlined />
-              </Popover>
+              <DownOutlined />
             </Col>
           </FlexMenuUserProfileRow>
         ) : (
           <></>
         )}
-      </Menu>
+
+        {isAuthenticated && localStorage.getItem("FLEX_JR_DEV_TOOLS") ? (
+          <FlexMenuItem key="/debugger">
+            <Link to="/debugger">
+              <Row>
+                <FlexMenuItemCol>
+                  <InfoCircleOutlined style={{ fontSize: "20px" }} />
+                </FlexMenuItemCol>
+                <Col>Dev Tools</Col>
+              </Row>
+            </Link>
+          </FlexMenuItem>
+        ) : (
+          <></>
+        )}
+      </FlexMenu>
     </Sider>
   );
 };
@@ -243,7 +335,7 @@ const CompanyDiv = styled.div`
   color: rgb(26, 40, 49);
 `;
 
-const FlexUserSettingsPopover: React.FunctionComponent<FlexUserSettingsPopoverProps> = () => {
+const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSettingsPopoverContentProps> = () => {
   const { logout, user } = useAuth0();
   return (
     <>
@@ -278,11 +370,16 @@ const FlexUserSettingsPopover: React.FunctionComponent<FlexUserSettingsPopoverPr
       </div>
       <RoleDiv>Admin</RoleDiv>
       <CompanyDiv>Example Co Pte Ltd</CompanyDiv>
-      <Menu theme="light" mode="vertical" defaultSelectedKeys={[location.pathname]} className="flex-menu">
-        <Menu.Item key="/flex/user/profile" icon={<UserOutlined />}>
+      <Divider
+        style={{
+          margin: "0px",
+        }}
+      />
+      <FlexPopoverMenu theme="light" mode="vertical" defaultSelectedKeys={[location.pathname]}>
+        <FlexPopoverMenuItem key="/flex/user/profile" icon={<UserOutlined />}>
           <Link to="/flex/user/profile">User Profile</Link>
-        </Menu.Item>
-        <Menu.Item
+        </FlexPopoverMenuItem>
+        <FlexPopoverMenuItem
           key="logout"
           onClick={() => {
             localStorage.clear();
@@ -293,8 +390,8 @@ const FlexUserSettingsPopover: React.FunctionComponent<FlexUserSettingsPopoverPr
           icon={<LogoutOutlined />}
         >
           Logout
-        </Menu.Item>
-      </Menu>
+        </FlexPopoverMenuItem>
+      </FlexPopoverMenu>
     </>
   );
 };

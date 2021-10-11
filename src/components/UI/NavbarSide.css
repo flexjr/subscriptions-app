@@ -1,66 +1,9 @@
-.ant-menu.ant-menu-light.flex-menu {
-    background: transparent;
-    border-right: none;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 21px;
-    color: rgb(186, 191, 193) !important;
+.user-settings-popover .ant-popover-arrow {
+    display: none;
 }
 
-.ant-menu a {
-    color: rgb(186, 191, 193) !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item {
-    padding: 0px 37px;
-    height: 52px;
-    line-height: 52px;
-}
-
-
-.ant-menu.ant-menu-light .ant-menu-item-active {
-    background-color: transparent !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item-active.ant-menu-item-selected {
-    background-color: transparent !important;
-    background-color: rgba(196, 196, 196, 0.15) !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item:hover {
-    color: rgb(38, 203, 147) !important;
-    transition: none 0s ease 0s !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item:hover a {
-    color: rgb(38, 203, 147) !important;
-    transition: none 0s ease 0s !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item-selected .ant-menu-item-icon {
-    color: rgb(38, 203, 147) !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item-selected {
-    color:rgb(38, 203, 147) !important;
-    background-color: rgba(196, 196, 196, 0.15) !important;
-}
-
-.ant-menu.ant-menu-light .ant-menu-item-selected a {
-    color: rgb(38, 203, 147) !important;
-}
-
-.user-settings-popover.user-settings-popover.user-settings-popover .ant-popover-inner-content {
+.user-settings-popover .ant-popover-inner-content {
     padding: 0px !important;
-    border-radius: 6px;
+    border-radius: 6px !important;
     width: 230px;
-}
-
-.ant-popover .ant-popover-content .ant-popover-inner .ant-popover-inner-content {
-    line-height: 16px;
-    -webkit-box-align: center;
-    align-items: center;
-    color: rgb(34, 55, 69);
-    font-size: 15px;
-    padding: 5px 16px;
 }
