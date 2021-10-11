@@ -117,6 +117,10 @@ const FlexPopoverMenuItem = styled(Menu.Item)`
   &.ant-menu-item-selected a {
     color: rgb(38, 203, 147);
   }
+
+  &.ant-menu-item-active span {
+    color: rgb(38, 203, 147);
+  }
 `;
 
 const FlexUserSettingsPopover = styled(Popover)``;
