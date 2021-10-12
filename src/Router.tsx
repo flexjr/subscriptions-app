@@ -21,6 +21,7 @@ export const Router: React.FunctionComponent = () => {
   const { isLoadingOnboarded, isOnboarded } = useFlex();
   const marginLeftIfLoggedOut = isAuthenticated && isOnboarded ? 260 : 359;
   console.log("isAuthenticated", isAuthenticated, "isOnboarded", isOnboarded);
+
   return (
     <BrowserRouter>
       {isLoading && isLoadingOnboarded ? (

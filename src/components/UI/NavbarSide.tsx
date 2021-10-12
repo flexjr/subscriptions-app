@@ -1,24 +1,17 @@
-import Icon, {
-  CreditCardOutlined,
-  DownOutlined,
-  InfoCircleOutlined,
-  LogoutOutlined,
-  TagOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Col, Divider, Layout, Menu, Popover, Row } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
-import "./NavbarSide.css";
-
 import { ReactComponent as FlexPhysicalCardSvg } from "./flex-icon-card-physical.svg";
 import { ReactComponent as FlexVirtuallCardSvg } from "./flex-icon-card-virtual.svg";
 import { ReactComponent as FlexCreditLineSvg } from "./flex-icon-credit-line.svg";
 import { ReactComponent as FlexHomeSvg } from "./flex-icon-home.svg";
 import { ReactComponent as FlexSettingsSvg } from "./flex-icon-settings.svg";
 import { ReactComponent as FlexTransactionsSvg } from "./flex-icon-transactions.svg";
+import { NavbarSideDevTools } from ".";
+import "./NavbarSide.css";
 
 const { Sider } = Layout;
 
@@ -28,7 +21,7 @@ const Logo = styled.div`
   background: rgba(255, 255, 255, 0.2);
 `;
 
-const FlexMenuItemCol = styled(Col)`
+export const FlexMenuItemCol = styled(Col)`
   margin-top: 0px;
   width: 45px;
 `;
@@ -59,7 +52,7 @@ const FlexMenu = styled(Menu)`
   }
 `;
 
-const FlexMenuItem = styled(Menu.Item)`
+export const FlexMenuItem = styled(Menu.Item)`
   &:hover {
     color: rgb(38, 203, 147);
     transition: none 0s ease 0s;
@@ -139,7 +132,6 @@ interface FlexUserSettingsPopoverContentProps {
 
 export const NavbarSide: React.FunctionComponent = () => {
   const { isAuthenticated, user } = useAuth0();
-  const featureName = "FLEXJR_DEV_TOOLS";
 
   return (
     <Sider
@@ -272,20 +264,7 @@ export const NavbarSide: React.FunctionComponent = () => {
           <></>
         )}
 
-        {isAuthenticated && localStorage.getItem(featureName) ? (
-          <FlexMenuItem key="/debugger">
-            <Link to="/debugger">
-              <Row>
-                <FlexMenuItemCol>
-                  <InfoCircleOutlined style={{ fontSize: "20px" }} />
-                </FlexMenuItemCol>
-                <Col>Dev Tools</Col>
-              </Row>
-            </Link>
-          </FlexMenuItem>
-        ) : (
-          <></>
-        )}
+        <NavbarSideDevTools />
 
         {isAuthenticated ? (
           <FlexMenuUserProfileRow
