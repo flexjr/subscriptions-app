@@ -7,13 +7,19 @@ import { LoginSide, NavbarSide } from "./components/UI";
 import { Loading } from "./components/UI/Loading";
 import { useFlex } from "./hooks";
 import { Members } from "./views/CompanySettings";
-import { OrgSubscriptions } from "./views/CompanySettings/OrgSubscriptions";
-import { SavedCards } from "./views/CompanySettings/SavedCards";
 import { Debugger } from "./views/Debugger";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
-import { CheckoutStep2, CheckoutStep1, CheckoutStep3, PaymentFailed, PaymentSuccess } from "./views/Subscriptions";
+import {
+  CheckoutStep1,
+  CheckoutStep2,
+  CheckoutStep3,
+  PaymentFailed,
+  PaymentSuccess,
+  OrgSubscriptions,
+  SavedCards,
+} from "./views/Subscriptions";
 import { UserSettings } from "./views/UserSettings";
 
 export const Router: React.FunctionComponent = () => {
