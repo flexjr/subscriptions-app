@@ -46,6 +46,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     frequency: null,
     friendly_name: null,
   });
+  const [isPayNowButtonLoading, setIsPayNowButtonLoading] = useState(false);
 
   const userIds = location.state?.userIds;
   const subscriptionPlan = location.state?.subscriptionPlan;
@@ -183,7 +184,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       subscriptionPlanId: subscriptionPlanId,
     };
     console.log(values);
-
+    setIsPayNowButtonLoading(true);
     // Checkout
     await postData<{ status; result }>(`${API_URL}/subscriptions/checkout`, accessToken, signal, values)
       .then(({ status, result }) => {
@@ -245,7 +246,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                   </Row>
                   <Row>
                     <Col md={6}>
-                      <Button onClick={handlePayNow}>Pay Now</Button>
+                      <Button onClick={handlePayNow} loading={isPayNowButtonLoading}>Pay Now</Button>
                     </Col>
                   </Row>
                 </>
