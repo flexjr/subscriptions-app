@@ -188,7 +188,7 @@ const HomeContent: React.FunctionComponent = () => {
                 >
                   <Col>
                     <Image
-                      src="https://app.fxr.one/platform/static/media/physicalCard.ac5b1e0e.svg"
+                      src="https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg"
                       preview={false}
                       style={{
                         minHeight: "74px",
@@ -217,7 +217,7 @@ const HomeContent: React.FunctionComponent = () => {
                 <Row>
                   <Col>
                     <Image
-                      src="https://app.fxr.one/platform/static/media/virtualCard.6b309051.svg"
+                      src="https://app.fxr.one/flex/static/media/virtualCard.c382fbee.svg"
                       preview={false}
                       style={{
                         minHeight: "74px",

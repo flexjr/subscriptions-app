@@ -2,14 +2,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Button, Table, Skeleton, Modal } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useRouteMatch } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 
 const columns = [
   {
     title: "User ID",
-    dataIndex: "id",
+    dataIndex: "user_id",
   },
   {
     title: "First Name",
@@ -26,6 +25,14 @@ const columns = [
   {
     title: "Subscription Plan",
     dataIndex: "subscription_plan",
+  },
+  {
+    title: "Current Term Start",
+    dataIndex: "current_term_start",
+  },
+  {
+    title: "Current Term End",
+    dataIndex: "current_term_end",
   },
 ];
 
@@ -44,10 +51,6 @@ const Iframe = ({ src, height, width }): JSX.Element => {
     </div>
   );
 };
-
-interface MatchProps {
-  path: string;
-}
 
 export const SubscriptionsManage: React.FunctionComponent = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -70,11 +73,12 @@ export const SubscriptionsManage: React.FunctionComponent = () => {
         scope: "openid profile email",
       });
 
-      const orgUsers = await getData<{ data }>(`${API_URL}/organizations/current_org_users`, accessToken, signal)
-        .then(({ data }) => {
+      const orgUsers = await getData<{ result }>(`${API_URL}/subscriptions/list_subscriptions`, accessToken, signal)
+        .then(({ result }) => {
+          const data = result.data;
           // Need to add key to each user
           for (let i = 0; i < data.length; i++) {
-            data[i].key = data[i].id;
+            data[i].key = data[i].user_id;
           }
           return data;
         })
@@ -126,9 +130,6 @@ export const SubscriptionsManage: React.FunctionComponent = () => {
   const handleChargebeeCancel = (): void => {
     setIsChargebeeModalVisible(false);
   };
-
-  const match = useRouteMatch<MatchProps>("/flex/organization/subscriptions/:path");
-  console.log(match?.params);
 
   return (
     <>

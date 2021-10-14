@@ -2,8 +2,10 @@ import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, Us
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Col, Divider, Layout, Menu, Popover, Row } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
+import { CurrentUserInfo } from "../../types";
 import { ReactComponent as FlexPhysicalCardSvg } from "./flex-icon-card-physical.svg";
 import { ReactComponent as FlexVirtuallCardSvg } from "./flex-icon-card-virtual.svg";
 import { ReactComponent as FlexCreditLineSvg } from "./flex-icon-credit-line.svg";
@@ -126,12 +128,55 @@ const FlexCreditLineIcon = (props): JSX.Element => <Icon component={FlexCreditLi
 const FlexSettingsIcon = (props): JSX.Element => <Icon component={FlexSettingsSvg} {...props} />;
 
 interface FlexUserSettingsPopoverContentProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user: any;
+  additionalUserInfo: CurrentUserInfo | undefined;
 }
 
+const capitalize = (str: string | undefined): string => {
+  if (str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  } else {
+    return "";
+  }
+};
+
 export const NavbarSide: React.FunctionComponent = () => {
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+
+  const [additionalUserInfo, setAdditionalUserInfo] = useState<undefined | CurrentUserInfo>();
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const fetchData = async () => {
+      const abortController = new AbortController();
+      const { signal } = abortController;
+
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      const userInfo = await getData<{ data: CurrentUserInfo }>(
+        `${API_URL}/users/current_user_info`,
+        accessToken,
+        signal
+      )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
+        });
+
+      setAdditionalUserInfo(userInfo);
+
+      // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
+      return function cleanup() {
+        abortController.abort();
+      };
+    };
+    fetchData();
+  }, [getAccessTokenSilently]);
 
   return (
     <Sider
@@ -278,7 +323,7 @@ export const NavbarSide: React.FunctionComponent = () => {
             </Col>
             <Col md={16}>
               <FlexUserSettingsPopover
-                content={<FlexUserSettingsPopoverContent user={user} />}
+                content={<FlexUserSettingsPopoverContent additionalUserInfo={additionalUserInfo} />}
                 placement="rightBottom"
                 trigger="click"
                 overlayClassName="user-settings-popover"
@@ -286,8 +331,10 @@ export const NavbarSide: React.FunctionComponent = () => {
                   borderRadius: "6px",
                 }}
               >
-                <div>{user?.name}</div>
-                <div>Admin</div>
+                <div>
+                  {additionalUserInfo?.first_name} {additionalUserInfo?.last_name}
+                </div>
+                <div>{capitalize(additionalUserInfo?.user_roles.role_name)}</div>
               </FlexUserSettingsPopover>
             </Col>
             <Col md={2}>
@@ -320,8 +367,11 @@ const CompanyDiv = styled.div`
   color: rgb(26, 40, 49);
 `;
 
-const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSettingsPopoverContentProps> = () => {
+export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSettingsPopoverContentProps> = ({
+  additionalUserInfo,
+}) => {
   const { logout, user } = useAuth0();
+
   return (
     <>
       <div
@@ -349,12 +399,13 @@ const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSettingsPo
               alignSelf: "center",
             }}
           >
-            {user?.name}
+            {additionalUserInfo?.first_name ? additionalUserInfo?.first_name : "(No name)"}{" "}
+            {additionalUserInfo?.last_name}
           </Col>
         </Row>
       </div>
-      <RoleDiv>Admin</RoleDiv>
-      <CompanyDiv>Example Co Pte Ltd</CompanyDiv>
+      <RoleDiv>{capitalize(additionalUserInfo?.user_roles.role_name)}</RoleDiv>
+      <CompanyDiv>{additionalUserInfo?.user_orgs.company_name}</CompanyDiv>
       <Divider
         style={{
           margin: "0px",

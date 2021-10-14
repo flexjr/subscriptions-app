@@ -23,7 +23,6 @@ export const NavbarSideDevTools: React.FunctionComponent = () => {
   if (readyAccountClient) {
     // `accountClient` is ready to evaluate treatments as usual. To see more information about the client API go to the docs for JavaScript SDK.
     const accountTreatments = readyAccountClient.getTreatments([featureName]);
-    console.log(accountTreatments);
 
     if (accountTreatments[featureName] === "on") {
       return (

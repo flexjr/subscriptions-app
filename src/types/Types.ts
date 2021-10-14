@@ -1,22 +1,30 @@
 export interface CurrentUserInfo {
   id: number;
-  userId: string;
-  firstName: string;
-  lastName: string;
+  user_id: string;
+  first_name: string;
+  last_name: string;
   email: string;
   mobile: string;
-  user_roles: UserRoles[];
-  user_subscriptions: UserSubscriptions[];
+  user_roles: FlexUserRole;
+  user_subscriptions: FlexUserSubscription;
+  user_orgs: FlexOrganization;
 }
 
-export interface UserRoles {
-  orgId: number;
-  userId: number;
-  roleName: string;
+export interface FlexUserRole {
+  org_id: number;
+  user_id: number;
+  role_name: string;
 }
 
-export interface UserSubscriptions {
-  orgId: number;
-  userId: number;
-  subscriptionPlanType: string;
+export interface FlexUserSubscription {
+  org_id: number;
+  user_id: number;
+  subscription_plan: string;
+  subscription_id: string;
+}
+
+export interface FlexOrganization {
+  id: number;
+  crn: string;
+  company_name: string;
 }
