@@ -246,7 +246,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                   </Row>
                   <Row>
                     <Col md={6}>
-                      <Button onClick={handlePayNow} loading={isPayNowButtonLoading}>Pay Now</Button>
+                      <Button onClick={handlePayNow} loading={isPayNowButtonLoading}>
+                        Pay Now
+                      </Button>
                     </Col>
                   </Row>
                 </>
