@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Table, Skeleton, Modal } from "antd";
+import { Button, Table, Skeleton, Modal, Space } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { RoundedCard } from "../../components/Shared";
@@ -33,6 +33,21 @@ const columns = [
   {
     title: "Current Term End",
     dataIndex: "current_term_end",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+  },
+  {
+    title: "Action",
+    key: "action",
+    sorter: true,
+    // eslint-disable-next-line react/display-name
+    render: () => (
+      <Space size="middle">
+        <Button type="link">Cancel</Button>
+      </Space>
+    ),
   },
 ];
 
@@ -133,7 +148,6 @@ export const SubscriptionsManage: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>My Organization’s Subscriptions</h2>
       {isPageLoading ? (
         <Skeleton active />
       ) : (
