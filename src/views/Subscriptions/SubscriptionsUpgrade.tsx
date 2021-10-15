@@ -142,7 +142,6 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
               <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
                 Upgrade
               </Button>{" "}
-              <Button type="primary">Downgrade</Button>
               <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
             </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />

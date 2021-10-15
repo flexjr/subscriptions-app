@@ -1,7 +1,7 @@
 import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Col, Divider, Layout, Menu, Popover, Row } from "antd";
+import { Col, Divider, Layout, Menu, Popover, Row, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
@@ -127,10 +127,6 @@ const FlexTransactionsIcon = (props): JSX.Element => <Icon component={FlexTransa
 const FlexCreditLineIcon = (props): JSX.Element => <Icon component={FlexCreditLineSvg} {...props} />;
 const FlexSettingsIcon = (props): JSX.Element => <Icon component={FlexSettingsSvg} {...props} />;
 
-interface FlexUserSettingsPopoverContentProps {
-  additionalUserInfo: CurrentUserInfo | undefined;
-}
-
 const capitalize = (str: string | undefined): string => {
   if (str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -140,7 +136,7 @@ const capitalize = (str: string | undefined): string => {
 };
 
 export const NavbarSide: React.FunctionComponent = () => {
-  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const [additionalUserInfo, setAdditionalUserInfo] = useState<undefined | CurrentUserInfo>();
 
@@ -334,7 +330,10 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <div>
                   {additionalUserInfo?.first_name} {additionalUserInfo?.last_name}
                 </div>
-                <div>{capitalize(additionalUserInfo?.user_roles.role_name)}</div>
+                <div>
+                  {capitalize(additionalUserInfo?.user_roles.role_name)}{" "}
+                  <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+                </div>
               </FlexUserSettingsPopover>
             </Col>
             <Col md={2}>
@@ -367,10 +366,14 @@ const CompanyDiv = styled.div`
   color: rgb(26, 40, 49);
 `;
 
+interface FlexUserSettingsPopoverContentProps {
+  additionalUserInfo: CurrentUserInfo | undefined;
+}
+
 export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSettingsPopoverContentProps> = ({
   additionalUserInfo,
 }) => {
-  const { logout, user } = useAuth0();
+  const { logout } = useAuth0();
 
   return (
     <>
@@ -404,7 +407,10 @@ export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSet
           </Col>
         </Row>
       </div>
-      <RoleDiv>{capitalize(additionalUserInfo?.user_roles.role_name)}</RoleDiv>
+      <RoleDiv>
+        {capitalize(additionalUserInfo?.user_roles.role_name)}{" "}
+        <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+      </RoleDiv>
       <CompanyDiv>{additionalUserInfo?.user_orgs.company_name}</CompanyDiv>
       <Divider
         style={{
@@ -430,4 +436,16 @@ export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSet
       </FlexPopoverMenu>
     </>
   );
+};
+
+interface FlexSubscriptionPlanLabelProps {
+  additionalUserInfo: CurrentUserInfo | undefined;
+}
+
+const FlexSubscriptionPlanLabel: React.FunctionComponent<FlexSubscriptionPlanLabelProps> = ({ additionalUserInfo }) => {
+  if (additionalUserInfo && additionalUserInfo?.user_subscriptions.subscription_plan.includes("FLEX_PRO")) {
+    return <Tag color="#87d068">Pro</Tag>;
+  } else {
+    return <></>;
+  }
 };
