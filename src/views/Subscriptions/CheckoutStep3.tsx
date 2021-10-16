@@ -333,7 +333,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                     </ol>
                   </div>
 
-                  {estimate.credits_applied && (
+                  {estimate.credits_applied !== 0 && (
                     <div
                       style={{
                         display: "flex",
