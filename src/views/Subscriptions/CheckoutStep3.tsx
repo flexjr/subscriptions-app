@@ -28,6 +28,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
   const location = useLocation<StateType>();
   const history = useHistory();
   const [debugData, setDebugData] = useState("Loading...");
+  const [errorMessage, setErrorMessage] = useState("");
   const [chargebeeToken, setChargebeeToken] = useState("");
   const { getAccessTokenSilently } = useAuth0();
   const [primaryCard, setPrimaryCard] = useState({
@@ -41,8 +42,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
   const [isLoadingPricing, setIsLoadingPricing] = useState(true);
   const [usersList, setUsersList] = useState([]);
   const [estimate, setEstimate] = useState({
-    estimated_price: null,
     unit_price: null,
+    credits_applied: null,
+    estimated_total_price: null,
     frequency: null,
     friendly_name: null,
   });
@@ -86,6 +88,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
           console.error(error);
           return undefined;
         });
+
       if (primaryCard) {
         console.log(primaryCard);
         setPrimaryCard(primaryCard);
@@ -103,7 +106,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       };
 
       // estimateSubscriptionPricing
-      await postData<{ estimated_price; unit_price; frequency; friendly_name }>(
+      await postData<{ unit_price; credits_applied; estimated_total_price; frequency; friendly_name }>(
         `${API_URL}/subscriptions/estimate_checkout`,
         accessToken,
         signal,
@@ -199,12 +202,19 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       })
       .catch((e) => {
         const error = JSON.parse(e.message);
-        history.push({
-          pathname: "/flex/subscription/payment-failed",
-          state: {
-            error: error, // TODO
-          },
-        });
+
+        if (process.env.NODE_ENV === "development") {
+          setErrorMessage(error.message + " " + error.debug);
+        } else {
+          history.push({
+            pathname: "/flex/subscription/payment-failed",
+            state: {
+              error: error, // TODO
+            },
+          });
+        }
+
+        setIsPayNowButtonLoading(false);
         return undefined;
       });
   };
@@ -217,6 +227,17 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         <Alert
           message={debugData}
           type="info"
+          banner
+          style={{
+            borderRadius: "10px",
+            marginTop: "16px",
+          }}
+        />
+      )}
+      {errorMessage !== "" && (
+        <Alert
+          message={errorMessage}
+          type="error"
           banner
           style={{
             borderRadius: "10px",
@@ -311,6 +332,30 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                       {usersList ? usersList.map((user) => <li key={user["id"]}>{user["email"]}</li>) : <>Error</>}
                     </ol>
                   </div>
+
+                  {estimate.credits_applied && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 600,
+                        }}
+                      >
+                        Credits applied
+                      </div>
+                      <div
+                        style={{
+                          fontWeight: 600,
+                        }}
+                      >
+                        –SGD {estimate.credits_applied}
+                      </div>
+                    </div>
+                  )}
                   <Divider />
                   <div
                     style={{
@@ -331,7 +376,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                         fontSize: "1.2rem",
                       }}
                     >
-                      SGD {estimate.estimated_price}
+                      SGD {estimate.estimated_total_price}
                     </div>
                   </div>
                   <Divider />
@@ -340,9 +385,9 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                       fontSize: "0.65rem",
                     }}
                   >
-                    You will be charged SGD {estimate.estimated_price}/{estimate.frequency} immediately when you click
-                    “Pay Now”. Your paid subscription will automatically renew until you cancel it. You can cancel at
-                    any time but only after 3 months by visiting My Org’s Subscriptions. By clicking “Pay Now”, you
+                    You will be charged SGD {estimate.estimated_total_price}/{estimate.frequency} immediately when you
+                    click “Pay Now”. Your paid subscription will automatically renew until you cancel it. You can cancel
+                    at any time but only after 3 months by visiting My Org’s Subscriptions. By clicking “Pay Now”, you
                     agree to our{" "}
                     <a href="https://app.fxr.one/originate/terms" target="_blank" rel="noopener noreferrer">
                       terms of use
