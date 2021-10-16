@@ -296,7 +296,7 @@ const HomeContent: React.FunctionComponent = () => {
                     </QuickActionsWrapper>
                     <QuickActionsWrapper>
                       <img src="https://app.fxr.one/flex/static/media/physicalCardIcon.82aeb182.svg" />
-                      <QuickActionsLink onClick={() => history.push("/flex//request-physical-card")}>
+                      <QuickActionsLink onClick={() => history.push("/flex/request-physical-card")}>
                         Request Physical Card
                       </QuickActionsLink>
                     </QuickActionsWrapper>
