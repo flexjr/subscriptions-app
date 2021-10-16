@@ -150,20 +150,40 @@ export const Members: React.FunctionComponent = () => {
           <RoundedCard style={{ marginTop: 16 }}>
             <h3>Invite New User</h3>
             <p>We will send an invitation email that is valid for 7 days</p>
-            <div>New Member's Email</div>
+            <div>Details</div>
             <Form name="basic" layout="vertical" onFinish={handleInvite}>
               <Row>
                 <Col
-                  md={16}
+                  md={5}
+                  style={{
+                    paddingRight: "16px",
+                  }}
+                >
+                  <Form.Item name="firstName" rules={[{ required: true, message: "This field is required" }]}>
+                    <Input placeholder="Enter First Name Here" type="text" size="large" />
+                  </Form.Item>
+                </Col>
+                <Col
+                  md={5}
+                  style={{
+                    paddingRight: "16px",
+                  }}
+                >
+                  <Form.Item name="lastName" rules={[{ required: true, message: "This field is required" }]}>
+                    <Input placeholder="Enter Last Name here" type="text" size="large" />
+                  </Form.Item>
+                </Col>
+                <Col
+                  md={10}
                   style={{
                     paddingRight: "16px",
                   }}
                 >
                   <Form.Item name="email" rules={[{ required: true, message: "This field is required" }]}>
-                    <Input placeholder="Enter User Email Here" type="email" size="large" />
+                    <Input placeholder="Enter User Email here" type="email" size="large" />
                   </Form.Item>
                 </Col>
-                <Col md={8}>
+                <Col md={4}>
                   <Button type="primary" htmlType="submit" loading={inviteIsLoading} size="large">
                     Invite
                   </Button>
