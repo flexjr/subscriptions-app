@@ -116,17 +116,17 @@ export const CheckoutStep1: React.FunctionComponent = () => {
           </Col>
         </Row> */}
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={8}>
             <Card
               title="Flex Starter"
               bordered={false}
-              extra={<>Free!</>}
               actions={[
                 <Button type="link" disabled key="btn_current">
                   You’re on this plan
                 </Button>,
               ]}
             >
+              <div>Free!</div>
               <div>
                 <RedCloseOutlined /> No Physical Visa Cards
               </div>
@@ -150,17 +150,17 @@ export const CheckoutStep1: React.FunctionComponent = () => {
               </div>
             </Card>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Card
               title="Flex Pro"
               bordered={false}
-              extra={<>SGD 7.99 per user per month</>}
               actions={[
                 <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("FLEX_PRO")} loading={loading}>
                   Upgrade
                 </Button>,
               ]}
             >
+              <div>SGD 7.49 per user per month</div>
               <div>
                 <GreenCheckedOutline />1 Physical Visa Card
               </div>
@@ -181,6 +181,40 @@ export const CheckoutStep1: React.FunctionComponent = () => {
               </div>
               <div>
                 <GreenCheckedOutline /> 1.0% FX Fee
+              </div>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card
+              title="Flex Premium"
+              bordered={false}
+              actions={[
+                <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("FLEX_PREMIUM")} loading={loading}>
+                  Upgrade
+                </Button>,
+              ]}
+            >
+              <div>From SGD 13.49 per user per month</div>
+              <div>
+                <GreenCheckedOutline />5 Physical Visa Cards
+              </div>
+              <div>
+                <GreenCheckedOutline /> Unlimited Virtual Visa Cards
+              </div>
+              <div>
+                <GreenCheckedOutline /> Accounting Software Integrations
+              </div>
+              <div>
+                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Line
+              </div>
+              <div>
+                <GreenCheckedOutline /> Advanced Spend Controls
+              </div>
+              <div>
+                <GreenCheckedOutline /> Premium Support with Assigned RM
+              </div>
+              <div>
+                <GreenCheckedOutline /> 0.5% FX Fee
               </div>
             </Card>
           </Col>

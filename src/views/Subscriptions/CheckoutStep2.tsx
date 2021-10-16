@@ -27,6 +27,15 @@ export const CheckoutStep2: React.FunctionComponent = () => {
     );
   }, [subscriptionPlan, userIds]);
 
+  let prettySubscriptionPlanTitle = "";
+  if (subscriptionPlan === "FLEX_PRO") {
+    prettySubscriptionPlanTitle = "Flex Pro";
+  } else if (subscriptionPlan === "FLEX_PREMIUM") {
+    prettySubscriptionPlanTitle = "Flex Premium";
+  } else {
+    prettySubscriptionPlanTitle = "";
+  }
+
   // If userIds does not exist, then redirect back...
 
   const handleUpgrade = (subscriptionPlanId: string): void => {
@@ -66,13 +75,13 @@ export const CheckoutStep2: React.FunctionComponent = () => {
         <Row gutter={16}>
           <Col span={12}>
             <Card
-              title="Flex Pro - Pay Monthly"
+              title={`${prettySubscriptionPlanTitle} - Pay Monthly`}
               bordered={false}
               actions={[
                 <Button
                   type="link"
                   key="btn_upgrade"
-                  onClick={() => handleUpgrade("FLEX_PRO-SGD-Monthly")}
+                  onClick={() => handleUpgrade(`${subscriptionPlan}-SGD-Monthly`)}
                   loading={loading}
                 >
                   Pay Monthly
@@ -84,13 +93,13 @@ export const CheckoutStep2: React.FunctionComponent = () => {
           </Col>
           <Col span={12}>
             <Card
-              title="Flex Pro - Pay Yearly"
+              title={`${prettySubscriptionPlanTitle} - Pay Yearly`}
               bordered={false}
               actions={[
                 <Button
                   type="link"
                   key="btn_upgrade"
-                  onClick={() => handleUpgrade("FLEX_PRO-SGD-Yearly")}
+                  onClick={() => handleUpgrade(`${subscriptionPlan}-SGD-Yearly`)}
                   loading={loading}
                 >
                   Pay Yearly
