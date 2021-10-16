@@ -1,7 +1,7 @@
 import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Col, Divider, Layout, Menu, Popover, Row, Tag } from "antd";
+import { Col, Divider, Layout, Menu, Popover, Row, Space, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
@@ -330,9 +330,16 @@ export const NavbarSide: React.FunctionComponent = () => {
                 <div>
                   {additionalUserInfo?.first_name} {additionalUserInfo?.last_name}
                 </div>
-                <div>
-                  {capitalize(additionalUserInfo?.user_roles.role_name)}{" "}
-                  <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "middle",
+                  }}
+                >
+                  <Space>
+                    {capitalize(additionalUserInfo?.user_roles.role_name)}
+                    <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+                  </Space>
                 </div>
               </FlexUserSettingsPopover>
             </Col>
@@ -349,6 +356,8 @@ export const NavbarSide: React.FunctionComponent = () => {
 };
 
 const RoleDiv = styled.div`
+  display: flex;
+  align-items: center;
   padding: 15px 15px 0px 20px;
   font-style: normal;
   font-weight: 500;
@@ -408,8 +417,10 @@ export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSet
         </Row>
       </div>
       <RoleDiv>
-        {capitalize(additionalUserInfo?.user_roles.role_name)}{" "}
-        <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+        <Space>
+          {capitalize(additionalUserInfo?.user_roles.role_name)}
+          <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+        </Space>
       </RoleDiv>
       <CompanyDiv>{additionalUserInfo?.user_orgs.company_name}</CompanyDiv>
       <Divider
@@ -444,7 +455,9 @@ interface FlexSubscriptionPlanLabelProps {
 
 const FlexSubscriptionPlanLabel: React.FunctionComponent<FlexSubscriptionPlanLabelProps> = ({ additionalUserInfo }) => {
   if (additionalUserInfo && additionalUserInfo?.user_subscriptions.subscription_plan.includes("FLEX_PRO")) {
-    return <Tag color="#87d068">Pro</Tag>;
+    return <Tag color="#2ddca1">Pro</Tag>;
+  } else if (additionalUserInfo && additionalUserInfo?.user_subscriptions.subscription_plan.includes("FLEX_PREMIUM")) {
+    return <Tag color="#1f9a70">Premium</Tag>;
   } else {
     return <></>;
   }
