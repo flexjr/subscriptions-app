@@ -22,7 +22,6 @@ export const Debugger: React.FunctionComponent = () => {
         audience: AUTH0_API_AUDIENCE,
         scope: "openid profile email",
       });
-      console.log(accessToken);
       setAuth0Token(accessToken);
     };
     fetchData();

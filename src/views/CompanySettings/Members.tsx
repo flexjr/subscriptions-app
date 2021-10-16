@@ -88,7 +88,6 @@ export const Members: React.FunctionComponent = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInvite = (values: any): void => {
-    console.log("Success:", values);
     setInviteIsLoading(true);
 
     const inviteUserToOrg = async (): Promise<{ message } | undefined> => {

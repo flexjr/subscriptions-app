@@ -52,8 +52,6 @@ export const CheckoutStep2: React.FunctionComponent = () => {
         }),
       1800
     );
-
-    console.log(userIds, subscriptionPlan, subscriptionPlanId);
   };
 
   return (

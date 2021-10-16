@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Row, Col, Typography, Divider, Image, Skeleton } from "antd";
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 import { useFlex } from "../../hooks";
 import { CompanyExpensesChart } from ".";
@@ -12,12 +13,30 @@ const PaddedCol = styled(Col)`
   padding-right: 16px;
 `;
 
+const QuickActionsWrapper = styled.div`
+  padding-bottom: 32px;
+  display: flex;
+`;
+
+const QuickActionsLink = styled.span`
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  color: rgb(70, 81, 88);
+  margin-left: 10px;
+`;
+
 export const Home: React.FunctionComponent = () => {
   const { isOnboarded } = useFlex();
   return <>{isOnboarded == undefined ? <Skeleton active /> : <HomeContent />}</>;
 };
 
 const HomeContent: React.FunctionComponent = () => {
+  const history = useHistory();
   return (
     <>
       <Row>
@@ -263,27 +282,24 @@ const HomeContent: React.FunctionComponent = () => {
                     >
                       Quick Actions
                     </Title>
-                    <div
-                      style={{
-                        paddingBottom: "8px",
-                      }}
-                    >
-                      Invite User
-                    </div>
-                    <div
-                      style={{
-                        paddingBottom: "8px",
-                      }}
-                    >
-                      Issue Virtual Card
-                    </div>
-                    <div
-                      style={{
-                        paddingBottom: "8px",
-                      }}
-                    >
-                      Request Physical Card
-                    </div>
+                    <QuickActionsWrapper>
+                      <img src="https://app.fxr.one/flex/static/media/Frame.fad0ea22.svg" />
+                      <QuickActionsLink onClick={() => history.push("/flex/organization/members")}>
+                        Invite User
+                      </QuickActionsLink>
+                    </QuickActionsWrapper>
+                    <QuickActionsWrapper>
+                      <img src="https://app.fxr.one/flex/static/media/virtualCardIcon.c4827e70.svg" />
+                      <QuickActionsLink onClick={() => history.push("/flex/request-virtual-card")}>
+                        Issue Virtual Card
+                      </QuickActionsLink>
+                    </QuickActionsWrapper>
+                    <QuickActionsWrapper>
+                      <img src="https://app.fxr.one/flex/static/media/physicalCardIcon.82aeb182.svg" />
+                      <QuickActionsLink onClick={() => history.push("/flex//request-physical-card")}>
+                        Request Physical Card
+                      </QuickActionsLink>
+                    </QuickActionsWrapper>
                   </Col>
                 </Row>
               </Col>

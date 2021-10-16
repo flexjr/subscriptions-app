@@ -124,7 +124,6 @@ export const SubscriptionsManage: React.FunctionComponent = () => {
 
       await getData<{ access_url }>(`${API_URL}/subscriptions/chargebee/sso`, accessToken, signal)
         .then(({ access_url }) => {
-          console.log(access_url);
           setIsChargebeeModalVisible(true);
           setChargebeeUrl(access_url);
           return access_url;

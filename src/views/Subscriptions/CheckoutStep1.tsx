@@ -30,7 +30,6 @@ export const CheckoutStep1: React.FunctionComponent = () => {
   // TODO: If userIds does not exist, then redirect back...
 
   const handleUpgrade = (subscriptionPlan: string): void => {
-    console.log(userIds, subscriptionPlan);
     setLoading(true);
     setTimeout(
       () =>
