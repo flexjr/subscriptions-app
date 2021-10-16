@@ -90,7 +90,6 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         });
 
       if (primaryCard) {
-        console.log(primaryCard);
         setPrimaryCard(primaryCard);
         setIsLoadingCards(false);
         setTitle("Your Saved Payment Methods");
@@ -112,7 +111,6 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         signal,
         payloadEstimate
       ).then((data) => {
-        console.log(data);
         setEstimate(data);
         setIsLoadingPricing(false);
         return data;
@@ -129,7 +127,6 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         signal,
         payloadUserIds
       ).then((data) => {
-        console.log(data);
         setUsersList(data?.data);
       });
     };
@@ -169,7 +166,6 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
   const handleTokenizeCard = (): void => {
     cardRef.current.tokenize().then((data) => {
-      console.log("Chargebee token", data.token);
       setChargebeeToken(data.token);
       handleAddCard(data.token);
     });
@@ -186,8 +182,8 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       subscriptionPlan: subscriptionPlan,
       subscriptionPlanId: subscriptionPlanId,
     };
-    console.log(values);
     setIsPayNowButtonLoading(true);
+
     // Checkout
     await postData<{ status; result }>(`${API_URL}/subscriptions/checkout`, accessToken, signal, values)
       .then(({ status, result }) => {

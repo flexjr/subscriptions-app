@@ -35,7 +35,7 @@ export const CompanyExpensesChart: React.FunctionComponent = () => {
       date: format(subDays(date, 6 - i), "MMM d"),
     };
   });
-  console.log(formattedData);
+
   return (
     <div style={{ width: "100%", height: 240 }}>
       <ResponsiveContainer>

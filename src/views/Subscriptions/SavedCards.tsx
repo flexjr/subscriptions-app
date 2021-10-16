@@ -76,7 +76,6 @@ export const SavedCards: React.FunctionComponent = () => {
         setHostedPaymentMethodPageUrl(data.url);
         setIframeRefresh(iframeRefresh + 1);
 
-        console.log(data.url);
         setIsModalVisible(true);
       } catch (e) {
         return undefined;

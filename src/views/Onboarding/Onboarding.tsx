@@ -56,6 +56,7 @@ export const Onboarding: React.FunctionComponent = () => {
   const onFinishFailed = (errorInfo: any): void => {
     console.log("Failed:", errorInfo);
   };
+
   return (
     <>
       <Row

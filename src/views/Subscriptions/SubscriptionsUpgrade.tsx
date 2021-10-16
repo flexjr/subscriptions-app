@@ -120,7 +120,6 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
   };
 
   const onSelectChange = (selectedRowKeys): void => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(selectedRowKeys);
   };
 
