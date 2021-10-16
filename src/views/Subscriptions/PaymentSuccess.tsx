@@ -16,7 +16,7 @@ export const PaymentSuccess: React.FunctionComponent = () => {
         <Result
           status="success"
           title="🥳 Successfully Upgraded!"
-          subTitle="Thank you for upgrading to Flex Pro, give us a minute or two while we prepare your account!"
+          subTitle="Thank you for upgrading! Give us a minute or two while we prepare your account."
           extra={[
             <Button type="primary" key="console">
               <Link to="/flex/dashboard">Go to Dashboard</Link>

@@ -194,6 +194,8 @@ export const CheckoutStep3: React.FunctionComponent = () => {
             pathname: "/flex/subscription/payment-success",
           });
         }
+
+        setIsPayNowButtonLoading(false);
         return true;
       })
       .catch((e) => {
