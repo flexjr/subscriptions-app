@@ -165,8 +165,8 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                   For small teams that are just getting started with our spend management platform.
                 </FlexSubscriptionPlanSupportingTitle>
                 <FlexSubscriptionPlanPrice>
-                  Free!
-                  <FlexSubscriptionPlanPriceText>Free forver</FlexSubscriptionPlanPriceText>
+                  Free
+                  <FlexSubscriptionPlanPriceText>Free forever</FlexSubscriptionPlanPriceText>
                   <FlexSubscriptionPlanPriceText>&nbsp;</FlexSubscriptionPlanPriceText>
                 </FlexSubscriptionPlanPrice>
                 <FlexSubscriptionUpgradeButton type="primary" size="large" block disabled={true}>
