@@ -6,4 +6,5 @@ export * from "./PaymentSuccess";
 export * from "./OrgSubscriptions";
 export * from "./SubscriptionsUpgrade";
 export * from "./SubscriptionsManage";
+export * from "./SubscriptionsCancel";
 export * from "./SavedCards";

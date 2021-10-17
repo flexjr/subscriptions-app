@@ -2,54 +2,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Button, Table, Skeleton, Modal, Space } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
-
-const columns = [
-  {
-    title: "User ID",
-    dataIndex: "user_id",
-  },
-  {
-    title: "First Name",
-    dataIndex: "first_name",
-  },
-  {
-    title: "Last Name",
-    dataIndex: "last_name",
-  },
-  {
-    title: "Member's Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Subscription Plan",
-    dataIndex: "subscription_plan",
-  },
-  {
-    title: "Current Term Start",
-    dataIndex: "current_term_start",
-  },
-  {
-    title: "Current Term End",
-    dataIndex: "current_term_end",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-  },
-  {
-    title: "Action",
-    key: "action",
-    sorter: true,
-    // eslint-disable-next-line react/display-name
-    render: () => (
-      <Space size="middle">
-        <Button type="link">Cancel</Button>
-      </Space>
-    ),
-  },
-];
 
 const Iframe = ({ src, height, width }): JSX.Element => {
   return (
@@ -68,6 +23,7 @@ const Iframe = ({ src, height, width }): JSX.Element => {
 };
 
 export const SubscriptionsManage: React.FunctionComponent = () => {
+  const history = useHistory();
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
@@ -76,6 +32,64 @@ export const SubscriptionsManage: React.FunctionComponent = () => {
   const [chargebeeUrl, setChargebeeUrl] = useState("");
 
   const { getAccessTokenSilently } = useAuth0();
+
+  const columns = [
+    {
+      title: "User ID",
+      dataIndex: "user_id",
+    },
+    {
+      title: "First Name",
+      dataIndex: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+    },
+    {
+      title: "Member's Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Subscription Plan",
+      dataIndex: "subscription_plan",
+    },
+    {
+      title: "Current Term Start",
+      dataIndex: "current_term_start",
+    },
+    {
+      title: "Current Term End",
+      dataIndex: "current_term_end",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+    },
+    {
+      title: "Action",
+      key: "action",
+      sorter: true,
+      // eslint-disable-next-line react/display-name
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            type="link"
+            onClick={() =>
+              history.push({
+                pathname: "/flex/subscription/cancel",
+                state: {
+                  userId: record.id,
+                },
+              })
+            }
+          >
+            Cancel
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

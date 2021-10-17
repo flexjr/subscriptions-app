@@ -1,9 +1,11 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Table, Skeleton, Form, Input, Row, Col, Button, notification } from "antd";
+import { Table, Skeleton, Form, Input, Row, Col, Button, notification, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
+
+const { Title } = Typography;
 
 const columns = [
   {
@@ -141,7 +143,7 @@ export const Members: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>Company Settings</h2>
+      <Title level={3}>Company Settings</Title>
       {isPageLoading ? (
         <Skeleton active />
       ) : (

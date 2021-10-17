@@ -11,6 +11,7 @@ import { Debugger } from "./views/Debugger";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Onboarding } from "./views/Onboarding";
+import { PlaceholderPage } from "./views/Placeholder";
 import {
   CheckoutStep1,
   CheckoutStep2,
@@ -19,6 +20,7 @@ import {
   PaymentSuccess,
   OrgSubscriptions,
   SavedCards,
+  SubscriptionsCancel,
 } from "./views/Subscriptions";
 import { UserSettings } from "./views/UserSettings";
 
@@ -79,6 +81,28 @@ export const Router: React.FunctionComponent = () => {
                 </Route>
                 <Route exact path="/flex/subscription/payment-failed">
                   <PaymentFailed />
+                </Route>
+                <Route exact path="/flex/subscription/cancel">
+                  <SubscriptionsCancel />
+                </Route>
+
+                <Route exact path="/flex/physical-cards/my-card">
+                  <PlaceholderPage />
+                </Route>
+                <Route exact path="/flex/request-physical-card">
+                  <PlaceholderPage />
+                </Route>
+                <Route exact path="/flex/virtual-cards">
+                  <PlaceholderPage />
+                </Route>
+                <Route exact path="/flex/request-virtual-card">
+                  <PlaceholderPage />
+                </Route>
+                <Route exact path="/flex/transactions">
+                  <PlaceholderPage />
+                </Route>
+                <Route exact path="/flex/flex-plus-credit">
+                  <PlaceholderPage />
                 </Route>
                 <Route exact path="/debugger">
                   <Debugger />
