@@ -253,7 +253,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
               <div>
                 <FlexSubscriptionPlanTitle>Flex Premium</FlexSubscriptionPlanTitle>
                 <FlexSubscriptionPlanSupportingTitle>
-                  For small teams that require advanced spend controls.
+                  For larger teams that perform more fund transfers per month.
                 </FlexSubscriptionPlanSupportingTitle>
                 <FlexSubscriptionPlanPrice>
                   <span style={{ fontSize: "1rem", verticalAlign: "top" }}>SGD</span> 12.99
@@ -272,7 +272,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                 </FlexSubscriptionUpgradeButton>
                 <FlexSubscriptionPlanContent>
                   <FlexSubscriptionBenefits>
-                    <FlexSubscriptionBenefitsTitle>Everything in Starter, plus:</FlexSubscriptionBenefitsTitle>
+                    <FlexSubscriptionBenefitsTitle>Everything in Pro, plus:</FlexSubscriptionBenefitsTitle>
                     <FlexSubscriptionBenefitsItem>
                       <GreenCheckedOutline />5 physical Visa Cards
                     </FlexSubscriptionBenefitsItem>
