@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Skeleton, Tabs } from "antd";
+import { Skeleton, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -8,6 +8,7 @@ import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 import { SubscriptionsManage } from "./SubscriptionsManage";
 import { SubscriptionsUpgrade } from "./SubscriptionsUpgrade";
 
+const { Title } = Typography;
 const { TabPane } = Tabs;
 
 interface MatchProps {
@@ -61,7 +62,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>Subscriptions</h2>
+      <Title level={3}>Subscriptions</Title>
       {isPageLoading ? (
         <Skeleton active />
       ) : (

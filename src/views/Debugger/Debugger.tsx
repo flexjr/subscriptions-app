@@ -1,10 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Skeleton, Tabs, Row, Col, Input } from "antd";
+import { Button, Skeleton, Tabs, Row, Col, Input, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { AUTH0_API_AUDIENCE } from "../../shared";
+
+const { Title } = Typography;
 
 const { TabPane } = Tabs;
 const { TextArea } = Input;
@@ -31,7 +33,7 @@ export const Debugger: React.FunctionComponent = () => {
 
   return (
     <>
-      <h2>Debugger</h2>
+      <Title level={3}>Developer Tools</Title>
       {isPageLoading ? (
         <Skeleton active />
       ) : (
