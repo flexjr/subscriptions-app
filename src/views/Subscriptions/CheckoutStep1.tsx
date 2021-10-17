@@ -1,6 +1,6 @@
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined } from "@ant-design/icons";
 import styled from "@emotion/styled";
-import { Button, Row, Card, Col, Alert, Typography } from "antd";
+import { Button, Row, Col, Alert, Typography, Tag } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -8,10 +8,7 @@ import { FlexBanner } from "../../components/Shared";
 const { Title } = Typography;
 const GreenCheckedOutline = styled(CheckOutlined)`
   color: #52c41a;
-`;
-
-const RedCloseOutlined = styled(CloseOutlined)`
-  color: #f5222d;
+  padding-right: 8px;
 `;
 
 const FlexSubscriptionPlanCard = styled.div`
@@ -22,14 +19,89 @@ const FlexSubscriptionPlanCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: rgba(255, 255, 255);
+
+  &.flex-pro {
+    background: linear-gradient(to bottom, #2ddca1 8px, white 7px 100%);
+  }
+
+  &.flex-premium {
+    background: linear-gradient(to bottom, #1f9a70 8px, white 7px 100%);
+  }
 `;
 
 const FlexSubscriptionPlanTitle = styled.div`
-  font-size: 24px;
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 24px;
+  font-size: 1.375rem;
+  font-weight: 400;
+  margin-bottom: 16px;
   flex-grow: 0;
+  display: flex;
+  align-items: center;
+`;
+
+const FlexSubscriptionPlanSupportingTitle = styled.div`
+  font-size: 1rem;
+  font-weight: normal;
+  color: #646f79;
+  padding-bottom: 24px;
+`;
+
+const FlexSubscriptionPlanPrice = styled.div`
+  font-size: 1.875rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  flex-grow: 0;
+`;
+
+const FlexSubscriptionPlanPriceText = styled.div`
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: #646f79;
+`;
+
+const FlexSubscriptionUpgradeButton = styled(Button)`
+  margin-bottom: 16px;
+
+  &.flex-pro {
+    background: #2ddca1;
+    border-color: #2ddca1;
+  }
+  &.flex-pro:hover {
+    background: #76e8c2;
+    border-color: #76e8c2;
+  }
+
+  &.flex-premium {
+    background: #1f9a70;
+    border-color: #1f9a70;
+  }
+  &.flex-premium:hover {
+    background: #37d7a0;
+    border-color: #37d7a0;
+  }
+`;
+
+const FlexSubscriptionPlanContent = styled.div`
+  font-size: 1rem;
+  margin-top: 16px;
+  margin-bottom: 16px;
+`;
+
+const FlexSubscriptionBenefitsTitle = styled.div`
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #273240;
+`;
+
+const FlexSubscriptionBenefits = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FlexSubscriptionBenefitsItem = styled(Row)`
+  font-size: 0.875rem;
+  align-items: center;
+  margin-bottom: 8px;
 `;
 
 interface StateType {
@@ -40,7 +112,7 @@ interface StateType {
 export const CheckoutStep1: React.FunctionComponent = () => {
   const history = useHistory();
   const location = useLocation<StateType>();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [debugData, setDebugData] = useState("Loading...");
 
   const userIds = location.state?.userIds;
@@ -48,7 +120,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
   // TODO: If userIds does not exist, then redirect back...
 
   const handleUpgrade = (subscriptionPlan: string): void => {
-    setLoading(true);
+    setIsLoading(true);
     setTimeout(
       () =>
         history.push({
@@ -89,131 +161,134 @@ export const CheckoutStep1: React.FunctionComponent = () => {
             <FlexSubscriptionPlanCard>
               <div>
                 <FlexSubscriptionPlanTitle>Flex Starter</FlexSubscriptionPlanTitle>
-                <div
-                  style={{
-                    fontSize: "32px",
-                    textAlign: "center",
-                    fontWeight: 600,
-                    marginBottom: "16px",
-                    flexGrow: 0,
-                  }}
-                >
-                  SGD 7.99
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "normal",
-                    }}
-                  >
-                    /month
-                  </span>
-                </div>
+                <FlexSubscriptionPlanSupportingTitle>
+                  For small teams that are just getting started with our spend management platform.
+                </FlexSubscriptionPlanSupportingTitle>
+                <FlexSubscriptionPlanPrice>
+                  Free!
+                  <FlexSubscriptionPlanPriceText>Free forver</FlexSubscriptionPlanPriceText>
+                  <FlexSubscriptionPlanPriceText>&nbsp;</FlexSubscriptionPlanPriceText>
+                </FlexSubscriptionPlanPrice>
+                <FlexSubscriptionUpgradeButton type="primary" size="large" block disabled={true}>
+                  Upgrade
+                </FlexSubscriptionUpgradeButton>
+                <FlexSubscriptionPlanContent>
+                  <FlexSubscriptionBenefits>
+                    <FlexSubscriptionBenefitsTitle>Manage your company’s payments with:</FlexSubscriptionBenefitsTitle>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> 10 virtual Visa cards
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Accounting software integrations
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> SGD 3,000 Flex PLUS Credit Line
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Basic spend controls
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Live customer support
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> 1.5% FX fee
+                    </FlexSubscriptionBenefitsItem>
+                  </FlexSubscriptionBenefits>
+                </FlexSubscriptionPlanContent>
               </div>
             </FlexSubscriptionPlanCard>
           </Col>
-        </Row>
-        <Row gutter={16}>
           <Col span={8}>
-            <Card
-              title="Flex Starter"
-              bordered={false}
-              actions={[
-                <Button type="link" disabled key="btn_current">
-                  You’re on this plan
-                </Button>,
-              ]}
-            >
-              <div>Free!</div>
+            <FlexSubscriptionPlanCard className="flex-pro">
               <div>
-                <RedCloseOutlined /> No Physical Visa Cards
+                <FlexSubscriptionPlanTitle>
+                  Flex Pro&nbsp;<Tag color="#2ddca1">Recommended</Tag>
+                </FlexSubscriptionPlanTitle>
+                <FlexSubscriptionPlanSupportingTitle>
+                  For small teams that require advanced spend controls.
+                </FlexSubscriptionPlanSupportingTitle>
+                <FlexSubscriptionPlanPrice>
+                  <span style={{ fontSize: "1rem", verticalAlign: "top" }}>SGD</span> 7.49
+                  <FlexSubscriptionPlanPriceText>Per user, per month billed annually</FlexSubscriptionPlanPriceText>
+                  <FlexSubscriptionPlanPriceText>SGD 7.99 billed monthly</FlexSubscriptionPlanPriceText>
+                </FlexSubscriptionPlanPrice>
+                <FlexSubscriptionUpgradeButton
+                  type="primary"
+                  size="large"
+                  block
+                  onClick={() => handleUpgrade("FLEX_PRO")}
+                  className="flex-pro"
+                  loading={isLoading}
+                >
+                  Upgrade
+                </FlexSubscriptionUpgradeButton>
+                <FlexSubscriptionPlanContent>
+                  <FlexSubscriptionBenefits>
+                    <FlexSubscriptionBenefitsTitle>Everything in Starter, plus:</FlexSubscriptionBenefitsTitle>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline />1 physical Visa Card
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Unlimited virtual Visa Cards
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Receipt capture
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Advanced spend controls
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> Premium support with assigned RM
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> 1.0% FX fee
+                    </FlexSubscriptionBenefitsItem>
+                  </FlexSubscriptionBenefits>
+                </FlexSubscriptionPlanContent>
               </div>
-              <div>
-                <GreenCheckedOutline /> 10 Virtual Visa Cards
-              </div>
-              <div>
-                <GreenCheckedOutline /> Accounting Software Integrations
-              </div>
-              <div>
-                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Line
-              </div>
-              <div>
-                <GreenCheckedOutline /> Basic Spend Controls
-              </div>
-              <div>
-                <GreenCheckedOutline /> Live Customer Support
-              </div>
-              <div>
-                <GreenCheckedOutline /> 1.5% FX Fee
-              </div>
-            </Card>
+            </FlexSubscriptionPlanCard>
           </Col>
           <Col span={8}>
-            <Card
-              title="Flex Pro"
-              bordered={false}
-              actions={[
-                <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("FLEX_PRO")} loading={loading}>
+            <FlexSubscriptionPlanCard className="flex-premium">
+              <div>
+                <FlexSubscriptionPlanTitle>Flex Premium</FlexSubscriptionPlanTitle>
+                <FlexSubscriptionPlanSupportingTitle>
+                  For small teams that require advanced spend controls.
+                </FlexSubscriptionPlanSupportingTitle>
+                <FlexSubscriptionPlanPrice>
+                  <span style={{ fontSize: "1rem", verticalAlign: "top" }}>SGD</span> 12.99
+                  <FlexSubscriptionPlanPriceText>Per user, per month billed annually</FlexSubscriptionPlanPriceText>
+                  <FlexSubscriptionPlanPriceText>SGD 7.99 billed monthly</FlexSubscriptionPlanPriceText>
+                </FlexSubscriptionPlanPrice>
+                <FlexSubscriptionUpgradeButton
+                  type="primary"
+                  size="large"
+                  block
+                  onClick={() => handleUpgrade("FLEX_PREMIUM")}
+                  className="flex-premium"
+                  loading={isLoading}
+                >
                   Upgrade
-                </Button>,
-              ]}
-            >
-              <div>SGD 7.49 per user per month</div>
-              <div>
-                <GreenCheckedOutline />1 Physical Visa Card
+                </FlexSubscriptionUpgradeButton>
+                <FlexSubscriptionPlanContent>
+                  <FlexSubscriptionBenefits>
+                    <FlexSubscriptionBenefitsTitle>Everything in Starter, plus:</FlexSubscriptionBenefitsTitle>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline />5 physical Visa Cards
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> 0.5% FX fee
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> 50 free FAST transfers per month
+                    </FlexSubscriptionBenefitsItem>
+                    <FlexSubscriptionBenefitsItem>
+                      <GreenCheckedOutline /> 5 free ATM withdrawals per month
+                    </FlexSubscriptionBenefitsItem>
+                  </FlexSubscriptionBenefits>
+                </FlexSubscriptionPlanContent>
               </div>
-              <div>
-                <GreenCheckedOutline /> Unlimited Virtual Visa Cards
-              </div>
-              <div>
-                <GreenCheckedOutline /> Accounting Software Integrations
-              </div>
-              <div>
-                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Line
-              </div>
-              <div>
-                <GreenCheckedOutline /> Advanced Spend Controls
-              </div>
-              <div>
-                <GreenCheckedOutline /> Premium Support with Assigned RM
-              </div>
-              <div>
-                <GreenCheckedOutline /> 1.0% FX Fee
-              </div>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card
-              title="Flex Premium"
-              bordered={false}
-              actions={[
-                <Button type="link" key="btn_upgrade" onClick={() => handleUpgrade("FLEX_PREMIUM")} loading={loading}>
-                  Upgrade
-                </Button>,
-              ]}
-            >
-              <div>From SGD 13.49 per user per month</div>
-              <div>
-                <GreenCheckedOutline />5 Physical Visa Cards
-              </div>
-              <div>
-                <GreenCheckedOutline /> Unlimited Virtual Visa Cards
-              </div>
-              <div>
-                <GreenCheckedOutline /> Accounting Software Integrations
-              </div>
-              <div>
-                <GreenCheckedOutline /> S$3,000 Flex Plus Credit Line
-              </div>
-              <div>
-                <GreenCheckedOutline /> Advanced Spend Controls
-              </div>
-              <div>
-                <GreenCheckedOutline /> Premium Support with Assigned RM
-              </div>
-              <div>
-                <GreenCheckedOutline /> 0.5% FX Fee
-              </div>
-            </Card>
+            </FlexSubscriptionPlanCard>
           </Col>
         </Row>
       </div>
