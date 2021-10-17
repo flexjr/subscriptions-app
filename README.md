@@ -1,6 +1,6 @@
 # Flex Jr's Subscriptions Proof-of-Concept
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/46aab2c0-2da6-4c0c-b6ae-fc94420cd798/deploy-status)](https://app.netlify.com/sites/flexjr/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/46aab2c0-2da6-4c0c-b6ae-fc94420cd798/deploy-status)](https://app.netlify.com/sites/flexjr/deploys) [![CircleCI](https://circleci.com/gh/flexjr/subscriptions-app/tree/main.svg?style=svg&circle-token=72b14236da171fe8fe64cad083a3089a17031584)](https://circleci.com/gh/flexjr/subscriptions-app/tree/main)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

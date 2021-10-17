@@ -2,19 +2,17 @@ import { useAuth0, User } from "@auth0/auth0-react";
 import { Row, Col, Typography, Tabs, Skeleton, Button } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
 import { RoundedCard } from "../../components/Shared";
 import { Semibold } from "../../components/Shared/Common";
-import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
-import { CurrentUserInfo } from "../../types";
+import { useFlex } from "../../hooks";
+import { FlexUserInfo } from "../../types";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
 interface UserDetailsProps {
   user: User | undefined;
-  additionalUserInfo: CurrentUserInfo | undefined;
+  additionalUserInfo: FlexUserInfo | undefined;
 }
 
 const UserDetails: React.FunctionComponent<UserDetailsProps> = ({ user, additionalUserInfo }) => {
@@ -63,44 +61,8 @@ const UserDetails: React.FunctionComponent<UserDetailsProps> = ({ user, addition
 };
 
 export const UserSettings: React.FunctionComponent = () => {
-  const { user, getAccessTokenSilently } = useAuth0();
-  const [isLoading, setIsLoading] = useState(true);
-  const [additionalUserInfo, setAdditionalUserInfo] = useState<undefined | CurrentUserInfo>();
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const fetchData = async () => {
-      const abortController = new AbortController();
-      const { signal } = abortController;
-
-      const accessToken = await getAccessTokenSilently({
-        audience: AUTH0_API_AUDIENCE,
-        scope: "openid profile email",
-      });
-
-      const userInfo = await getData<{ data: CurrentUserInfo }>(
-        `${API_URL}/users/current_user_info`,
-        accessToken,
-        signal
-      )
-        .then(({ data }) => {
-          return data;
-        })
-        .catch((error) => {
-          console.error(error);
-          return undefined;
-        });
-
-      setAdditionalUserInfo(userInfo);
-      setIsLoading(false);
-
-      // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
-      return function cleanup() {
-        abortController.abort();
-      };
-    };
-    fetchData();
-  }, [getAccessTokenSilently]);
+  const { user } = useAuth0();
+  const { flexUserInfo, isLoadingFlexUserInfo } = useFlex();
 
   return (
     <>
@@ -122,10 +84,10 @@ export const UserSettings: React.FunctionComponent = () => {
                 <Row>
                   <Col md={24}>
                     <Row>
-                      {isLoading ? (
+                      {isLoadingFlexUserInfo ? (
                         <Skeleton avatar paragraph={{ rows: 1 }} active />
                       ) : (
-                        <UserDetails user={user} additionalUserInfo={additionalUserInfo} />
+                        <UserDetails user={user} additionalUserInfo={flexUserInfo} />
                       )}
                     </Row>
                   </Col>

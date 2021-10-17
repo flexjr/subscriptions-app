@@ -1,11 +1,12 @@
 import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Col, Divider, Layout, Menu, Popover, Row, Space, Tag } from "antd";
-import React, { useEffect, useState } from "react";
+import { Col, Divider, Layout, Menu, Popover, Row, Space } from "antd";
+import React from "react";
 import { Link } from "react-router-dom";
-import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
-import { CurrentUserInfo } from "../../types";
+import { useFlex } from "../../hooks";
+import { FlexUserInfo } from "../../types";
+import { FlexPremiumLabel, FlexProLabel } from "../Shared";
 import { ReactComponent as FlexPhysicalCardSvg } from "./flex-icon-card-physical.svg";
 import { ReactComponent as FlexVirtuallCardSvg } from "./flex-icon-card-virtual.svg";
 import { ReactComponent as FlexCreditLineSvg } from "./flex-icon-credit-line.svg";
@@ -136,43 +137,8 @@ const capitalize = (str: string | undefined): string => {
 };
 
 export const NavbarSide: React.FunctionComponent = () => {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-
-  const [additionalUserInfo, setAdditionalUserInfo] = useState<undefined | CurrentUserInfo>();
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const fetchData = async () => {
-      const abortController = new AbortController();
-      const { signal } = abortController;
-
-      const accessToken = await getAccessTokenSilently({
-        audience: AUTH0_API_AUDIENCE,
-        scope: "openid profile email",
-      });
-
-      const userInfo = await getData<{ data: CurrentUserInfo }>(
-        `${API_URL}/users/current_user_info`,
-        accessToken,
-        signal
-      )
-        .then(({ data }) => {
-          return data;
-        })
-        .catch((error) => {
-          console.error(error);
-          return undefined;
-        });
-
-      setAdditionalUserInfo(userInfo);
-
-      // Need to unsubscribe to API calls if the user moves away from the page before fetch() is done
-      return function cleanup() {
-        abortController.abort();
-      };
-    };
-    fetchData();
-  }, [getAccessTokenSilently]);
+  const { isAuthenticated } = useAuth0();
+  const { flexUserInfo } = useFlex();
 
   return (
     <Sider
@@ -319,7 +285,7 @@ export const NavbarSide: React.FunctionComponent = () => {
             </Col>
             <Col md={16}>
               <FlexUserSettingsPopover
-                content={<FlexUserSettingsPopoverContent additionalUserInfo={additionalUserInfo} />}
+                content={<FlexUserSettingsPopoverContent additionalUserInfo={flexUserInfo} />}
                 placement="rightBottom"
                 trigger="click"
                 overlayClassName="user-settings-popover"
@@ -328,7 +294,7 @@ export const NavbarSide: React.FunctionComponent = () => {
                 }}
               >
                 <div>
-                  {additionalUserInfo?.first_name} {additionalUserInfo?.last_name}
+                  {flexUserInfo?.first_name} {flexUserInfo?.last_name}
                 </div>
                 <div
                   style={{
@@ -337,8 +303,8 @@ export const NavbarSide: React.FunctionComponent = () => {
                   }}
                 >
                   <Space>
-                    {capitalize(additionalUserInfo?.user_roles.role_name)}
-                    <FlexSubscriptionPlanLabel additionalUserInfo={additionalUserInfo} />
+                    {capitalize(flexUserInfo?.user_roles?.role_name)}
+                    <FlexSubscriptionPlanLabel additionalUserInfo={flexUserInfo} />
                   </Space>
                 </div>
               </FlexUserSettingsPopover>
@@ -376,7 +342,7 @@ const CompanyDiv = styled.div`
 `;
 
 interface FlexUserSettingsPopoverContentProps {
-  additionalUserInfo: CurrentUserInfo | undefined;
+  additionalUserInfo: FlexUserInfo | undefined;
 }
 
 export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSettingsPopoverContentProps> = ({
@@ -450,14 +416,14 @@ export const FlexUserSettingsPopoverContent: React.FunctionComponent<FlexUserSet
 };
 
 interface FlexSubscriptionPlanLabelProps {
-  additionalUserInfo: CurrentUserInfo | undefined;
+  additionalUserInfo: FlexUserInfo | undefined;
 }
 
 const FlexSubscriptionPlanLabel: React.FunctionComponent<FlexSubscriptionPlanLabelProps> = ({ additionalUserInfo }) => {
-  if (additionalUserInfo && additionalUserInfo?.user_subscriptions.subscription_plan.includes("FLEX_PRO")) {
-    return <Tag color="#2ddca1">Pro</Tag>;
-  } else if (additionalUserInfo && additionalUserInfo?.user_subscriptions.subscription_plan.includes("FLEX_PREMIUM")) {
-    return <Tag color="#1f9a70">Premium</Tag>;
+  if (additionalUserInfo && additionalUserInfo?.user_subscriptions?.subscription_plan.includes("FLEX_PRO")) {
+    return <FlexProLabel label="Pro" />;
+  } else if (additionalUserInfo && additionalUserInfo?.user_subscriptions?.subscription_plan.includes("FLEX_PREMIUM")) {
+    return <FlexPremiumLabel label="Premium" />;
   } else {
     return <></>;
   }

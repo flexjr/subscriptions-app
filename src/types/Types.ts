@@ -1,4 +1,4 @@
-export interface CurrentUserInfo {
+export interface FlexUserInfo {
   id: number;
   user_id: string;
   first_name: string;

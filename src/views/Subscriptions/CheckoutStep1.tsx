@@ -14,6 +14,24 @@ const RedCloseOutlined = styled(CloseOutlined)`
   color: #f5222d;
 `;
 
+const FlexSubscriptionPlanCard = styled.div`
+  padding: 16px;
+  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255);
+`;
+
+const FlexSubscriptionPlanTitle = styled.div`
+  font-size: 24px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 24px;
+  flex-grow: 0;
+`;
+
 interface StateType {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   userIds?: any;
@@ -66,31 +84,11 @@ export const CheckoutStep1: React.FunctionComponent = () => {
         />
       )}
       <div style={{ marginTop: "16px", marginBottom: "16px" }}>
-        {/* <Row gutter={16}>
-          <Col span={12}>
-            <div
-              style={{
-                padding: "16px",
-                borderRadius: "10px",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                backgroundColor: "rgba(255, 255, 255)",
-              }}
-            >
+        <Row gutter={16}>
+          <Col span={8}>
+            <FlexSubscriptionPlanCard>
               <div>
-                <div
-                  style={{
-                    fontSize: "24px",
-                    textAlign: "center",
-                    fontWeight: 600,
-                    marginBottom: "24px",
-                    flexGrow: 0,
-                  }}
-                >
-                  Flex Starter
-                </div>
+                <FlexSubscriptionPlanTitle>Flex Starter</FlexSubscriptionPlanTitle>
                 <div
                   style={{
                     fontSize: "32px",
@@ -111,9 +109,9 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </FlexSubscriptionPlanCard>
           </Col>
-        </Row> */}
+        </Row>
         <Row gutter={16}>
           <Col span={8}>
             <Card
