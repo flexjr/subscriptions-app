@@ -407,22 +407,36 @@ const HomeContent: React.FunctionComponent = () => {
                 </Title>
                 <div
                   style={{
+                    paddingTop: "16px",
                     paddingBottom: "8px",
                     color: "rgb(105, 105, 105)",
-                    fontSize: "1.175em",
+                    fontSize: "1em",
                     fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
+                  <img
+                    src="https://app.fxr.one/flex/static/media/question-mark-icon.df27b889.svg"
+                    style={{ marginRight: "8px" }}
+                  />{" "}
                   Frequently Asked Questions
                 </div>
                 <div
                   style={{
+                    paddingTop: "16px",
                     paddingBottom: "8px",
                     color: "rgb(105, 105, 105)",
-                    fontSize: "1.175em",
+                    fontSize: "1em",
                     fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
+                  <img
+                    src="https://app.fxr.one/flex/static/media/contact-icon.3d68ac31.svg"
+                    style={{ marginRight: "8px" }}
+                  />{" "}
                   Contact Us
                 </div>
               </Col>
