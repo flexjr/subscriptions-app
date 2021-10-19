@@ -21,6 +21,8 @@ import {
   OrgSubscriptions,
   SavedCards,
   SubscriptionsCancel,
+  SubscriptionsCancelSuccess,
+  SubscriptionsCancelFailure,
 } from "./views/Subscriptions";
 import { UserSettings } from "./views/UserSettings";
 
@@ -84,6 +86,12 @@ export const Router: React.FunctionComponent = () => {
                 </Route>
                 <Route exact path="/flex/subscription/cancel">
                   <SubscriptionsCancel />
+                </Route>
+                <Route exact path="/flex/subscription/cancel-success">
+                  <SubscriptionsCancelSuccess />
+                </Route>
+                <Route exact path="/flex/subscription/cancel-failed">
+                  <SubscriptionsCancelFailure />
                 </Route>
 
                 <Route exact path="/flex/physical-cards/my-card">
