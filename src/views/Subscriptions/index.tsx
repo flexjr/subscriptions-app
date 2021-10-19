@@ -7,4 +7,6 @@ export * from "./OrgSubscriptions";
 export * from "./SubscriptionsUpgrade";
 export * from "./SubscriptionsManage";
 export * from "./SubscriptionsCancel";
+export * from "./SubscriptionsCancelSuccess";
+export * from "./SubscriptionsCancelFailure";
 export * from "./SavedCards";

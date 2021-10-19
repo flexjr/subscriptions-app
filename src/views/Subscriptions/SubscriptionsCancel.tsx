@@ -1,18 +1,47 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Skeleton, Select, Form, Input, Row, Col, Button, Typography, Divider } from "antd";
+import { Skeleton, Select, Form, Row, Col, Button, Typography, Divider } from "antd";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useHistory, useLocation } from "react-router";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
+import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
 const { Title } = Typography;
 
 const Field = styled(Col)`
   font-weight: 500;
 `;
+interface StateType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  userId?: string;
+}
 
 export const SubscriptionsCancel: React.FunctionComponent = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isCancellationLoading, setIsCancellationLoading] = useState(false);
+  const [subscriptionInfo, setSubscriptionInfo] = useState({
+    current_term_end: 0,
+    current_term_start: 0,
+    email: null,
+    email_verified: null,
+    event_id: null,
+    first_name: null,
+    id: null,
+    last_name: null,
+    mobile: null,
+    mobile_verified: null,
+    org_id: null,
+    status: null,
+    subscription_id: null,
+    subscription_plan: null,
+    user_id: null,
+  });
+  const location = useLocation<StateType>();
+  const history = useHistory();
+
+  const userId = location.state?.userId;
 
   const { getAccessTokenSilently } = useAuth0();
 
@@ -20,12 +49,24 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const fetchData = async () => {
       const abortController = new AbortController();
-      // const { signal } = abortController;
+      const { signal } = abortController;
 
-      // const accessToken = await getAccessTokenSilently({
-      //   audience: AUTH0_API_AUDIENCE,
-      //   scope: "openid profile email",
-      // });
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      await getData<{ result }>(`${API_URL}/subscriptions/list_subscription/${userId}`, accessToken, signal)
+        .then(({ result }) => {
+          result.current_term_start = format(new Date(result?.current_term_start), "d MMM yyyy");
+          result.current_term_end = format(new Date(result?.current_term_end), "d MMM yyyy");
+          setSubscriptionInfo(result);
+          return result;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
+        });
 
       setIsPageLoading(false);
 
@@ -35,7 +76,41 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
       };
     };
     fetchData();
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, userId]);
+
+  const handleCancellation = (): void => {
+    setIsCancellationLoading(true);
+    const cancel = async (): Promise<{ message } | undefined> => {
+      const abortController = new AbortController();
+      const { signal } = abortController;
+
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      return await postData<{ message }>(`${API_URL}/subscriptions/cancel_subscription`, accessToken, signal, {
+        userId: userId,
+      })
+        .then(({ message }) => {
+          setIsCancellationLoading(false);
+          history.push({
+            pathname: "/flex/subscription/cancel-success",
+          });
+          return { message };
+        })
+        .catch((error) => {
+          console.error(error);
+          history.push({
+            pathname: "/flex/subscription/cancel-failed",
+          });
+          setIsCancellationLoading(false);
+          return undefined;
+        });
+    };
+
+    cancel();
+  };
 
   return (
     <>
@@ -54,7 +129,7 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
                     <p>
                       Thanks for spending time with us. You’re always welcome back. Finish your cancellation below.
                       Cancellation will be effective at the end of your current billing period on{" "}
-                      <span style={{ fontWeight: 500 }}>D MMMM YYYY</span>. After this date:
+                      <span style={{ fontWeight: 500 }}>{subscriptionInfo?.current_term_end}</span>. After this date:
                     </p>
                     <ul>
                       <li>Your physical Flex Visa cards will be frozen immediately.</li>
@@ -74,15 +149,17 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
                 <h3>You will be cancelling for</h3>
                 <Row style={{ paddingBottom: "8px" }}>
                   <Field md={12}>User Account</Field>
-                  <Col md={12}>example@example.com</Col>
+                  <Col md={12}>{subscriptionInfo?.email}</Col>
                 </Row>
                 <Row style={{ paddingBottom: "8px" }}>
                   <Field md={12}>Plan Name</Field>
-                  <Col md={12}>FLEX_PRO-SGD-Monthly</Col>
+                  <Col md={12}>{subscriptionInfo?.subscription_plan}</Col>
                 </Row>
                 <Row style={{ paddingBottom: "8px" }}>
                   <Field md={12}>Current Billing Cycle</Field>
-                  <Col md={12}>D MMMM YYYY – D MMMM YYYY</Col>
+                  <Col md={12}>
+                    {subscriptionInfo?.current_term_start} – {subscriptionInfo?.current_term_end}
+                  </Col>
                 </Row>
                 <Divider />
                 <p>Before you go, we’d love to find out why</p>
@@ -91,22 +168,26 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
                     <Col md={24}>
                       <Form.Item>
                         <Select size="large">
-                          <Select.Option value="demo">It is too expensive</Select.Option>
-                          <Select.Option value="demo">The free plan is just right for my business</Select.Option>
-                          <Select.Option value="demo">I do not need some of the paid features</Select.Option>
-                          <Select.Option value="demo">
-                            I am switching to another spend management platform
-                          </Select.Option>
-                          <Select.Option value="demo">I am closing my business</Select.Option>
-                          <Select.Option value="demo">Other reasons</Select.Option>
+                          <Select.Option value="1">It is too expensive</Select.Option>
+                          <Select.Option value="2">The free plan is just right for my business</Select.Option>
+                          <Select.Option value="3">I do not need some of the paid features</Select.Option>
+                          <Select.Option value="4">I am switching to another spend management platform</Select.Option>
+                          <Select.Option value="5">I am closing my business</Select.Option>
+                          <Select.Option value="6">Other reasons</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
                   </Row>
                   <Row>
                     <Col md={24}>
-                      <Button type="primary" htmlType="submit" size="large">
-                        End my subscription on DATE
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        size="large"
+                        onClick={handleCancellation}
+                        loading={isCancellationLoading}
+                      >
+                        End my subscription on {subscriptionInfo?.current_term_end}
                       </Button>{" "}
                       <Button type="default" htmlType="submit" size="large">
                         Go back
