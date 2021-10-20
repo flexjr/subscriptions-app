@@ -4,30 +4,8 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { RoundedCard } from "../../components/Shared";
+import { useFlex } from "../../hooks";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
-
-const columns = [
-  {
-    title: "User ID",
-    dataIndex: "id",
-  },
-  {
-    title: "First Name",
-    dataIndex: "first_name",
-  },
-  {
-    title: "Last Name",
-    dataIndex: "last_name",
-  },
-  {
-    title: "Member's Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Subscription Plan",
-    dataIndex: "subscription_plan",
-  },
-];
 
 export const SubscriptionsUpgrade: React.FunctionComponent = () => {
   const history = useHistory();
@@ -37,6 +15,34 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
 
   const { getAccessTokenSilently } = useAuth0();
+  const { subscriptionPlanFriendlyName } = useFlex();
+
+  const columns = [
+    {
+      title: "User ID",
+      dataIndex: "id",
+    },
+    {
+      title: "First Name",
+      dataIndex: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+    },
+    {
+      title: "Member's Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Subscription Plan",
+      dataIndex: "subscription_plan",
+      // eslint-disable-next-line react/display-name
+      render: (text, record) => {
+        return subscriptionPlanFriendlyName(record.subscription_plan);
+      },
+    },
+  ];
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
