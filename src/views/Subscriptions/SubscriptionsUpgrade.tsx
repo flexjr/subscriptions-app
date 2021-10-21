@@ -11,6 +11,7 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
   const history = useHistory();
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Check here to configure the default column
   const [currentOrgUsers, setCurrentOrgUsers] = useState([]);
 
@@ -125,13 +126,17 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
     fetchData();
   };
 
-  const onSelectChange = (selectedRowKeys): void => {
+  const onSelectChange = (selectedRowKeys, selectedRows): void => {
     setSelectedRowKeys(selectedRowKeys);
+    setSelectedRows(selectedRows);
   };
 
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+    // getCheckboxProps: ({ record }) => {
+    //   console.log(record);
+    // },
   };
 
   const hasSelected = selectedRowKeys.length > 0;

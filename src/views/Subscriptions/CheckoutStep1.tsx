@@ -1,10 +1,12 @@
 import { CheckOutlined } from "@ant-design/icons";
+import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Button, Row, Col, Alert, Typography, Tag } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner } from "../../components/Shared";
+import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 const { Title } = Typography;
 const GreenCheckedOutline = styled(CheckOutlined)`
   color: #52c41a;
@@ -43,6 +45,7 @@ const FlexSubscriptionPlanSupportingTitle = styled.div`
   font-weight: normal;
   color: #646f79;
   padding-bottom: 24px;
+  height: 80px;
 `;
 
 const FlexSubscriptionPlanPrice = styled.div`
@@ -112,15 +115,36 @@ interface StateType {
 export const CheckoutStep1: React.FunctionComponent = () => {
   const history = useHistory();
   const location = useLocation<StateType>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    FLEX_STARTER: false,
+    FLEX_PRO: false,
+    FLEX_PREMIUM: false,
+  });
+  const [isDisabled, setIsDisabled] = useState({
+    FLEX_STARTER: false,
+    FLEX_PRO: false,
+    FLEX_PREMIUM: false,
+  });
   const [debugData, setDebugData] = useState("Loading...");
+  const [currentSubscriptionPlan, setCurrentSubscriptionPlan] = useState(null);
+  const { getAccessTokenSilently } = useAuth0();
 
   const userIds = location.state?.userIds;
 
   // TODO: If userIds does not exist, then redirect back...
 
   const handleUpgrade = (subscriptionPlan: string): void => {
-    setIsLoading(true);
+    setIsLoading({
+      FLEX_STARTER: subscriptionPlan === "FLEX_STARTER",
+      FLEX_PRO: subscriptionPlan === "FLEX_PRO",
+      FLEX_PREMIUM: subscriptionPlan === "FLEX_PREMIUM",
+    });
+    setIsDisabled({
+      FLEX_STARTER: subscriptionPlan !== "FLEX_STARTER",
+      FLEX_PRO: subscriptionPlan !== "FLEX_PRO",
+      FLEX_PREMIUM: subscriptionPlan !== "FLEX_PREMIUM",
+    });
+
     setTimeout(
       () =>
         history.push({
@@ -138,7 +162,37 @@ export const CheckoutStep1: React.FunctionComponent = () => {
     setDebugData(
       `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan NULL / billing frequency NULL`
     );
-  }, [userIds]);
+
+    const fetchData = async (): Promise<void> => {
+      const userId = userIds[0]; // We should assume all users are on the same plan currently. Previous page should check.
+
+      const abortController = new AbortController();
+      const { signal } = abortController;
+
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      await getData<{ result }>(
+        `${API_URL}/subscriptions/list_subscription/${userId}?paid_only=false`,
+        accessToken,
+        signal
+      )
+        .then(({ result }) => {
+          const formattedPlan = result.subscription_plan.split("-")[0];
+          console.log(formattedPlan);
+          setCurrentSubscriptionPlan(formattedPlan);
+          return result;
+        })
+        .catch((error) => {
+          console.error(error);
+          return undefined;
+        });
+    };
+
+    fetchData();
+  }, [getAccessTokenSilently, userIds]);
 
   return (
     <>
@@ -169,8 +223,10 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                   <FlexSubscriptionPlanPriceText>Free forever</FlexSubscriptionPlanPriceText>
                   <FlexSubscriptionPlanPriceText>&nbsp;</FlexSubscriptionPlanPriceText>
                 </FlexSubscriptionPlanPrice>
-                <FlexSubscriptionUpgradeButton type="primary" size="large" block disabled={true}>
-                  Upgrade
+                <FlexSubscriptionUpgradeButton size="large" block disabled={currentSubscriptionPlan === "FLEX_STARTER"}>
+                  {currentSubscriptionPlan === "FLEX_STARTER" && "You’re on this plan"}
+                  {currentSubscriptionPlan === "FLEX_PRO" && "Downgrade"}
+                  {currentSubscriptionPlan === "FLEX_PREMIUM" && "Downgrade"}
                 </FlexSubscriptionUpgradeButton>
                 <FlexSubscriptionPlanContent>
                   <FlexSubscriptionBenefits>
@@ -202,7 +258,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
             <FlexSubscriptionPlanCard className="flex-pro">
               <div>
                 <FlexSubscriptionPlanTitle>
-                  Flex Pro&nbsp;<Tag color="#2ddca1">Recommended</Tag>
+                  Flex Pro&nbsp;{currentSubscriptionPlan !== "FLEX_PREMIUM" && <Tag color="#2ddca1">Recommended</Tag>}
                 </FlexSubscriptionPlanTitle>
                 <FlexSubscriptionPlanSupportingTitle>
                   For small teams that require advanced spend controls.
@@ -216,11 +272,14 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                   type="primary"
                   size="large"
                   block
+                  loading={isLoading.FLEX_PRO}
                   onClick={() => handleUpgrade("FLEX_PRO")}
-                  className="flex-pro"
-                  loading={isLoading}
+                  className={currentSubscriptionPlan === "FLEX_PRO" || isDisabled.FLEX_PRO ? "" : "flex-pro"}
+                  disabled={currentSubscriptionPlan === "FLEX_PRO" || isDisabled.FLEX_PRO}
                 >
-                  Upgrade
+                  {currentSubscriptionPlan === "FLEX_STARTER" && "Upgrade"}
+                  {currentSubscriptionPlan === "FLEX_PRO" && "You’re on this plan"}
+                  {currentSubscriptionPlan === "FLEX_PREMIUM" && "Downgrade"}
                 </FlexSubscriptionUpgradeButton>
                 <FlexSubscriptionPlanContent>
                   <FlexSubscriptionBenefits>
@@ -258,17 +317,20 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                 <FlexSubscriptionPlanPrice>
                   <span style={{ fontSize: "1rem", verticalAlign: "top" }}>SGD</span> 12.99
                   <FlexSubscriptionPlanPriceText>Per user, per month billed annually</FlexSubscriptionPlanPriceText>
-                  <FlexSubscriptionPlanPriceText>SGD 7.99 billed monthly</FlexSubscriptionPlanPriceText>
+                  <FlexSubscriptionPlanPriceText>SGD 14.99 billed monthly</FlexSubscriptionPlanPriceText>
                 </FlexSubscriptionPlanPrice>
                 <FlexSubscriptionUpgradeButton
                   type="primary"
                   size="large"
                   block
+                  loading={isLoading.FLEX_PREMIUM}
                   onClick={() => handleUpgrade("FLEX_PREMIUM")}
-                  className="flex-premium"
-                  loading={isLoading}
+                  className={
+                    currentSubscriptionPlan === "FLEX_PREMIUM" || isDisabled.FLEX_PREMIUM ? "" : "flex-premium"
+                  }
+                  disabled={currentSubscriptionPlan === "FLEX_PREMIUM" || isDisabled.FLEX_PREMIUM}
                 >
-                  Upgrade
+                  {currentSubscriptionPlan === "FLEX_PREMIUM" ? "You’re on this plan" : "Upgrade"}
                 </FlexSubscriptionUpgradeButton>
                 <FlexSubscriptionPlanContent>
                   <FlexSubscriptionBenefits>

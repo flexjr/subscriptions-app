@@ -15,7 +15,14 @@ interface StateType {
 export const CheckoutStep2: React.FunctionComponent = () => {
   const history = useHistory();
   const location = useLocation<StateType>();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    PAY_MONTHLY: false,
+    PAY_YEARLY: false,
+  });
+  const [isDisabled, setIsDisabled] = useState({
+    PAY_MONTHLY: false,
+    PAY_YEARLY: false,
+  });
   const [debugData, setDebugData] = useState("Loading...");
 
   const userIds = location.state?.userIds;
@@ -39,7 +46,15 @@ export const CheckoutStep2: React.FunctionComponent = () => {
   // If userIds does not exist, then redirect back...
 
   const handleUpgrade = (subscriptionPlanId: string): void => {
-    setLoading(true);
+    setIsLoading({
+      PAY_MONTHLY: subscriptionPlanId.indexOf("Monthly") > 0,
+      PAY_YEARLY: subscriptionPlanId.indexOf("Yearly") > 0,
+    });
+    setIsDisabled({
+      PAY_MONTHLY: subscriptionPlanId.indexOf("Monthly") < 0,
+      PAY_YEARLY: subscriptionPlanId.indexOf("Yearly") < 0,
+    });
+    console.log(subscriptionPlanId.indexOf("Monthly"));
     setTimeout(
       () =>
         history.push({
@@ -80,7 +95,8 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                   type="link"
                   key="btn_upgrade"
                   onClick={() => handleUpgrade(`${subscriptionPlan}-SGD-Monthly`)}
-                  loading={loading}
+                  loading={isLoading.PAY_MONTHLY}
+                  disabled={isDisabled.PAY_MONTHLY}
                 >
                   Pay Monthly
                 </Button>,
@@ -98,7 +114,8 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                   type="link"
                   key="btn_upgrade"
                   onClick={() => handleUpgrade(`${subscriptionPlan}-SGD-Yearly`)}
-                  loading={loading}
+                  loading={isLoading.PAY_YEARLY}
+                  disabled={isDisabled.PAY_YEARLY}
                 >
                   Pay Yearly
                 </Button>,
