@@ -49,12 +49,18 @@ export const SubscriptionsManage: React.FunctionComponent = () => {
         scope: "openid profile email",
       });
 
-      await postData<{ data }>(`${API_URL}/subscriptions/renew_subscription`, accessToken, signal)
+      const payload = {
+        userId: userId,
+      };
+
+      await postData<{ data }>(`${API_URL}/subscriptions/renew_subscription`, accessToken, signal, payload)
         .then(({ data }) => {
           openNotification("success", "Subscription successfully renewed!");
+          console.log(data);
         })
         .catch((error) => {
           openNotification("error", "Error occured in subscription renewal. Please contact our customer support.");
+          console.log(error);
           return undefined;
         });
 
