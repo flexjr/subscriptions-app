@@ -34,7 +34,7 @@ export const Router: React.FunctionComponent = () => {
 
   return (
     <BrowserRouter>
-      {isLoading && isLoadingOnboarded ? (
+      {isLoading || isLoadingOnboarded ? (
         <>
           <Loading />
         </>
