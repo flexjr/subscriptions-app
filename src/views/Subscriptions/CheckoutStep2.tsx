@@ -102,7 +102,9 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                 </Button>,
               ]}
             >
-              <div>SGD 7.99 per user per month</div>
+              <div>
+                SGD <code>AMOUNT_SLOT_1</code> per user, per month
+              </div>
             </Card>
           </Col>
           <Col span={12}>
@@ -121,7 +123,9 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                 </Button>,
               ]}
             >
-              <div>SGD 89.99 per user per year (10% discount!)</div>
+              <div>
+                SGD <code>AMOUNT_SLOT_2</code> per user, per month billed annually
+              </div>
             </Card>
           </Col>
         </Row>
