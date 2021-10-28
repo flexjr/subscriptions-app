@@ -19,7 +19,6 @@ import {
   PaymentFailed,
   PaymentSuccess,
   OrgSubscriptions,
-  SavedCards,
   SubscriptionsCancel,
   SubscriptionsCancelSuccess,
   SubscriptionsCancelFailure,
@@ -62,9 +61,6 @@ export const Router: React.FunctionComponent = () => {
                 </Route>
                 <Route exact path="/flex/organization/members">
                   <Members />
-                </Route>
-                <Route exact path="/flex/organization/saved-cards">
-                  <SavedCards />
                 </Route>
                 <Route exact path="/flex/user/profile">
                   <UserSettings />

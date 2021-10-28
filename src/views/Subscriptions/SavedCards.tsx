@@ -1,9 +1,26 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Typography, Card, Modal, Image, Button } from "antd";
 import React, { useState, useEffect } from "react";
+import { RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 
 const { Title } = Typography;
+
+const Iframe = ({ src, height, width }): JSX.Element => {
+  return (
+    <div>
+      <iframe
+        src={src}
+        height={height}
+        width={width}
+        style={{
+          border: "none",
+        }}
+        scrolling="no"
+      />
+    </div>
+  );
+};
 
 interface Card {
   brand: string;
@@ -17,7 +34,7 @@ interface Card {
 
 export const SavedCards: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
-  const [hostedPaymentMethodPageUrl, setHostedPaymentMethodPageUrl] = useState("");
+  const [addCardUrl, setAddCardUrl] = useState("");
   const [iframeRefresh, setIframeRefresh] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { getAccessTokenSilently } = useAuth0();
@@ -62,18 +79,25 @@ export const SavedCards: React.FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleAddCard = (): void => {
+  const handleAddCard = async (): Promise<void> => {
     const abortController = new AbortController();
     const { signal } = abortController;
+    const accessToken = await getAccessTokenSilently({
+      audience: AUTH0_API_AUDIENCE,
+      scope: "openid profile email",
+    });
 
-    const getHostedPaymentMethodPageUrl = async (): Promise<void> => {
+    const getAddCardUrl = async (): Promise<void> => {
       try {
-        const apiUrl = `${API_URL}/chargebee/payment_source/customer/manage?id=4851`;
-        const response = await fetch(apiUrl, {
-          signal,
-        });
-        const data = await response.json();
-        setHostedPaymentMethodPageUrl(data.url);
+        await getData<{ access_url } | undefined>(`${API_URL}/subscriptions/chargebee/add_card`, accessToken, signal)
+          .then((data) => {
+            setAddCardUrl(data?.access_url);
+            return data;
+          })
+          .catch((error) => {
+            console.error(error);
+            return undefined;
+          });
         setIframeRefresh(iframeRefresh + 1);
 
         setIsModalVisible(true);
@@ -82,16 +106,11 @@ export const SavedCards: React.FunctionComponent = () => {
       }
     };
 
-    getHostedPaymentMethodPageUrl();
+    getAddCardUrl();
   };
 
   return (
-    <>
-      <Row>
-        <Col md={24}>
-          <Title level={3}>Saved Cards</Title>
-        </Col>
-      </Row>
+    <RoundedCard style={{ marginTop: 16 }}>
       <Row>
         <Col md={24}>
           <Row style={{ marginBottom: 16 }}>
@@ -101,40 +120,45 @@ export const SavedCards: React.FunctionComponent = () => {
           </Row>
         </Col>
         <Col md={24}>
-          <Row>
+          <Row gutter={2}>
             {savedCards ? (
               savedCards.map((card) => (
-                <Card
-                  key={card["id"]}
-                  style={{
-                    borderRadius: "10px",
-                    marginRight: "16px",
-                  }}
-                >
-                  <Row>
-                    <Col md={24}>
-                      <Row>
-                        <Col>
-                          <Image
-                            src="https://app.fxr.one/platform/static/media/physicalCard.ac5b1e0e.svg"
-                            preview={false}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md={24}>
-                      <Row>
-                        <Col md={24}>
-                          <div>{card["brand"]}</div>
-                          <div>Ending in {card["last4"]}</div>
-                          <div>
-                            Expiry {card["expiry_month"]}/{card["expiry_year"]}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Card>
+                <>
+                  <Card
+                    key={card["id"]}
+                    style={{
+                      borderRadius: "10px",
+                      marginRight: "16px",
+                      boxShadow: "0 7px 30px -10px rgba(150, 170, 180, 0.65)",
+                      backgroundImage: "https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg",
+                    }}
+                  >
+                    <Row>
+                      <Col md={24}>
+                        <Row>
+                          <Col>
+                            <Image
+                              src="https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg"
+                              preview={false}
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col md={24}>
+                        <Row>
+                          <Col md={24}>
+                            <div>
+                              {card["brand"]} ending {card["last4"]}
+                            </div>
+                            <div>
+                              expiry {card["expiry_month"]}/{card["expiry_year"]}
+                            </div>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Card>
+                </>
               ))
             ) : (
               <>No saved cards found! Would you like to add one?</>
@@ -143,8 +167,8 @@ export const SavedCards: React.FunctionComponent = () => {
         </Col>
       </Row>
       <Modal title="Add Card" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <iframe src={hostedPaymentMethodPageUrl} key={iframeRefresh} height="500" width="100%" frameBorder="0" />
+        <Iframe src={addCardUrl} width="100%" height="500px" />
       </Modal>
-    </>
+    </RoundedCard>
   );
 };

@@ -1,4 +1,4 @@
-import Icon, { CreditCardOutlined, DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
+import Icon, { DownOutlined, LogoutOutlined, TagOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import { Col, Divider, Layout, Menu, Popover, Row, Space } from "antd";
@@ -138,7 +138,7 @@ const capitalize = (str: string | undefined): string => {
 
 export const NavbarSide: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
-  const { flexUserInfo } = useFlex();
+  const { isLoadingFlexUserInfo, flexUserInfo } = useFlex();
 
   return (
     <Sider
@@ -226,93 +226,84 @@ export const NavbarSide: React.FunctionComponent = () => {
 
         <Menu.Divider style={{ backgroundColor: "rgb(50, 69, 81)" }} />
 
-        {isAuthenticated ? (
-          <FlexMenuItem key="/flex/organization/subscriptions">
-            <Link to="/flex/organization/subscriptions">
-              <Row>
-                <FlexMenuItemCol>
-                  <TagOutlined style={{ fontSize: "20px" }} />
-                </FlexMenuItemCol>
-                <Col>Subscriptions</Col>
-              </Row>
-            </Link>
-          </FlexMenuItem>
-        ) : (
-          <></>
-        )}
+        {isLoadingFlexUserInfo === false ? (
+          <>
+            {isAuthenticated ? (
+              <FlexMenuItem key="/flex/organization/subscriptions">
+                <Link to="/flex/organization/subscriptions">
+                  <Row>
+                    <FlexMenuItemCol>
+                      <TagOutlined style={{ fontSize: "20px" }} />
+                    </FlexMenuItemCol>
+                    <Col>Subscriptions</Col>
+                  </Row>
+                </Link>
+              </FlexMenuItem>
+            ) : (
+              <></>
+            )}
 
-        {isAuthenticated ? (
-          <FlexMenuItem key="/flex/organization/saved-cards">
-            <Link to="/flex/organization/saved-cards">
-              <Row>
-                <FlexMenuItemCol>
-                  <CreditCardOutlined style={{ fontSize: "20px" }} />
-                </FlexMenuItemCol>
-                <Col>Payment Methods</Col>
-              </Row>
-            </Link>
-          </FlexMenuItem>
-        ) : (
-          <></>
-        )}
+            {isAuthenticated ? (
+              <FlexMenuItem key="/flex/organization/members">
+                <Link to="/flex/organization/members">
+                  <Row>
+                    <FlexMenuItemCol>
+                      <FlexSettingsIcon style={{ fontSize: "20px" }} />
+                    </FlexMenuItemCol>
+                    <Col>Company Settings</Col>
+                  </Row>
+                </Link>
+              </FlexMenuItem>
+            ) : (
+              <></>
+            )}
 
-        {isAuthenticated ? (
-          <FlexMenuItem key="/flex/organization/members">
-            <Link to="/flex/organization/members">
-              <Row>
-                <FlexMenuItemCol>
-                  <FlexSettingsIcon style={{ fontSize: "20px" }} />
-                </FlexMenuItemCol>
-                <Col>Company Settings</Col>
-              </Row>
-            </Link>
-          </FlexMenuItem>
-        ) : (
-          <></>
-        )}
+            <NavbarSideDevTools />
 
-        <NavbarSideDevTools />
-
-        {isAuthenticated ? (
-          <FlexMenuUserProfileRow
-            style={{
-              rowGap: "0px",
-            }}
-          >
-            {" "}
-            <Col md={6}>
-              <UserOutlined style={{ fontSize: "20px" }} />
-            </Col>
-            <Col md={16}>
-              <FlexUserSettingsPopover
-                content={<FlexUserSettingsPopoverContent additionalUserInfo={flexUserInfo} />}
-                placement="rightBottom"
-                trigger="click"
-                overlayClassName="user-settings-popover"
-                overlayInnerStyle={{
-                  borderRadius: "6px",
+            {isAuthenticated ? (
+              <FlexMenuUserProfileRow
+                style={{
+                  rowGap: "0px",
                 }}
               >
-                <div>
-                  {flexUserInfo?.first_name} {flexUserInfo?.last_name}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "middle",
-                  }}
-                >
-                  <Space>
-                    {capitalize(flexUserInfo?.user_roles?.role_name)}
-                    <FlexSubscriptionPlanLabel additionalUserInfo={flexUserInfo} />
-                  </Space>
-                </div>
-              </FlexUserSettingsPopover>
-            </Col>
-            <Col md={2}>
-              <DownOutlined />
-            </Col>
-          </FlexMenuUserProfileRow>
+                {" "}
+                <Col md={6}>
+                  <UserOutlined style={{ fontSize: "20px" }} />
+                </Col>
+                <Col md={16}>
+                  <FlexUserSettingsPopover
+                    content={<FlexUserSettingsPopoverContent additionalUserInfo={flexUserInfo} />}
+                    placement="rightBottom"
+                    trigger="click"
+                    overlayClassName="user-settings-popover"
+                    overlayInnerStyle={{
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <div>
+                      {flexUserInfo?.first_name} {flexUserInfo?.last_name}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "middle",
+                      }}
+                    >
+                      <Space>
+                        {capitalize(flexUserInfo?.user_roles?.role_name)}
+                        <FlexSubscriptionPlanLabel additionalUserInfo={flexUserInfo} />
+                      </Space>
+                    </div>
+                  </FlexUserSettingsPopover>
+                </Col>
+                <Col md={2}>
+                  <DownOutlined />
+                </Col>
+              </FlexMenuUserProfileRow>
+            ) : (
+              <></>
+            )}
+          </>
         ) : (
           <></>
         )}
