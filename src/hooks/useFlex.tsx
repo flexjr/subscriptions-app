@@ -117,7 +117,8 @@ export const useFlex = (): {
       case "non_renewing":
         return (
           <Tooltip placement="top" title="Subscription is still active, but will not be renewed when it ends.">
-            <Tag color="#ffbf00">Non Renewing</Tag>
+            <Tag color="#3dbd7d">Non Renewing</Tag>
+            {/* #ffbf00 */}
           </Tooltip>
         );
       case "cancelled":

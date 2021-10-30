@@ -3,6 +3,7 @@ import { Skeleton } from "antd";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import React from "react";
 import { Redirect, BrowserRouter, Switch, Route } from "react-router-dom";
+import Package from "../package.json";
 import { LoginSide, NavbarSide } from "./components/UI";
 import { Loading } from "./components/UI/Loading";
 import { useFlex } from "./hooks";
@@ -114,7 +115,7 @@ export const Router: React.FunctionComponent = () => {
               </Switch>
               <Footer style={{ textAlign: "center" }}>
                 <p id="build-label">
-                  Build v1.0.0-
+                  Build v{Package.version}-
                   <a href="https://github.com/flexjr/subscriptions-app" target="_blank" rel="noopener noreferrer">
                     {process.env.REACT_APP_COMMIT_REF?.substring(0, 7)}
                   </a>

@@ -148,7 +148,7 @@ export const SavedCards: React.FunctionComponent = () => {
                         <Row>
                           <Col md={24}>
                             <div>
-                              {card["brand"]} ending {card["last4"]}
+                              {card["brand"]} •••• {card["last4"]}
                             </div>
                             <div>
                               expiry {card["expiry_month"]}/{card["expiry_year"]}

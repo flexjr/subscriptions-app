@@ -75,7 +75,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
             onChange={(key) => {
               history.push(`/flex/organization/subscriptions/${key}`);
             }}
-            tabBarGutter={10}
+            tabBarGutter={32}
           >
             <TabPane tab="Upgrades" key="upgrade">
               <SubscriptionsUpgrade />
