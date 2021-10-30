@@ -1,10 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Row, Col, Typography, Card, Modal, Image, Button } from "antd";
+import { Row, Col, Card, Modal, Image, Button } from "antd";
 import React, { useState, useEffect } from "react";
 import { RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
-
-const { Title } = Typography;
 
 const Iframe = ({ src, height, width }): JSX.Element => {
   return (

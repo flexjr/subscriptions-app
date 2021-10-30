@@ -3,9 +3,9 @@ import { Skeleton, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { SavedCards } from ".";
 import { FlexBanner } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
+import { SavedCards } from "./SavedCards";
 import { SubscriptionsManage } from "./SubscriptionsManage";
 import { SubscriptionsUpgrade } from "./SubscriptionsUpgrade";
 

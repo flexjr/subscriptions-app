@@ -1,7 +1,6 @@
 import { CheckOutlined } from "@ant-design/icons";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { useClient } from "@splitsoftware/splitio-react";
 import { Button, Row, Col, Alert, Typography, Tag } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
