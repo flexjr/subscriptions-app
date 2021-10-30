@@ -129,14 +129,16 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
   const onSelectChange = (selectedRowKeys, selectedRows): void => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
+    console.log(selectedRows);
   };
 
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-    // getCheckboxProps: ({ record }) => {
-    //   console.log(record);
-    // },
+    getCheckboxProps: (record) => ({
+      disabled: selectedRows.length > 0 && record.subscription_plan !== selectedRows[0]["subscription_plan"],
+    }),
+    hideSelectAll: true,
   };
 
   const hasSelected = selectedRowKeys.length > 0;
