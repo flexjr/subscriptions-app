@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FlexBanner } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
-import { SavedCards } from "./SavedCards";
+import { PaymentMethods } from "./PaymentMethods";
 import { SubscriptionsManage } from "./SubscriptionsManage";
 import { SubscriptionsUpgrade } from "./SubscriptionsUpgrade";
 
@@ -83,8 +83,8 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
             <TabPane id="manage-tab" tab="Manage Subscriptions" key="manage">
               <SubscriptionsManage />
             </TabPane>
-            <TabPane id="payment-methods-tab" tab="Payment Methods" key="saved-cards">
-              <SavedCards />
+            <TabPane tab="Payment Methods" key="saved-cards">
+              <PaymentMethods />
             </TabPane>
           </Tabs>
         </>

@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Row, Col, Card, Modal, Image, Button } from "antd";
+import { Row, Col, Card, Modal, Image, Button, Skeleton } from "antd";
 import React, { useState, useEffect } from "react";
 import { RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
@@ -30,19 +30,38 @@ interface Card {
   last4: string;
 }
 
-export const SavedCards: React.FunctionComponent = () => {
+export const PaymentMethods: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
+  const [isLoading, setIsLoading] = useState({
+    cardsList: true,
+    addCardButton: false,
+  });
   const [addCardUrl, setAddCardUrl] = useState("");
   const [iframeRefresh, setIframeRefresh] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0);
   const { getAccessTokenSilently } = useAuth0();
 
   const handleOk = (): void => {
     setIsModalVisible(false);
+    setIsLoading({
+      ...isLoading,
+      cardsList: true,
+    });
+    setRefreshCount(refreshCount + 1);
+    setAddCardUrl("");
+    console.log(refreshCount);
   };
 
   const handleCancel = (): void => {
     setIsModalVisible(false);
+    setIsLoading({
+      ...isLoading,
+      cardsList: true,
+    });
+    setRefreshCount(refreshCount + 1);
+    setAddCardUrl("");
+    console.log(refreshCount);
   };
 
   useEffect(() => {
@@ -60,10 +79,18 @@ export const SavedCards: React.FunctionComponent = () => {
         .then((data) => {
           console.info(data);
           setSavedCards(data?.cards);
+          setIsLoading({
+            ...isLoading,
+            cardsList: false,
+          });
           return data;
         })
         .catch((error) => {
           console.error(error);
+          setIsLoading({
+            ...isLoading,
+            cardsList: false,
+          });
           return undefined;
         });
     };
@@ -75,7 +102,7 @@ export const SavedCards: React.FunctionComponent = () => {
       abortController.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshCount]);
 
   const handleAddCard = async (): Promise<void> => {
     const abortController = new AbortController();
@@ -83,6 +110,11 @@ export const SavedCards: React.FunctionComponent = () => {
     const accessToken = await getAccessTokenSilently({
       audience: AUTH0_API_AUDIENCE,
       scope: "openid profile email",
+    });
+
+    setIsLoading({
+      ...isLoading,
+      addCardButton: true,
     });
 
     const getAddCardUrl = async (): Promise<void> => {
@@ -98,6 +130,11 @@ export const SavedCards: React.FunctionComponent = () => {
           });
         setIframeRefresh(iframeRefresh + 1);
 
+        setIsLoading({
+          ...isLoading,
+          addCardButton: false,
+        });
+
         setIsModalVisible(true);
       } catch (e) {
         return undefined;
@@ -112,54 +149,17 @@ export const SavedCards: React.FunctionComponent = () => {
       <Row>
         <Col md={24}>
           <Row style={{ marginBottom: 16 }}>
-            <Button type="primary" onClick={handleAddCard}>
+            <Button type="primary" onClick={handleAddCard} loading={isLoading.addCardButton}>
               Add Card
             </Button>
           </Row>
         </Col>
         <Col md={24}>
           <Row gutter={2}>
-            {savedCards ? (
-              savedCards.map((card) => (
-                <>
-                  <Card
-                    key={card["id"]}
-                    style={{
-                      borderRadius: "10px",
-                      marginRight: "16px",
-                      boxShadow: "0 7px 30px -10px rgba(150, 170, 180, 0.65)",
-                      backgroundImage: "https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg",
-                    }}
-                  >
-                    <Row>
-                      <Col md={24}>
-                        <Row>
-                          <Col>
-                            <Image
-                              src="https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg"
-                              preview={false}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col md={24}>
-                        <Row>
-                          <Col md={24}>
-                            <div>
-                              {card["brand"]} •••• {card["last4"]}
-                            </div>
-                            <div>
-                              expiry {card["expiry_month"]}/{card["expiry_year"]}
-                            </div>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </Card>
-                </>
-              ))
+            {isLoading.cardsList ? (
+              <Skeleton active />
             ) : (
-              <>No saved cards found! Would you like to add one?</>
+              <CardsList savedCards={savedCards} refreshCount={refreshCount} />
             )}
           </Row>
         </Col>
@@ -168,5 +168,54 @@ export const SavedCards: React.FunctionComponent = () => {
         <Iframe src={addCardUrl} width="100%" height="500px" />
       </Modal>
     </RoundedCard>
+  );
+};
+
+interface CardsListProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  savedCards: any;
+  refreshCount: number;
+}
+
+export const CardsList: React.FunctionComponent<CardsListProps> = ({ savedCards, refreshCount }) => {
+  console.log(refreshCount);
+  return savedCards && savedCards.length > 0 ? (
+    savedCards.map((card) => (
+      <>
+        <Card
+          key={card["id"]}
+          style={{
+            borderRadius: "10px",
+            marginRight: "16px",
+            boxShadow: "0 7px 30px -10px rgba(150, 170, 180, 0.65)",
+            backgroundImage: "https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg",
+          }}
+        >
+          <Row>
+            <Col md={24}>
+              <Row>
+                <Col>
+                  <Image src="https://app.fxr.one/flex/static/media/physicalCard.f79f7efe.svg" preview={false} />
+                </Col>
+              </Row>
+            </Col>
+            <Col md={24}>
+              <Row>
+                <Col md={24}>
+                  <div>
+                    {card["brand"]} •••• {card["last4"]}
+                  </div>
+                  <div>
+                    expiry {card["expiry_month"]}/{card["expiry_year"]}
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Card>
+      </>
+    ))
+  ) : (
+    <>No saved cards found! You can add your Flex Visa card above. ☝️</>
   );
 };
