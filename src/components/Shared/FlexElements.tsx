@@ -32,3 +32,11 @@ export const FlexProLabel: React.FunctionComponent<FlexLabelProps> = ({ label: s
 export const FlexPremiumLabel: React.FunctionComponent<FlexLabelProps> = ({ label: string }): JSX.Element => {
   return <Tag color="#1f9a70">{string}</Tag>;
 };
+
+export const SavedCardPrimary: React.FunctionComponent<FlexLabelProps> = ({ label: string }): JSX.Element => {
+  return <Tag color="#108ee9">{string}</Tag>;
+};
+
+export const SavedCardBackup: React.FunctionComponent<FlexLabelProps> = ({ label: string }): JSX.Element => {
+  return <Tag color="#ccccd2">{string}</Tag>;
+};

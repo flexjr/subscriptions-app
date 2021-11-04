@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Card, Modal, Image, Button, Skeleton } from "antd";
 import React, { useState, useEffect } from "react";
-import { RoundedCard } from "../../components/Shared";
+import { RoundedCard, SavedCardBackup, SavedCardPrimary } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 
 const Iframe = ({ src, height, width }): JSX.Element => {
@@ -29,6 +29,22 @@ interface Card {
   id: string;
   last4: string;
 }
+
+
+interface FlexSavedCardsLabelProps {
+  cardStatus: string | undefined;
+}
+
+const FlexSavedCardsLabel: React.FunctionComponent<FlexSavedCardsLabelProps> = ({ cardStatus }) => {
+  if (cardStatus == "primary") {
+    return <SavedCardPrimary label="Primary" />;
+  } else if (cardStatus == "backup") {
+    return <SavedCardBackup label="Backup" />;
+  } else {
+    return <></>;
+  }
+};
+
 
 export const PaymentMethods: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
@@ -203,7 +219,7 @@ export const CardsList: React.FunctionComponent<CardsListProps> = ({ savedCards,
               <Row>
                 <Col md={24}>
                   <div>
-                    {card["brand"]} •••• {card["last4"]}
+                    {card["brand"]} •••• {card["last4"]} <FlexSavedCardsLabel cardStatus={card["card_status"]} />
                   </div>
                   <div>
                     expiry {card["expiry_month"]}/{card["expiry_year"]}
