@@ -1,10 +1,9 @@
 export {};
 
 describe("Dashboard", () => {
-  it("Should login with valid credentials", () => {
+  it("should expect to see dashboard items", () => {
     cy.visit("/");
     cy.login().then(({ body: { access_token, expires_in, id_token, token_type } }) => {
-      cy.visit("/flex/dashboard");
       cy.window().then((win) => {
         win.localStorage.setItem(
           `@@auth0spajs@@::${Cypress.env("auth_client_id")}::${Cypress.env("auth_audience")}::${Cypress.env(
@@ -26,5 +25,7 @@ describe("Dashboard", () => {
         );
       });
     });
+    cy.visit("/flex/dashboard");
+    // Continue from here, expect to see "Company Cards Overview", "Total Available Funds", "Flex Plus Credit Business Account", "Increase Credit Line", "Deposit Funds"
   });
 });
