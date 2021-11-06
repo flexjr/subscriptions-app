@@ -30,7 +30,6 @@ interface Card {
   last4: string;
 }
 
-
 interface FlexSavedCardsLabelProps {
   cardStatus: string | undefined;
 }
@@ -44,7 +43,6 @@ const FlexSavedCardsLabel: React.FunctionComponent<FlexSavedCardsLabelProps> = (
     return <></>;
   }
 };
-
 
 export const PaymentMethods: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
