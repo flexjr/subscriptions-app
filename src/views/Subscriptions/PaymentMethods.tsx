@@ -30,7 +30,6 @@ interface Card {
   last4: string;
 }
 
-
 interface FlexSavedCardsLabelProps {
   cardStatus: string | undefined;
 }
