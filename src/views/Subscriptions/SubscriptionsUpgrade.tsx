@@ -22,6 +22,7 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
     {
       title: "User ID",
       dataIndex: "id",
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: "First Name",
@@ -42,6 +43,29 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
       render: (text, record) => {
         return subscriptionPlanFriendlyName(record.subscription_plan);
       },
+      filters: [
+        {
+          text: "Flex Starter",
+          value: "FLEX_STARTER",
+        },
+        {
+          text: "Flex Pro (Monthly)",
+          value: "FLEX_PRO-SGD-Monthly",
+        },
+        {
+          text: "Flex Pro (Yearly)",
+          value: "FLEX_PRO-SGD-Yearly",
+        },
+        {
+          text: "Flex Premium (Monthly)",
+          value: "FLEX_PREMIUM-SGD-Monthly",
+        },
+        {
+          text: "Flex Premium (Yearly)",
+          value: "FLEX_PREMIUM-SGD-Yearly",
+        },
+      ],
+      onFilter: (value, record) => record.subscription_plan.indexOf(value) === 0,
     },
   ];
 
