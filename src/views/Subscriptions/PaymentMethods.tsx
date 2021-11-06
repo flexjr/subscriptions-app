@@ -44,7 +44,6 @@ const FlexSavedCardsLabel: React.FunctionComponent<FlexSavedCardsLabelProps> = (
   }
 };
 
-
 export const PaymentMethods: React.FunctionComponent = () => {
   const [savedCards, setSavedCards] = useState([]);
   const [isLoading, setIsLoading] = useState({
