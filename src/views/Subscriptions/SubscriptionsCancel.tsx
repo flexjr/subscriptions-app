@@ -95,7 +95,11 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
         .then(({ message }) => {
           setIsCancellationLoading(false);
           history.push({
-            pathname: "/flex/subscription/cancel-success",
+            pathname: "/flex/organization/subscriptions/manage",
+            state: {
+              message:
+                "Your subscription has been cancelled and will not be billed at the next billing cycle. We hope to see you again soon!",
+            },
           });
           return { message };
         })
