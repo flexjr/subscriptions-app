@@ -3,7 +3,7 @@ import { Skeleton, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { FlexBanner } from "../../components/Shared";
+import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 import { PaymentMethods } from "./PaymentMethods";
 import { SubscriptionsManage } from "./SubscriptionsManage";
@@ -84,7 +84,9 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
               <SubscriptionsManage />
             </TabPane>
             <TabPane tab="Payment Methods" key="saved-cards">
-              <PaymentMethods />
+              <RoundedCard style={{ marginTop: 16 }}>
+                <PaymentMethods />
+              </RoundedCard>
             </TabPane>
           </Tabs>
         </>

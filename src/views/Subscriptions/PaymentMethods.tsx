@@ -164,7 +164,7 @@ export const PaymentMethods: React.FunctionComponent = () => {
   };
 
   return (
-    <RoundedCard style={{ marginTop: 16 }}>
+    <>
       <Row>
         <Col md={24}>
           <Row style={{ marginBottom: 16 }}>
@@ -192,7 +192,7 @@ export const PaymentMethods: React.FunctionComponent = () => {
       <Modal title="Add Card" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <Iframe src={addCardUrl} width="100%" height="500px" />
       </Modal>
-    </RoundedCard>
+    </>
   );
 };
 
