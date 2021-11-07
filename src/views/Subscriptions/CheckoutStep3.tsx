@@ -1,11 +1,13 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { CardComponent } from "@chargebee/chargebee-js-react-wrapper";
-import { Button, Row, Col, Alert, Skeleton, Typography, Divider } from "antd";
+import styled from "@emotion/styled";
+import { Button, Row, Col, Alert, Skeleton, Typography, Divider, Drawer } from "antd";
 import React, { createRef, useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
+import { PaymentMethods } from "./PaymentMethods";
 
 const { Title } = Typography;
 
@@ -24,6 +26,12 @@ declare global {
   }
 }
 
+const PaymentMethodDrawer = styled(Drawer)`
+  .ant-drawer-content-wrapper {
+    height: 500px !important;
+  }
+`;
+
 export const CheckoutStep3: React.FunctionComponent = () => {
   const location = useLocation<StateType>();
   const history = useHistory();
@@ -38,8 +46,11 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     expiry_year: null,
   });
   const [title, setTitle] = useState("");
-  const [isLoadingCards, setIsLoadingCards] = useState(true);
-  const [isLoadingPricing, setIsLoadingPricing] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    card: true,
+    pricing: true,
+  });
   const [usersList, setUsersList] = useState([]);
   const [estimate, setEstimate] = useState({
     unit_price: null,
@@ -49,6 +60,16 @@ export const CheckoutStep3: React.FunctionComponent = () => {
     friendly_name: null,
   });
   const [isPayNowButtonLoading, setIsPayNowButtonLoading] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0);
+
+  const handleOk = (): void => {
+    setIsModalVisible(false);
+    setIsLoading({
+      ...isLoading,
+      card: true,
+    });
+    setRefreshCount(refreshCount + 1);
+  };
 
   const userIds = location.state?.userIds;
   const subscriptionPlan = location.state?.subscriptionPlan;
@@ -91,12 +112,14 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
       if (primaryCard) {
         setPrimaryCard(primaryCard);
-        setIsLoadingCards(false);
         setTitle("Your Saved Payment Methods");
       } else {
-        setIsLoadingCards(false);
         setTitle("Add your Flex Visa card");
       }
+      setIsLoading({
+        ...isLoading,
+        card: false,
+      });
 
       const payloadEstimate = {
         userIds: userIds,
@@ -112,7 +135,10 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         payloadEstimate
       ).then((data) => {
         setEstimate(data);
-        setIsLoadingPricing(false);
+        setIsLoading({
+          card: false,
+          pricing: false,
+        });
         return data;
       });
 
@@ -133,7 +159,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshCount]);
 
   const handleAddCard = async (chargebeeToken: string): Promise<void> => {
     const accessToken = await getAccessTokenSilently({
@@ -141,7 +167,10 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       scope: "openid profile email",
     });
 
-    setIsLoadingCards(true);
+    setIsLoading({
+      ...isLoading,
+      card: true,
+    });
 
     const payload = {
       token: chargebeeToken,
@@ -161,7 +190,10 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         console.error(error);
         return undefined;
       });
-    setIsLoadingCards(false);
+    setIsLoading({
+      ...isLoading,
+      card: false,
+    });
   };
 
   const handleTokenizeCard = (): void => {
@@ -217,6 +249,10 @@ export const CheckoutStep3: React.FunctionComponent = () => {
       });
   };
 
+  const handleChangePaymentMethod = async (): Promise<void> => {
+    setIsModalVisible(true);
+  };
+
   return (
     <>
       <Title level={3}>Checkout</Title>
@@ -247,7 +283,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
         <Row gutter={16}>
           <Col span={16}>
             <RoundedCard title={title} bordered={false}>
-              {isLoadingCards ? (
+              {isLoading.card ? (
                 <Skeleton active />
               ) : primaryCard.last4 ? (
                 <>
@@ -261,7 +297,11 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                     <Col md={6}>
                       {primaryCard?.expiry_month}/{primaryCard?.expiry_year}
                     </Col>
-                    <Col md={6}>Change Payment Method</Col>
+                    <Col md={6}>
+                      <Button type="link" size="small" onClick={() => handleChangePaymentMethod()}>
+                        Change Payment Method
+                      </Button>
+                    </Col>
                   </Row>
                   <Row>
                     <Col md={6}>
@@ -302,7 +342,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
           </Col>
           <Col span={8}>
             <RoundedCard title="Pricing Summary" bordered={false}>
-              {isLoadingPricing ? (
+              {isLoading.pricing ? (
                 <Skeleton active />
               ) : (
                 <>
@@ -403,6 +443,14 @@ export const CheckoutStep3: React.FunctionComponent = () => {
             </RoundedCard>
           </Col>
         </Row>
+        <PaymentMethodDrawer
+          title="Change Payment Method"
+          placement="bottom"
+          visible={isModalVisible}
+          onClose={handleOk}
+        >
+          <PaymentMethods />
+        </PaymentMethodDrawer>
       </div>
     </>
   );
