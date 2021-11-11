@@ -153,7 +153,7 @@ export const NavbarSide: React.FunctionComponent = () => {
     >
       <Logo />
       <FlexMenu theme="light" mode="vertical" defaultSelectedKeys={[location.pathname]}>
-        <FlexMenuItem key="/flex/dashboard">
+        <FlexMenuItem id="navbar-home" key="/flex/dashboard">
           <Link to="/flex/dashboard">
             <Row>
               <FlexMenuItemCol>
@@ -165,7 +165,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         </FlexMenuItem>
 
         {isAuthenticated ? (
-          <FlexMenuItem key="/flex/physical-cards/my-card">
+          <FlexMenuItem id="navbar-physical-card" key="/flex/physical-cards/my-card">
             <Link to="/flex/physical-cards/my-card">
               <Row>
                 <FlexMenuItemCol>
@@ -180,7 +180,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         )}
 
         {isAuthenticated ? (
-          <FlexMenuItem key="/flex/virtual-cards">
+          <FlexMenuItem id="navbar-virtual-card" key="/flex/virtual-cards">
             <Link to="/flex/virtual-cards">
               <Row>
                 <FlexMenuItemCol>
@@ -195,7 +195,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         )}
 
         {isAuthenticated ? (
-          <FlexMenuItem key="/flex/transactions">
+          <FlexMenuItem id="navbar-transactions" key="/flex/transactions">
             <Link to="/flex/transactions">
               <Row>
                 <FlexMenuItemCol>
@@ -210,7 +210,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         )}
 
         {isAuthenticated ? (
-          <FlexMenuItem key="/flex/flex-plus-credit">
+          <FlexMenuItem id="navbar-flex-plus-credit" key="/flex/flex-plus-credit">
             <Link to="/flex/flex-plus-credit">
               <Row>
                 <FlexMenuItemCol>
@@ -229,7 +229,7 @@ export const NavbarSide: React.FunctionComponent = () => {
         {isLoadingFlexUserInfo === false ? (
           <>
             {isAuthenticated ? (
-              <FlexMenuItem key="/flex/organization/subscriptions">
+              <FlexMenuItem id="navbar-subscriptions" key="/flex/organization/subscriptions">
                 <Link to="/flex/organization/subscriptions">
                   <Row>
                     <FlexMenuItemCol>
@@ -244,7 +244,7 @@ export const NavbarSide: React.FunctionComponent = () => {
             )}
 
             {isAuthenticated ? (
-              <FlexMenuItem key="/flex/organization/members">
+              <FlexMenuItem id="navbar-company-settings" key="/flex/organization/members">
                 <Link to="/flex/organization/members">
                   <Row>
                     <FlexMenuItemCol>
