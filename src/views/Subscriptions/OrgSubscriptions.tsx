@@ -63,7 +63,7 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   return (
     <>
-      <Title level={3}>Subscriptions</Title>
+      <Title id="subscriptions-title" level={3}>Subscriptions</Title>
       {isPageLoading ? (
         <Skeleton active />
       ) : (
@@ -77,13 +77,13 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
             }}
             tabBarGutter={32}
           >
-            <TabPane tab="Upgrades" key="upgrade">
+            <TabPane id="upgrades-tab" tab="Upgrades" key="upgrade">
               <SubscriptionsUpgrade />
             </TabPane>
-            <TabPane tab="Manage Subscriptions" key="manage">
+            <TabPane id="manage-tab" tab="Manage Subscriptions" key="manage">
               <SubscriptionsManage />
             </TabPane>
-            <TabPane tab="Payment Methods" key="saved-cards">
+            <TabPane id="payment-methods-tab" tab="Payment Methods" key="saved-cards">
               <SavedCards />
             </TabPane>
           </Tabs>

@@ -151,7 +151,7 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
         <>
           <RoundedCard style={{ marginTop: 16 }}>
             <div style={{ marginBottom: 16 }}>
-              <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
+              <Button id="upgrade-button" type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
                 Upgrade
               </Button>{" "}
               <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
