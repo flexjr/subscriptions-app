@@ -1,5 +1,3 @@
-import { contains } from "cypress/types/jquery";
-
 export {};
 
 describe("Subscriptions Page", () => {
