@@ -41,7 +41,9 @@ const HomeContent: React.FunctionComponent = () => {
     <>
       <Row>
         <Col md={24}>
-          <Title id="home-title" level={3}>Home</Title>
+          <Title data-cy="home-title" level={3}>
+            Home
+          </Title>
         </Col>
       </Row>
       <Row
@@ -69,7 +71,7 @@ const HomeContent: React.FunctionComponent = () => {
                 }}
               >
                 <div
-                  id="total-available-funds-div"
+                  data-cy="total-available-funds-div"
                   style={{
                     color: "rgb(255, 255, 255)",
                     fontSize: "1.375em",
@@ -80,7 +82,7 @@ const HomeContent: React.FunctionComponent = () => {
                   Total Available Funds
                 </div>
                 <div
-                  id="flex-plus-credit-div"
+                  data-cy="flex-plus-credit-div"
                   style={{
                     color: "rgb(173, 210, 200)",
                     fontSize: "1.125em",
@@ -90,7 +92,7 @@ const HomeContent: React.FunctionComponent = () => {
                   Flex Plus Credit
                 </div>
                 <div
-                  id="business-account-div"
+                  data-cy="business-account-div"
                   style={{
                     color: "rgb(173, 210, 200)",
                     fontSize: "1.125em",
@@ -147,7 +149,7 @@ const HomeContent: React.FunctionComponent = () => {
                   }}
                 />
                 <div
-                  id="deposit-funds-div"
+                  data-cy="deposit-funds-div"
                   style={{
                     color: "rgb(255, 255, 255)",
                     fontSize: "1.175em",
@@ -172,7 +174,7 @@ const HomeContent: React.FunctionComponent = () => {
                   }}
                 />
                 <div
-                  id="increase-credit-line-div"
+                  data-cy="increase-credit-line-div"
                   style={{
                     color: "rgb(255, 255, 255)",
                     fontSize: "1.175em",
@@ -198,7 +200,7 @@ const HomeContent: React.FunctionComponent = () => {
             <Row>
               <Col md={14}>
                 <Title
-                  id="company-cards-overview-title"
+                  data-cy="company-cards-overview-title"
                   level={4}
                   style={{
                     paddingBottom: "8px",
@@ -281,7 +283,7 @@ const HomeContent: React.FunctionComponent = () => {
                     }}
                   >
                     <Title
-                      id="quick-actions-title"
+                      data-cy="quick-actions-title"
                       level={4}
                       style={{
                         paddingBottom: "8px",
@@ -318,7 +320,7 @@ const HomeContent: React.FunctionComponent = () => {
             <Row>
               <Col md={24}>
                 <Title
-                  id="company-expenses-title"
+                  data-cy="company-expenses-title"
                   level={4}
                   style={{
                     paddingBottom: "8px",
@@ -338,7 +340,7 @@ const HomeContent: React.FunctionComponent = () => {
             <Row>
               <Col md={24}>
                 <Title
-                  id="explore-flex-title"
+                  data-cy="explore-flex-title"
                   level={4}
                   style={{
                     paddingBottom: "8px",
@@ -364,7 +366,7 @@ const HomeContent: React.FunctionComponent = () => {
                   }}
                 />
                 <div
-                  id="blog-div"
+                  data-cy="blog-div"
                   style={{
                     color: "rgb(112, 128, 144)",
                     fontSize: "1.175em",
@@ -389,7 +391,7 @@ const HomeContent: React.FunctionComponent = () => {
                   }}
                 />
                 <div
-                  id="visa-commercial-offers-div"
+                  data-cy="visa-commercial-offers-div"
                   style={{
                     color: "rgb(112, 128, 144)",
                     fontSize: "1.175em",
@@ -409,7 +411,7 @@ const HomeContent: React.FunctionComponent = () => {
             <Row>
               <Col md={24}>
                 <Title
-                  id="help-and-support-title"
+                  data-cy="help-and-support-title"
                   level={4}
                   style={{
                     paddingBottom: "8px",
@@ -418,7 +420,7 @@ const HomeContent: React.FunctionComponent = () => {
                   Help and Support
                 </Title>
                 <div
-                  id="faq-div"
+                  data-cy="faq-div"
                   style={{
                     paddingTop: "16px",
                     paddingBottom: "8px",
@@ -436,7 +438,7 @@ const HomeContent: React.FunctionComponent = () => {
                   Frequently Asked Questions
                 </div>
                 <div
-                  id="contact-us-div"
+                  data-cy="contact-us-div"
                   style={{
                     paddingTop: "16px",
                     paddingBottom: "8px",
