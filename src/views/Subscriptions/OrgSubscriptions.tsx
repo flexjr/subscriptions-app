@@ -63,14 +63,14 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   return (
     <>
-      <Title id="subscriptions-title" level={3}>
+      <Title data-cy="subscriptions-title" level={3}>
         Subscriptions
       </Title>
       {isPageLoading ? (
         <Skeleton active />
       ) : (
         <>
-          <FlexBanner>{currentOrgInfo?.company_name}</FlexBanner>
+          <FlexBanner data-cy="company-name">{currentOrgInfo?.company_name}</FlexBanner>
           <Tabs
             defaultActiveKey="upgrade"
             activeKey={match?.params.path ? match.params.path : "upgrade"}
@@ -78,14 +78,15 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
               history.push(`/flex/organization/subscriptions/${key}`);
             }}
             tabBarGutter={32}
+            data-cy="tab-navigation"
           >
-            <TabPane id="upgrades-tab" tab="Upgrades" key="upgrade">
+            <TabPane data-cy="upgrades-tab" tab="Upgrades" key="upgrade">
               <SubscriptionsUpgrade />
             </TabPane>
-            <TabPane id="manage-tab" tab="Manage Subscriptions" key="manage">
+            <TabPane data-cy="manage-tab" tab="Manage Subscriptions" key="manage">
               <SubscriptionsManage />
             </TabPane>
-            <TabPane tab="Payment Methods" key="saved-cards">
+            <TabPane data-cy="saved-cards-tab" tab="Payment Methods" key="saved-cards">
               <RoundedCard style={{ marginTop: 16 }}>
                 <PaymentMethods />
               </RoundedCard>

@@ -1,7 +1,9 @@
+import { copyFileSync } from "fs";
+
 export {};
 
 describe("Subscriptions Page", () => {
-  it("should expect to see subscriptions items", () => {
+  it("should expect to see all org users, attempt to upgrade user on Flex Starter to Flex Pro (Yearly)", () => {
     cy.visit("/");
     cy.login().then(({ body: { access_token, expires_in, id_token, token_type } }) => {
       cy.window().then((win) => {
@@ -26,12 +28,36 @@ describe("Subscriptions Page", () => {
       });
     });
     cy.visit("/flex/dashboard");
-    cy.get("#navbar-subscriptions").click();
-    cy.url().should("include", "flex/organization/subscriptions");
-    cy.get("#subscriptions-title").should("exist").contains("Subscriptions");
-    cy.get("#upgrades-tab").should("exist").contains("Upgrades");
-    cy.get("#manage-tab").should("exist").contains("Manage Subscriptions");
-    cy.get("#payment-methods-tab").should("exist").contains("Payment Methods");
-    cy.get("#upgrade-button").should("exist").contains("Upgrade");
+
+    cy.get("[data-cy=navbar-subscriptions]").click();
+    cy.url().should("include", "/flex/organization/subscriptions");
+    cy.intercept("GET", "/organizations/current_org", []).as("getCurrentOrgInfo");
+    cy.wait("@getCurrentOrgInfo");
+    cy.get("[data-cy=subscriptions-title]").should("exist").contains("Subscriptions");
+    cy.get("[data-cy=company-name]").should("exist").contains("E2E Testing Co Pte Ltd");
+    cy.get("[data-cy=upgrade-button]").should("exist").contains("Upgrade");
+
+    // cy.get("[data-row-key=1252]").should("exist");
+    // cy.contains("td", "1252").prev("td").find("input").check();
+    cy.get("[data-cy=tab-navigation]").should("exist");
+
+    cy.get("[data-cy=org-users-table]").should("exist");
+    cy.get("table").contains("td", "1250");
+    cy.get("table").contains("td", "E2E");
+    cy.get("table").contains("td", "Test User");
+    cy.get("table").contains("td", "e2e-testing@example.com");
+    cy.get("table").contains("td", "Flex Starter");
+
+    // Select the first user
+    cy.get("table").contains("td", "1250").prev("td").find("input").check();
+    cy.get("[data-cy=upgrade-button]").click();
+    cy.intercept("POST", "/subscriptions/chargebee_customer", []).as("postChargebeeCustomer");
+    cy.wait("@postChargebeeCustomer");
+
+    cy.url().should("include", "/flex/subscription/checkout/plan-selection");
+
+    // cy.get("[data-cy=upgrades-tab]").should("exist").contains("Upgrades");
+    // cy.get("[data-cy=manage-tab]").should("exist").contains("Manage Subscriptions");
+    // cy.get("[data-cy=payment-methods-tab]").should("exist").contains("Payment Methods");
   });
 });
