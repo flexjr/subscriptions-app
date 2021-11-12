@@ -63,7 +63,9 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   return (
     <>
-      <Title id="subscriptions-title" level={3}>Subscriptions</Title>
+      <Title id="subscriptions-title" level={3}>
+        Subscriptions
+      </Title>
       {isPageLoading ? (
         <Skeleton active />
       ) : (

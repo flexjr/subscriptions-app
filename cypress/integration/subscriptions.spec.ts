@@ -29,13 +29,11 @@ describe("Subscriptions Page", () => {
     });
     cy.visit("/flex/dashboard");
     cy.get("#navbar-subscriptions").click();
-    cy.url().should("include", "flex/organization/subscriptions")
+    cy.url().should("include", "flex/organization/subscriptions");
     cy.get("#subscriptions-title").should("exist").contains("Subscriptions");
     cy.get("#upgrades-tab").should("exist").contains("Upgrades");
     cy.get("#manage-tab").should("exist").contains("Manage Subscriptions");
     cy.get("#payment-methods-tab").should("exist").contains("Payment Methods");
     cy.get("#upgrade-button").should("exist").contains("Upgrade");
-
-
   });
 });
