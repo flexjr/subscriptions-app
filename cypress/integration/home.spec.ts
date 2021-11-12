@@ -26,6 +26,8 @@ describe("Home", () => {
       });
     });
     cy.visit("/flex/dashboard");
+    cy.intercept("GET", "/users/current_user_info", []).as("getCurrentUserInfo");
+    cy.wait("@getCurrentUserInfo");
     // Continue from here, expect to see "Company Cards Overview", "Total Available Funds", "Flex Plus Credit Business Account", "Increase Credit Line", "Deposit Funds"
     cy.get("[data-cy=home-title]").should("exist").contains("Home");
     cy.get("[data-cy=total-available-funds-div]").should("exist").contains("Total Available Funds");
