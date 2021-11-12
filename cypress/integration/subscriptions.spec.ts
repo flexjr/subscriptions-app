@@ -1,5 +1,3 @@
-import { copyFileSync } from "fs";
-
 export {};
 
 describe("Subscriptions Page", () => {
