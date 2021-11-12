@@ -41,7 +41,9 @@ const HomeContent: React.FunctionComponent = () => {
     <>
       <Row>
         <Col md={24}>
-          <Title id="home-title" level={3}>Home</Title>
+          <Title id="home-title" level={3}>
+            Home
+          </Title>
         </Col>
       </Row>
       <Row
