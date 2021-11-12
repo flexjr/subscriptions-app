@@ -79,13 +79,13 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
             }}
             tabBarGutter={32}
           >
-            <TabPane id="upgrades-tab" tab="Upgrades" key="upgrade">
+            <TabPane data-cy="upgrades-tab" tab="Upgrades" key="upgrade">
               <SubscriptionsUpgrade />
             </TabPane>
-            <TabPane id="manage-tab" tab="Manage Subscriptions" key="manage">
+            <TabPane data-cy="manage-tab" tab="Manage Subscriptions" key="manage">
               <SubscriptionsManage />
             </TabPane>
-            <TabPane tab="Payment Methods" key="saved-cards">
+            <TabPane data-cy="payments-tab" tab="Payment Methods" key="saved-cards">
               <RoundedCard style={{ marginTop: 16 }}>
                 <PaymentMethods />
               </RoundedCard>
