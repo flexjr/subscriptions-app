@@ -49,13 +49,14 @@ describe("Subscriptions Page", () => {
     // Select the first user
     cy.get("table").contains("td", "1250").prev("td").find("input").check();
     cy.get("[data-cy=upgrade-button]").click();
-    cy.intercept("POST", "/subscriptions/chargebee_customer", []).as("postChargebeeCustomer");
-    cy.wait("@postChargebeeCustomer");
+    // cy.intercept("POST", "/subscriptions/chargebee_customer", []).as("postChargebeeCustomer");
+    // cy.wait("@postChargebeeCustomer");
 
     cy.url().should("include", "/flex/subscription/checkout/plan-selection");
 
-    // cy.get("[data-cy=upgrades-tab]").should("exist").contains("Upgrades");
-    // cy.get("[data-cy=manage-tab]").should("exist").contains("Manage Subscriptions");
-    // cy.get("[data-cy=payment-methods-tab]").should("exist").contains("Payment Methods");
+    cy.get("[data-cy=flex-starter-title]").should("exist").contains("Flex Starter");
+    cy.get("[data-cy=flex-pro-title]").should("exist").contains("Flex Pro");
+    cy.get("[data-cy=flex-premium-title]").should("exist").contains("Flex Premium");
+    cy.get("[data-cy=flex-pro-button]").should("exist").click();
   });
 });

@@ -217,7 +217,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
           <Col span={columnSize}>
             <FlexSubscriptionPlanCard>
               <div>
-                <FlexSubscriptionPlanTitle>Flex Starter</FlexSubscriptionPlanTitle>
+                <FlexSubscriptionPlanTitle data-cy="flex-starter-title">Flex Starter</FlexSubscriptionPlanTitle>
                 <FlexSubscriptionPlanSupportingTitle>
                   For small teams that are just getting started with our spend management platform.
                 </FlexSubscriptionPlanSupportingTitle>
@@ -226,7 +226,12 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                   <FlexSubscriptionPlanPriceText>Free forever</FlexSubscriptionPlanPriceText>
                   <FlexSubscriptionPlanPriceText>&nbsp;</FlexSubscriptionPlanPriceText>
                 </FlexSubscriptionPlanPrice>
-                <FlexSubscriptionUpgradeButton size="large" block disabled={currentSubscriptionPlan === "FLEX_STARTER"}>
+                <FlexSubscriptionUpgradeButton
+                  size="large"
+                  block
+                  disabled={currentSubscriptionPlan === "FLEX_STARTER"}
+                  data-cy="flex-starter-button"
+                >
                   {currentSubscriptionPlan === "FLEX_STARTER" && "You’re on this plan"}
                   {currentSubscriptionPlan === "FLEX_PRO" && "Downgrade"}
                   {currentSubscriptionPlan === "FLEX_PREMIUM" && "Downgrade"}
@@ -260,7 +265,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
           <Col span={columnSize}>
             <FlexSubscriptionPlanCard className="flex-pro">
               <div>
-                <FlexSubscriptionPlanTitle>
+                <FlexSubscriptionPlanTitle data-cy="flex-pro-title">
                   Flex Pro&nbsp;{currentSubscriptionPlan !== "FLEX_PREMIUM" && <Tag color="#2ddca1">Recommended</Tag>}
                 </FlexSubscriptionPlanTitle>
                 <FlexSubscriptionPlanSupportingTitle>
@@ -279,6 +284,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                   onClick={() => handleUpgrade("FLEX_PRO")}
                   className={currentSubscriptionPlan === "FLEX_PRO" || isDisabled.FLEX_PRO ? "" : "flex-pro"}
                   disabled={currentSubscriptionPlan === "FLEX_PRO" || isDisabled.FLEX_PRO}
+                  data-cy="flex-pro-button"
                 >
                   {currentSubscriptionPlan === "FLEX_STARTER" && "Upgrade"}
                   {currentSubscriptionPlan === "FLEX_PRO" && "You’re on this plan"}
@@ -314,7 +320,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
           <Col span={columnSize}>
             <FlexSubscriptionPlanCard className="flex-premium">
               <div>
-                <FlexSubscriptionPlanTitle>Flex Premium</FlexSubscriptionPlanTitle>
+                <FlexSubscriptionPlanTitle data-cy="flex-premium-title">Flex Premium</FlexSubscriptionPlanTitle>
                 <FlexSubscriptionPlanSupportingTitle>
                   For larger teams that perform more fund transfers per month.
                 </FlexSubscriptionPlanSupportingTitle>
@@ -333,6 +339,7 @@ export const CheckoutStep1: React.FunctionComponent = () => {
                     currentSubscriptionPlan === "FLEX_PREMIUM" || isDisabled.FLEX_PREMIUM ? "" : "flex-premium"
                   }
                   disabled={currentSubscriptionPlan === "FLEX_PREMIUM" || isDisabled.FLEX_PREMIUM}
+                  data-cy="flex-premium-button"
                 >
                   {currentSubscriptionPlan === "FLEX_PREMIUM" ? "You’re on this plan" : "Upgrade"}
                 </FlexSubscriptionUpgradeButton>
