@@ -26,7 +26,10 @@ describe("Subscriptions Page", () => {
       });
     });
     cy.visit("/flex/dashboard");
+    cy.intercept("GET", "/users/current_user_info", []).as("getCurrentUserInfo");
+    cy.wait("@getCurrentUserInfo");
 
+    // Go to subscriptions tab
     cy.get("[data-cy=navbar-subscriptions]").click();
     cy.url().should("include", "/flex/organization/subscriptions");
     cy.intercept("GET", "/organizations/current_org", []).as("getCurrentOrgInfo");
@@ -35,8 +38,6 @@ describe("Subscriptions Page", () => {
     cy.get("[data-cy=company-name]").should("exist").contains("E2E Testing Co Pte Ltd");
     cy.get("[data-cy=upgrade-button]").should("exist").contains("Upgrade");
 
-    // cy.get("[data-row-key=1252]").should("exist");
-    // cy.contains("td", "1252").prev("td").find("input").check();
     cy.get("[data-cy=tab-navigation]").should("exist");
 
     cy.get("[data-cy=org-users-table]").should("exist");
@@ -52,11 +53,14 @@ describe("Subscriptions Page", () => {
     // cy.intercept("POST", "/subscriptions/chargebee_customer", []).as("postChargebeeCustomer");
     // cy.wait("@postChargebeeCustomer");
 
+    // Plan selection step
     cy.url().should("include", "/flex/subscription/checkout/plan-selection");
-
     cy.get("[data-cy=flex-starter-title]").should("exist").contains("Flex Starter");
     cy.get("[data-cy=flex-pro-title]").should("exist").contains("Flex Pro");
     cy.get("[data-cy=flex-premium-title]").should("exist").contains("Flex Premium");
     cy.get("[data-cy=flex-pro-button]").should("exist").click();
+
+    // Billing frequency step
+    cy.url().should("include", "/flex/subscription/checkout/billing-frequency");
   });
 });
