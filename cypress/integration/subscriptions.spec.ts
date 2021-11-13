@@ -64,5 +64,15 @@ describe("Subscriptions Page", () => {
 
     // Billing frequency step
     cy.url().should("include", "/flex/subscription/checkout/billing-frequency");
+    cy.get("[data-cy=pay-yearly-button]").should("exist").click();
+
+    // Checkout summary page
+    cy.url().should("include", "/flex/subscription/checkout/summary");
+    cy.get("[data-cy=saved-card]").should("exist").contains("visa");
+    cy.get("[data-cy=saved-card-last4]").should("exist").contains("•••• 1111");
+    cy.get("[data-cy=upgrade-plan]").should("exist").contains("Flex Pro (Yearly)");
+    cy.get("[data-cy=upgrade-price]").should("exist").contains("SGD 89.99");
+    cy.get("[data-cy=upgrade-list-1250]").should("exist").contains("e2e-testing@example.com");
+    cy.get("[data-cy=upgrade-tncs]").should("exist").contains("You will be charged SGD 89.99/year immediately");
   });
 });
