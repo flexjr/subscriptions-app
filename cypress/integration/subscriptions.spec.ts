@@ -34,6 +34,8 @@ describe("Subscriptions Page", () => {
     cy.url().should("include", "/flex/organization/subscriptions");
     cy.intercept("GET", "/organizations/current_org", []).as("getCurrentOrgInfo");
     cy.wait("@getCurrentOrgInfo");
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2500);
     cy.get("[data-cy=subscriptions-title]").should("exist").contains("Subscriptions");
     cy.get("[data-cy=company-name]").should("exist").contains("E2E Testing Co Pte Ltd");
     cy.get("[data-cy=upgrade-button]").should("exist").contains("Upgrade");
