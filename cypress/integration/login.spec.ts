@@ -6,10 +6,9 @@ describe("Login Page", () => {
     cy.get(
       '[style="display: flex; flex-direction: column; justify-content: center; height: 100%;"] > :nth-child(2)'
     ).contains("Grow your business with flexible business funds");
-    cy.get("#login-title").should("exist");
-    cy.get("#login-title").contains("Welcome back to Flex!");
-    cy.get("#login-button").contains("Login");
-    cy.get("#build-label").contains("Build v1.0.0-");
+    cy.get("#login-title").should("exist").contains("Welcome back to Flex!");
+    cy.get("#login-button").should("exist").contains("Login");
+    cy.get("#build-label").should("exist").contains("Build v1.0.0-");
   });
 
   it("should NOT log into our app with invalid credentials", () => {
@@ -45,7 +44,6 @@ describe("Login Page", () => {
   it("should successfully log into our app with valid credentials", () => {
     cy.clearLocalStorage();
     cy.login().then(({ body: { access_token, expires_in, id_token, token_type } }) => {
-      cy.visit("/flex/dashboard");
       cy.window().then((win) => {
         win.localStorage.setItem(
           `@@auth0spajs@@::${Cypress.env("auth_client_id")}::${Cypress.env("auth_audience")}::${Cypress.env(

@@ -1,0 +1,38 @@
+{
+    "id": 1250,
+    "user_id": "897042802b0b48788238121cfd3505ea",
+    "first_name": "E2E",
+    "last_name": "Test User",
+    "email": "e2e-testing@example.com",
+    "mobile": "+6581234567",
+    "email_verified": true,
+    "mobile_verified": true,
+    "user_roles": {
+        "org_id": 4875,
+        "user_id": 1250,
+        "role_name": "admin"
+    },
+    "user_subscriptions": {
+        "org_id": 4875,
+        "user_id": 1250,
+        "subscription_plan": "FLEX_STARTER",
+        "subscription_id": null,
+        "event_id": null,
+        "current_term_start": null,
+        "current_term_end": null,
+        "status": null
+    },
+    "user_orgs": {
+        "id": 4875,
+        "company_name": "E2E Testing Co Pte Ltd",
+        "crn": "201909876A",
+        "city": "Singapore",
+        "country": "Singapore",
+        "zip_code": "120005",
+        "phone": "+6561238000",
+        "base_currency": "SGD",
+        "financing_currency": "SGD",
+        "company_type": "LC"
+    },
+    "message": "CACHE_HIT"
+}

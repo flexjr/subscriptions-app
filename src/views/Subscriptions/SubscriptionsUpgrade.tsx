@@ -175,12 +175,23 @@ export const SubscriptionsUpgrade: React.FunctionComponent = () => {
         <>
           <RoundedCard style={{ marginTop: 16 }}>
             <div style={{ marginBottom: 16 }}>
-              <Button type="primary" onClick={handleUpgrade} disabled={!hasSelected} loading={isButtonLoading}>
+              <Button
+                data-cy="upgrade-button"
+                type="primary"
+                onClick={handleUpgrade}
+                disabled={!hasSelected}
+                loading={isButtonLoading}
+              >
                 Upgrade
               </Button>{" "}
               <span style={{ marginLeft: 8 }}>{hasSelected ? `Selected ${selectedRowKeys.length} users` : ""}</span>
             </div>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={currentOrgUsers} />
+            <Table
+              data-cy="org-users-table"
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={currentOrgUsers}
+            />
           </RoundedCard>
         </>
       )}

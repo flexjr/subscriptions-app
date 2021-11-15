@@ -292,8 +292,12 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                       paddingBottom: "16px",
                     }}
                   >
-                    <Col md={6}>{primaryCard?.brand}</Col>
-                    <Col md={6}>•••• {primaryCard?.last4}</Col>
+                    <Col md={6} data-cy="saved-card">
+                      {primaryCard?.brand}
+                    </Col>
+                    <Col md={6} data-cy="saved-card-last4">
+                      •••• {primaryCard?.last4}
+                    </Col>
                     <Col md={6}>
                       {primaryCard?.expiry_month}/{primaryCard?.expiry_year}
                     </Col>
@@ -356,6 +360,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                       style={{
                         fontWeight: 600,
                       }}
+                      data-cy="upgrade-plan"
                     >
                       {estimate.friendly_name}
                     </div>
@@ -363,13 +368,22 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                       style={{
                         fontWeight: 600,
                       }}
+                      data-cy="upgrade-unit-price"
                     >
                       SGD {estimate.unit_price}
                     </div>
                   </div>
                   <div>
                     <ol>
-                      {usersList ? usersList.map((user) => <li key={user["id"]}>{user["email"]}</li>) : <>Error</>}
+                      {usersList ? (
+                        usersList.map((user) => (
+                          <li key={user["id"]} data-cy={`upgrade-list-${user["id"]}`}>
+                            {user["email"]}
+                          </li>
+                        ))
+                      ) : (
+                        <>Error</>
+                      )}
                     </ol>
                   </div>
 
@@ -424,6 +438,7 @@ export const CheckoutStep3: React.FunctionComponent = () => {
                     style={{
                       fontSize: "0.65rem",
                     }}
+                    data-cy="upgrade-tncs"
                   >
                     You will be charged SGD {estimate.estimated_total_price}/{estimate.frequency} immediately when you
                     click “Pay Now”. Your paid subscription will automatically renew until you cancel it. You can cancel

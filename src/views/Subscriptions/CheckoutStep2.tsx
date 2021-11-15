@@ -97,6 +97,7 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                   onClick={() => handleUpgrade(`${subscriptionPlan}-SGD-Monthly`)}
                   loading={isLoading.PAY_MONTHLY}
                   disabled={isDisabled.PAY_MONTHLY}
+                  data-cy="pay-monthly-button"
                 >
                   Pay Monthly
                 </Button>,
@@ -118,6 +119,7 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                   onClick={() => handleUpgrade(`${subscriptionPlan}-SGD-Yearly`)}
                   loading={isLoading.PAY_YEARLY}
                   disabled={isDisabled.PAY_YEARLY}
+                  data-cy="pay-yearly-button"
                 >
                   Pay Yearly
                 </Button>,
