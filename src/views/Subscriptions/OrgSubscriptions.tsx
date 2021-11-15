@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
+import { useFlex } from "../../hooks";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 import { PaymentMethods } from "./PaymentMethods";
 import { SubscriptionsManage } from "./SubscriptionsManage";
+import { SubscriptionsMine } from "./SubscriptionsMine";
 import { SubscriptionsUpgrade } from "./SubscriptionsUpgrade";
 
 const { Title } = Typography;
@@ -61,6 +63,12 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
 
   const match = useRouteMatch<MatchProps>("/flex/organization/subscriptions/:path");
 
+  const { flexUserInfo } = useFlex();
+
+  // Account switching not implemented
+  const userCurrentOrgRole = "user_roles" in flexUserInfo ? flexUserInfo.user_roles.role_name : "";
+  const defaultActiveKey = userCurrentOrgRole === "admin" ? "upgrade" : "my-subscription";
+
   return (
     <>
       <Title data-cy="subscriptions-title" level={3}>
@@ -72,25 +80,37 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
         <>
           <FlexBanner data-cy="company-name">{currentOrgInfo?.company_name}</FlexBanner>
           <Tabs
-            defaultActiveKey="upgrade"
-            activeKey={match?.params.path ? match.params.path : "upgrade"}
+            defaultActiveKey={defaultActiveKey}
+            activeKey={match?.params.path ? match.params.path : defaultActiveKey}
             onChange={(key) => {
               history.push(`/flex/organization/subscriptions/${key}`);
             }}
             tabBarGutter={32}
             data-cy="tab-navigation"
           >
-            <TabPane data-cy="upgrades-tab" tab="Upgrades" key="upgrade">
-              <SubscriptionsUpgrade />
+            {userCurrentOrgRole === "admin" && (
+              <TabPane data-cy="upgrades-tab" tab="Upgrades" key="upgrade">
+                <SubscriptionsUpgrade />
+              </TabPane>
+            )}
+
+            {userCurrentOrgRole === "admin" && (
+              <TabPane data-cy="manage-tab" tab="Manage Subscriptions" key="manage">
+                <SubscriptionsManage />
+              </TabPane>
+            )}
+
+            <TabPane data-cy="my-subscription-tab" tab="My Subscription" key="my-subscription">
+              <SubscriptionsMine />
             </TabPane>
-            <TabPane data-cy="manage-tab" tab="Manage Subscriptions" key="manage">
-              <SubscriptionsManage />
-            </TabPane>
-            <TabPane data-cy="saved-cards-tab" tab="Payment Methods" key="saved-cards">
-              <RoundedCard style={{ marginTop: 16 }}>
-                <PaymentMethods />
-              </RoundedCard>
-            </TabPane>
+
+            {userCurrentOrgRole === "admin" && (
+              <TabPane data-cy="saved-cards-tab" tab="Payment Methods" key="saved-cards">
+                <RoundedCard style={{ marginTop: 16 }}>
+                  <PaymentMethods />
+                </RoundedCard>
+              </TabPane>
+            )}
           </Tabs>
         </>
       )}
