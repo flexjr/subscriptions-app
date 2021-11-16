@@ -66,7 +66,8 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
   const { flexUserInfo } = useFlex();
 
   // Account switching not implemented
-  const userCurrentOrgRole = "user_roles" in flexUserInfo ? flexUserInfo.user_roles.role_name : "";
+  const userCurrentOrgRole =
+    flexUserInfo !== undefined && "user_roles" in flexUserInfo ? flexUserInfo.user_roles.role_name : "";
   const defaultActiveKey = userCurrentOrgRole === "admin" ? "upgrade" : "my-subscription";
 
   return (
