@@ -1,24 +1,19 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Skeleton, Select, Form, Row, Col, Button, Divider } from "antd";
+import { Skeleton, Form, Row, Col, Button, Divider } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useHistory, useLocation } from "react-router";
 import { RoundedCard } from "../../components/Shared";
-import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
+import { useFlex } from "../../hooks";
+import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 
 const Field = styled(Col)`
   font-weight: 500;
 `;
-interface StateType {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userId?: string;
-}
 
 export const SubscriptionsMine: React.FunctionComponent = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const [isCancellationLoading, setIsCancellationLoading] = useState(false);
   const [subscriptionInfo, setSubscriptionInfo] = useState({
     current_term_end: 0,
     current_term_start: 0,
@@ -36,12 +31,9 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
     subscription_plan: null,
     user_id: null,
   });
-  const location = useLocation<StateType>();
-  const history = useHistory();
-
-  const userId = location.state?.userId;
 
   const { getAccessTokenSilently } = useAuth0();
+  const { subscriptionPlanFriendlyName } = useFlex();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -54,10 +46,12 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
         scope: "openid profile email",
       });
 
-      await getData<{ result }>(`${API_URL}/subscriptions/list_subscription/${userId}`, accessToken, signal)
+      await getData<{ result }>(`${API_URL}/subscriptions/my_subscription`, accessToken, signal)
         .then(({ result }) => {
+          result = result.data[0];
           result.current_term_start = format(new Date(result?.current_term_start), "d MMM yyyy");
           result.current_term_end = format(new Date(result?.current_term_end), "d MMM yyyy");
+          console.log(result);
           setSubscriptionInfo(result);
           return result;
         })
@@ -74,45 +68,7 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
       };
     };
     fetchData();
-  }, [getAccessTokenSilently, userId]);
-
-  const handleCancellation = (): void => {
-    setIsCancellationLoading(true);
-    const cancel = async (): Promise<{ message } | undefined> => {
-      const abortController = new AbortController();
-      const { signal } = abortController;
-
-      const accessToken = await getAccessTokenSilently({
-        audience: AUTH0_API_AUDIENCE,
-        scope: "openid profile email",
-      });
-
-      return await postData<{ message }>(`${API_URL}/subscriptions/cancel_subscription`, accessToken, signal, {
-        userId: userId,
-      })
-        .then(({ message }) => {
-          setIsCancellationLoading(false);
-          history.push({
-            pathname: "/flex/organization/subscriptions/manage",
-            state: {
-              message:
-                "Your subscription has been cancelled and will not be billed at the next billing cycle. We hope to see you again soon!",
-            },
-          });
-          return { message };
-        })
-        .catch((error) => {
-          console.error(error);
-          history.push({
-            pathname: "/flex/subscription/cancel-failed",
-          });
-          setIsCancellationLoading(false);
-          return undefined;
-        });
-    };
-
-    cancel();
-  };
+  }, [getAccessTokenSilently]);
 
   return (
     <>
@@ -124,41 +80,42 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
             <Col span={24}>
               <RoundedCard style={{ marginTop: 16 }}>
                 <h3>My subscription</h3>
-                <Row>
-                  <Col md={24}>
-                    <p>Your current subscription plan entitles your account to: </p>
-                    <ul>
-                      <li>Placeholder</li>
-                    </ul>
-                  </Col>
-                </Row>
-                <Divider />
-                <h3>You will be cancelling for</h3>
-                <Row style={{ paddingBottom: "8px" }}>
-                  <Field md={12}>User Account</Field>
-                  <Col md={12}>{subscriptionInfo?.email}</Col>
-                </Row>
-                <Row style={{ paddingBottom: "8px" }}>
-                  <Field md={12}>Plan Name</Field>
-                  <Col md={12}>{subscriptionInfo?.subscription_plan}</Col>
-                </Row>
-                <Row style={{ paddingBottom: "8px" }}>
-                  <Field md={12}>Current Billing Cycle</Field>
-                  <Col md={12}>
-                    {subscriptionInfo?.current_term_start} – {subscriptionInfo?.current_term_end}
-                  </Col>
-                </Row>
-                <Divider />
+                {!subscriptionInfo?.subscription_plan || subscriptionInfo?.subscription_plan == "FLEX_STARTER" ? (
+                  <p>
+                    You currently do not have any subscription, you can send a request to your company admin to request
+                    for an upgrade.
+                  </p>
+                ) : (
+                  <p>Your subscription is currently billed to your company.</p>
+                )}
+
+                {subscriptionInfo?.subscription_plan == null ||
+                  (subscriptionInfo?.subscription_plan !== "FLEX_STARTER" && (
+                    <>
+                      <Divider />
+                      <Row style={{ paddingBottom: "8px" }}>
+                        <Field md={6}>User Account</Field>
+                        <Col md={12}>{subscriptionInfo?.email}</Col>
+                      </Row>
+                      <Row style={{ paddingBottom: "8px" }}>
+                        <Field md={6}>Plan Name</Field>
+                        <Col md={12}>{subscriptionPlanFriendlyName(subscriptionInfo?.subscription_plan)}</Col>
+                      </Row>
+                      <Row style={{ paddingBottom: "8px" }}>
+                        <Field md={6}>Current Billing Cycle</Field>
+                        <Col md={12}>
+                          {subscriptionInfo?.current_term_start ? subscriptionInfo?.current_term_start : ""} –{"  "}
+                          {subscriptionInfo?.current_term_end ? subscriptionInfo?.current_term_end : ""}
+                        </Col>
+                      </Row>
+                      <Divider />
+                    </>
+                  ))}
+
                 <Form name="basic" layout="vertical">
                   <Row>
                     <Col md={24}>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        size="large"
-                        onClick={handleCancellation}
-                        loading={isCancellationLoading}
-                      >
+                      <Button type="primary" htmlType="submit" size="large">
                         Request for upgrade
                       </Button>{" "}
                     </Col>

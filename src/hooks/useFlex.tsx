@@ -88,23 +88,27 @@ export const useFlex = (): {
   }, [getAccessTokenSilently, isAuthenticated]);
 
   const subscriptionPlanFriendlyName = (subscriptionPlan: string): string | undefined => {
-    const parts = subscriptionPlan.split("-"); // e.g. FLEX_PRO-SGD-Monthly
-    const plan = parts[0];
-    // const currency = parts[1];
-    const frequency = parts[2];
+    if (subscriptionPlan) {
+      const parts = subscriptionPlan.split("-"); // e.g. FLEX_PRO-SGD-Monthly
+      const plan = parts[0];
+      // const currency = parts[1];
+      const frequency = parts[2];
 
-    let formattedPlanName = "";
-    switch (plan) {
-      case "FLEX_STARTER":
-        return "Flex Starter";
-      case "FLEX_PRO":
-        formattedPlanName = `Flex Pro`;
-        return `${formattedPlanName} (${frequency})`;
-      case "FLEX_PREMIUM":
-        formattedPlanName = `Flex Premium`;
-        return `${formattedPlanName} (${frequency})`;
-      default:
-        return undefined;
+      let formattedPlanName = "";
+      switch (plan) {
+        case "FLEX_STARTER":
+          return "Flex Starter";
+        case "FLEX_PRO":
+          formattedPlanName = `Flex Pro`;
+          return `${formattedPlanName} (${frequency})`;
+        case "FLEX_PREMIUM":
+          formattedPlanName = `Flex Premium`;
+          return `${formattedPlanName} (${frequency})`;
+        default:
+          return undefined;
+      }
+    } else {
+      return undefined;
     }
   };
 

@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router";
 import { FlexBanner, RoundedCard } from "../../components/Shared";
+import { useFlex } from "../../hooks";
 import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
 const { Title } = Typography;
@@ -44,6 +45,7 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
   const userId = location.state?.userId;
 
   const { getAccessTokenSilently } = useAuth0();
+  const { subscriptionPlanFriendlyName } = useFlex();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -157,7 +159,7 @@ export const SubscriptionsCancel: React.FunctionComponent = () => {
                 </Row>
                 <Row style={{ paddingBottom: "8px" }}>
                   <Field md={12}>Plan Name</Field>
-                  <Col md={12}>{subscriptionInfo?.subscription_plan}</Col>
+                  <Col md={12}>{subscriptionPlanFriendlyName(subscriptionInfo?.subscription_plan)}</Col>
                 </Row>
                 <Row style={{ paddingBottom: "8px" }}>
                   <Field md={12}>Current Billing Cycle</Field>
