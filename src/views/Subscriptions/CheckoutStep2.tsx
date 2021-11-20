@@ -28,6 +28,16 @@ export const CheckoutStep2: React.FunctionComponent = () => {
   const userIds = location.state?.userIds;
   const subscriptionPlan = location.state?.subscriptionPlan;
 
+  const getSubscriptionPlanPricing = (plan: string): number => {
+    const monthlyPrices = {
+      "FLEX_PRO-SGD-Monthly": 7.99,
+      "FLEX_PRO-SGD-Yearly": 7.49,
+      "FLEX_PREMIUM-SGD-Monthly": 14.99,
+      "FLEX_PREMIUM-SGD-Yearly": 12.99,
+    };
+    return monthlyPrices[plan];
+  };
+
   useEffect(() => {
     setDebugData(
       `Debug Data: In this checkout, you intend to upgrade users ${userIds.toString()} / plan ${subscriptionPlan} / billing frequency NULL`
@@ -103,9 +113,7 @@ export const CheckoutStep2: React.FunctionComponent = () => {
                 </Button>,
               ]}
             >
-              <div>
-                SGD <code>AMOUNT_SLOT_1</code> per user, per month
-              </div>
+              <div>SGD {getSubscriptionPlanPricing(`${subscriptionPlan}-SGD-Monthly`)} per user, per month</div>
             </Card>
           </Col>
           <Col span={12}>
@@ -126,7 +134,7 @@ export const CheckoutStep2: React.FunctionComponent = () => {
               ]}
             >
               <div>
-                SGD <code>AMOUNT_SLOT_2</code> per user, per month billed annually
+                SGD {getSubscriptionPlanPricing(`${subscriptionPlan}-SGD-Yearly`)} per user, per month billed annually
               </div>
             </Card>
           </Col>
