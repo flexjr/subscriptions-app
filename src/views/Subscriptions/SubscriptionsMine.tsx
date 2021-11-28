@@ -1,12 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
-import { Skeleton, Form, Row, Col, Button, Divider } from "antd";
+import { Skeleton, Form, Row, Col, Button, Divider, notification } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { RoundedCard } from "../../components/Shared";
 import { useFlex } from "../../hooks";
-import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
+import { API_URL, AUTH0_API_AUDIENCE, getData, postData } from "../../shared";
 
 const Field = styled(Col)`
   font-weight: 500;
@@ -30,6 +30,10 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
     subscription_id: null,
     subscription_plan: null,
     user_id: null,
+  });
+
+  const [isLoading, setIsLoading] = useState({
+    request_upgrade: false,
   });
 
   const { getAccessTokenSilently } = useAuth0();
@@ -69,6 +73,62 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
     };
     fetchData();
   }, [getAccessTokenSilently]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleInvite = (): void => {
+    setIsLoading({ ...isLoading, request_upgrade: true });
+
+    const inviteUserToOrg = async (): Promise<{ message } | undefined> => {
+      const abortController = new AbortController();
+      const { signal } = abortController;
+
+      const accessToken = await getAccessTokenSilently({
+        audience: AUTH0_API_AUDIENCE,
+        scope: "openid profile email",
+      });
+
+      return await postData<{ message }>(`${API_URL}/subscriptions/request_upgrade`, accessToken, signal)
+        .then(({ message }) => {
+          setIsLoading({ ...isLoading, request_upgrade: false });
+          openNotification("success", "We've sent a request to your company admin to upgrade your account!");
+          return { message };
+        })
+        .catch((error) => {
+          console.error(error);
+          openNotification(
+            "error",
+            "Something went wrong! We failed to submit your request for an upgrade, please try again in a bit!"
+          );
+          setIsLoading({ ...isLoading, request_upgrade: false });
+          return undefined;
+        });
+    };
+
+    inviteUserToOrg();
+  };
+
+  const openNotification = (type: string, description: string): void => {
+    if (type == "success") {
+      notification.success({
+        message: "Upgrade requested",
+        description: description,
+      });
+    } else if (type == "error") {
+      notification.error({
+        message: "Failed to request",
+        description: description,
+      });
+    } else {
+      notification.open({
+        message: "Notification Title",
+        description:
+          "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+        onClick: () => {
+          console.log("Notification Clicked!");
+        },
+      });
+    }
+  };
 
   return (
     <>
@@ -115,7 +175,13 @@ export const SubscriptionsMine: React.FunctionComponent = () => {
                 <Form name="basic" layout="vertical">
                   <Row>
                     <Col md={24}>
-                      <Button type="primary" htmlType="submit" size="large">
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        size="large"
+                        loading={isLoading.request_upgrade}
+                        onClick={() => handleInvite()}
+                      >
                         Request for upgrade
                       </Button>{" "}
                     </Col>
