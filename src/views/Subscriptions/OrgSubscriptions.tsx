@@ -7,6 +7,7 @@ import { FlexBanner, RoundedCard } from "../../components/Shared";
 import { useFlex } from "../../hooks";
 import { API_URL, AUTH0_API_AUDIENCE, getData } from "../../shared";
 import { PaymentMethods } from "./PaymentMethods";
+import { SubscriptionRequests } from "./SubscriptionRequests";
 import { SubscriptionsManage } from "./SubscriptionsManage";
 import { SubscriptionsMine } from "./SubscriptionsMine";
 import { SubscriptionsUpgrade } from "./SubscriptionsUpgrade";
@@ -92,6 +93,12 @@ export const OrgSubscriptions: React.FunctionComponent = () => {
             {userCurrentOrgRole === "admin" && (
               <TabPane data-cy="upgrades-tab" tab="Upgrades" key="upgrade">
                 <SubscriptionsUpgrade />
+              </TabPane>
+            )}
+
+            {userCurrentOrgRole === "admin" && (
+              <TabPane data-cy="upgrades-requests-tab" tab="Upgrade Requests" key="upgrades-requests">
+                <SubscriptionRequests />
               </TabPane>
             )}
 

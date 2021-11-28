@@ -87,7 +87,7 @@ export const useFlex = (): {
     getFlexUserInfo();
   }, [getAccessTokenSilently, isAuthenticated]);
 
-  const subscriptionPlanFriendlyName = (subscriptionPlan: string): string | undefined => {
+  const subscriptionPlanFriendlyName = (subscriptionPlan: string, nameOnly = false): string | undefined => {
     if (subscriptionPlan) {
       const parts = subscriptionPlan.split("-"); // e.g. FLEX_PRO-SGD-Monthly
       const plan = parts[0];
@@ -100,9 +100,15 @@ export const useFlex = (): {
           return "Flex Starter";
         case "FLEX_PRO":
           formattedPlanName = `Flex Pro`;
+          if (nameOnly) {
+            return `${formattedPlanName}`;
+          }
           return `${formattedPlanName} (${frequency})`;
         case "FLEX_PREMIUM":
           formattedPlanName = `Flex Premium`;
+          if (nameOnly) {
+            return `${formattedPlanName}`;
+          }
           return `${formattedPlanName} (${frequency})`;
         default:
           return undefined;
